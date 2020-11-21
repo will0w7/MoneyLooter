@@ -1,10 +1,9 @@
 ## Title: MoneyLooter
-## Version: 0.20
+## Version: 0.21
 ## Author: Will0w7
 ## Interface: 90002
-## OptionalDeps: TradeSkillMaster
 ## SavedVariables: MoneyLooterDB
-## Notes: MoneyLooter!
+## Dependencies: TradeSKillMaster
 
 MoneyLooter.lua
 ui\UI.lua
