@@ -1,5 +1,5 @@
 ## Title: MoneyLooter
-## Version: 0.12
+## Version: 0.20
 ## Author: Will0w7
 ## Interface: 90002
 ## OptionalDeps: TradeSkillMaster
@@ -7,7 +7,9 @@
 ## Notes: MoneyLooter!
 
 MoneyLooter.lua
-UI\UI.lua
-LootedItem.lua
+ui\UI.lua
 
-FastLoot.lua
+const\LootedItem.lua
+const\Consts.lua
+
+ext\FastLoot.lua

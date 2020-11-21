@@ -4,19 +4,19 @@
 
 -- Hay que mover y cambiar las variables
 ML_FONT = "Fonts\\FRIZQT__.TTF"
-IsRunning = false
-TimeOnStart = 0
 SLASH_ML1 = "/ml"
+
+-- IsRunning = false
+TimeOnStart = 0
 Timer = 0
--- TimerGPH = 0
 TimeSinceLastUpdate = 0
 TimeSinceLastUpdateGPH = 0
 
 -- Se crea el frame principal
-local ML_UI = CreateFrame("Frame", "MoneyLooter", UIParent)
+local ML_UI = CreateFrame("Frame", "MoneyLooter", UIParent, BackdropTemplateMixin and "BackdropTemplate")
 ML_UI:SetSize(170, 170)
 ML_UI:SetPoint("Center")
-Mixin(ML_UI, BackdropTemplateMixin)
+-- Mixin(ML_UI, BackdropTemplateMixin)
 ML_UI:SetBackdrop({
     bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
 	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
@@ -118,12 +118,12 @@ GPH:SetFont(ML_FONT, 12)
 
 
 -- Se crea el frame del loot
-local loot = CreateFrame("ScrollingMessageFrame", "LootedItems", ML_UI)
+local loot = CreateFrame("ScrollingMessageFrame", "LootedItems", ML_UI, BackdropTemplateMixin and "BackdropTemplate")
 -- loot:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 loot:CreateFontString(nil, nil, GameFontNormal)
 loot:SetSize(380,170)
 loot:SetPoint("RIGHT", 380, 0)
-Mixin(loot, BackdropTemplateMixin)
+-- Mixin(loot, BackdropTemplateMixin)
 loot:SetBackdrop({
     bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
 	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
@@ -154,38 +154,38 @@ ML_UPDATE_GPH = CreateFrame("Frame")
 function ML_UPDATE_STARTSTOP_OnUpdate(self, elapsed)
     TimeSinceLastUpdate = TimeSinceLastUpdate + elapsed
     if TimeSinceLastUpdate > 1.0 then
-        if IsRunning then
+        if GET_IS_RUNNING() then
             time:SetText(date("!%X", Timer))
             Timer = Timer + 1
         end
         TimeSinceLastUpdate = 0
     end
-    if IsRunning then
-        gold:SetText(GetCoinTextureString(GetLootedMoney()))
-        item:SetText(GetCoinTextureString(GetMoneyFromItems()))
+    if GET_IS_RUNNING() then
+        gold:SetText(GetCoinTextureString(GET_RAW_MONEY()))
+        item:SetText(GetCoinTextureString(GET_ITEMS_MONEY()))
     end
 end
 
 -- Controla la actualizacion de loot de objetos
 function ML_UPDATE_LOOT_OnUpdate(self, elapsed)
-    if IsRunning and GetUPDATE() then
-        local looted = GetLootedItems()
+    if GET_IS_RUNNING() and GET_UPDATE() then
+        local looted = GET_LOOTED_ITEMS()
         for n, v in ipairs(looted) do
             loot:AddMessage(v.amount .. "x" .. v.name ..  " " .. GetCoinTextureString(v.value, 12))
         end
-        SetLootedItems({})
-        SetUPDATE(false)
+        SET_LOOTED_ITEMS({})
+        SET_UPDATE(false)
     end
 end
 
 function ML_UPDATE_GPH_OnUpdate(self, elapsed)
     TimeSinceLastUpdateGPH = TimeSinceLastUpdateGPH + elapsed
     if TimeSinceLastUpdateGPH > 2.0 then
-        if IsRunning then
-            local money = GetTOTAL_MONEY()
+        if GET_IS_RUNNING() then
+            local money = GET_TOTAL_MONEY()
             local perhour = 0
             if money > 0 then
-                perhour = (GetTOTAL_MONEY() / Timer) * 3600
+                perhour = (money / Timer) * 3600
             end            
             GPH:SetText(GetCoinTextureString(perhour))
         end
@@ -214,9 +214,12 @@ reset:SetScript("OnClick", function ()
     TimeSinceLastUpdate = 0
     TimeSinceLastUpdateGPH = 0
     Timer = 0
-    IsRunning = false
-    SetLootedMoney(0)
-    SetMoneyFromItems(0)
+    -- IsRunning = false
+    SET_IS_RUNNING(false)
+    -- SetLootedMoney(0)
+    SET_RAW_MONEY(0)
+    -- SetMoneyFromItems(0)
+    SET_ITEMS_MONEY(0)
     startstop:SetText("Start")
     time:SetText("00:00:00")
     gold:SetText(GetCoinTextureString(0))
@@ -224,18 +227,20 @@ reset:SetScript("OnClick", function ()
     GPH:SetText(GetCoinTextureString(0))
     SET_RECORD_LOOT(false)
     SetOldMoney(GetMoney())
-    SetLootedItems({})
-    SetTOTAL_MONEY(0)
+    -- SetLootedItems({})
+    SET_LOOTED_ITEMS({})
+    -- SetTOTAL_MONEY(0)
+    SET_TOTAL_MONEY(0)
     loot:Clear()
 end)
 
 startstop:SetScript("OnClick", function()
-    if IsRunning then
-        IsRunning = false
+    if GET_IS_RUNNING() then
+        SET_IS_RUNNING(false)
         startstop:SetText("Start")
         SET_RECORD_LOOT(false)
     else
-        IsRunning = true
+        SET_IS_RUNNING(true)
         SetOldMoney(GetMoney())
         startstop:SetText("Stop")
         SET_RECORD_LOOT(true)

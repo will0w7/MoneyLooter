@@ -1,29 +1,23 @@
 -- Author      : Will0w7
 -- Core --
--- ML_FONT = "Fonts\\FRIZQT__.TTF"
-local RECORD_LOOT = false
-local MIN_PRICE = 10000000 -- (MIN_PRICE * 1000)
-local oldmoney = GetMoney()
-local lootedMoney = 0
-local moneyFromItems = 0
--- local hex = ""
-local lootedItems = {}
-local UPDATE = false
-local amount = 0
-local TOTAL_MONEY = 0
+local TSM_API = TSM_API
 
+local oldmoney = GetMoney()
+local amount = 0
+
+-- Controla el evento de lootear dinero
 local function OnMoneyLoot(self, event, ...)
-    if event == "CHAT_MSG_MONEY" and RECORD_LOOT == true then
+    if event == "CHAT_MSG_MONEY" and GET_RECORD_LOOT() == true then
         local newmoney = GetMoney()
         local change = (newmoney - oldmoney)
-        lootedMoney = lootedMoney + change
-        TOTAL_MONEY = TOTAL_MONEY + change
+        RAW_MONEY_ADD(change)
+        TOTAL_MONEY_ADD(change)
         oldmoney = GetMoney()
     end
 end
 
 local function OnItemLoot(self, event, ...)
-    if event == "CHAT_MSG_LOOT" and RECORD_LOOT == true then
+    if event == "CHAT_MSG_LOOT" and GET_RECORD_LOOT() == true then
         local p0 = ""
         local p1 = ""
         local lootstring, _, _, _, p2 = ...
@@ -32,10 +26,11 @@ local function OnItemLoot(self, event, ...)
         if itemLink == nil then return false end
         local tsmItemString = TSM_API.ToItemString(itemLink)
         local itemString = string.match(itemLink, "item[%-?%d:]+")
+        -- texture -> añadir icono al chat
         local itemName, _, quality, _, _, _, _, _, _, texture, sellPrice, _, _, _, _, _, isCraftingReagent = GetItemInfo(itemString)
         amount = string.match(lootstring, "x(%d+)%p") or 1
         if amount == nil then amount = 1 end
-        -- _,_,_,hex = GetItemQualityColor(quality)
+
         p0,_ = GetUnitName("player")
         p1,_ = strsplit ('-', p2, 2)
         if (string.len(itemName) >30) then
@@ -53,7 +48,7 @@ local function OnItemLoot(self, event, ...)
                         else
                             if isCraftingReagent then
                                 price = tsm
-                            elseif price < MIN_PRICE then
+                            elseif price < GET_MIN_PRICE() then
                                 price = sellPrice
                             else
                                 price = tsm
@@ -72,13 +67,21 @@ local function OnItemLoot(self, event, ...)
                 end
             end
                 price = (price * amount)
-                moneyFromItems = moneyFromItems + price
+                ITEMS_MONEY_ADD(price)
                 local i = LootedItem.new(itemLink, price, amount)
-                table.insert(lootedItems, i)
-                UPDATE = true
-                TOTAL_MONEY = TOTAL_MONEY + price
+                -- table.insert(lootedItems, i)
+                LOOTED_ITEMS_INSERT(i)
+                SET_UPDATE(true)
+                -- TOTAL_MONEY = TOTAL_MONEY + price
+                TOTAL_MONEY_ADD(price)
             end
         end
+end
+
+function OnSellAction(self, event, ...)
+    if event == "MERCHANT_UPDATE" and GET_RECORD_LOOT() == true then
+        oldmoney = GetMoney()
+    end
 end
 
 local moneyLoot = CreateFrame("Frame")
@@ -89,51 +92,11 @@ local itemLoot = CreateFrame("Frame")
 itemLoot:RegisterEvent("CHAT_MSG_LOOT")
 itemLoot:SetScript("OnEvent", OnItemLoot)
 
--- Getters y setters
-function GetLootedMoney()
-    return lootedMoney
-end
-
-function GetMoneyFromItems()
-    return moneyFromItems
-end
-
-function SET_RECORD_LOOT(status)
-    RECORD_LOOT = status
-end
-
-function SetLootedMoney(val)
-    lootedMoney = val
-end
-
-function SetMoneyFromItems(val)
-    moneyFromItems = val
-end
+local sellAction = CreateFrame("Frame")
+sellAction:RegisterEvent("PLAYER_MONEY")
+sellAction:RegisterEvent("MERCHANT_UPDATE")
+sellAction:SetScript("OnEvent", OnSellAction)
 
 function SetOldMoney(val)
     oldmoney = val
-end
-
-function GetLootedItems()
-    return lootedItems
-end
-
-function SetLootedItems(val)
-    lootedItems = val
-end
-
-function GetUPDATE()
-    return UPDATE
-end
-
-function SetUPDATE(val)
-    UPDATE = val
-end
-
-function SetTOTAL_MONEY(val)
-    TOTAL_MONEY = val
-end
-
-function GetTOTAL_MONEY()
-    return TOTAL_MONEY
 end
