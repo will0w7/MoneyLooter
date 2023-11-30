@@ -1,6 +1,5 @@
 -- Author      : Will0w7
-
--- Interfaz --
+-- Interface --
 
 -- Hay que mover y cambiar las variables
 ML_FONT = "Fonts\\FRIZQT__.TTF"
@@ -15,14 +14,14 @@ TimeSinceLastUpdateGPH = 0
 -- Se crea el frame principal
 local ML_UI = CreateFrame("Frame", "MoneyLooter", UIParent, BackdropTemplateMixin and "BackdropTemplate")
 ML_UI:SetSize(170, 170)
-ML_UI:SetPoint("Center")
+ML_UI:SetPoint("CENTER")
 -- Mixin(ML_UI, BackdropTemplateMixin)
 ML_UI:SetBackdrop({
     bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
-	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-	tileSize = 7,
-	edgeSize = 8,
-	insets = { left = 1, right = 1, top = 1, bottom = 1, },
+    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+    tileSize = 7,
+    edgeSize = 8,
+    insets = { left = 1, right = 1, top = 1, bottom = 1, },
 })
 ML_UI:SetBackdropColor(0, 0, 0, .5)
 ML_UI:SetBackdropBorderColor(0, 0, 0)
@@ -39,7 +38,7 @@ close:SetPoint("TOPRIGHT", ML_UI, "TOPRIGHT")
 -- Boton de start/stop
 local startstop = CreateFrame("Button", "Start/Stop", ML_UI, "UIPanelButtonTemplate")
 startstop:SetPoint("BOTTOMLEFT", ML_UI, 5, 5)
-startstop:SetSize(100,20)
+startstop:SetSize(100, 20)
 startstop:SetText("Start")
 -- startstop:SetFont(ML_FONT, 12)
 -- startstop.tooltipText = "Arranca y para la herramienta"
@@ -47,7 +46,7 @@ startstop:SetText("Start")
 -- Boton de reset
 local reset = CreateFrame("Button", "Reset", ML_UI, "UIPanelButtonTemplate")
 reset:SetPoint("BOTTOMRIGHT", ML_UI, -5, 5)
-reset:SetSize(50,20)
+reset:SetSize(50, 20)
 reset:SetText("Reset")
 -- reset:SetFont(ML_FONT, 12)
 -- reset.tooltipText = "Resetea todos los datos"
@@ -58,78 +57,78 @@ ml:SetJustifyV("CENTER")
 ml:SetJustifyH("CENTER")
 ml:SetText("|cFFFF0000MoneyLooter!")
 ml:SetPoint("TOP", ML_UI, -3, -8)
-ml:SetFont(ML_FONT, 17)
+ml:SetFont(ML_FONT, 17, "")
 
 local t = ML_UI:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 t:SetJustifyV("CENTER")
 t:SetJustifyH("CENTER")
-t:SetText("Tiempo:")
+t:SetText("Time:")
 t:SetPoint("TOPLEFT", ML_UI, 5, -40)
-t:SetFont(ML_FONT, 12)
+t:SetFont(ML_FONT, 12, "")
 
 local time = ML_UI:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 time:SetJustifyV("CENTER")
 time:SetJustifyH("CENTER")
 time:SetText("00:00:00")
 time:SetPoint("TOPRIGHT", ML_UI, -8, -40)
-time:SetFont(ML_FONT, 12)
+time:SetFont(ML_FONT, 12, "")
 
 local g = ML_UI:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 g:SetJustifyV("CENTER")
 g:SetJustifyH("CENTER")
-g:SetText("Oro:")
+g:SetText("Gold:")
 g:SetPoint("TOPLEFT", ML_UI, 5, -60)
-g:SetFont(ML_FONT, 12)
+g:SetFont(ML_FONT, 12, "")
 
 local gold = ML_UI:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 gold:SetJustifyV("CENTER")
 gold:SetJustifyH("CENTER")
 gold:SetText(GetCoinTextureString(0))
 gold:SetPoint("TOPRIGHT", ML_UI, -8, -60)
-gold:SetFont(ML_FONT, 12)
+gold:SetFont(ML_FONT, 12, "")
 
 local i = ML_UI:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 i:SetJustifyV("CENTER")
 i:SetJustifyH("CENTER")
 i:SetText("Items:")
 i:SetPoint("TOPLEFT", ML_UI, 5, -80)
-i:SetFont(ML_FONT, 12)
+i:SetFont(ML_FONT, 12, "")
 
 local item = ML_UI:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 item:SetJustifyV("CENTER")
 item:SetJustifyH("CENTER")
 item:SetText(GetCoinTextureString(0))
 item:SetPoint("TOPRIGHT", ML_UI, -8, -80)
-item:SetFont(ML_FONT, 12)
+item:SetFont(ML_FONT, 12, "")
 
 local gph = ML_UI:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 gph:SetJustifyV("CENTER")
 gph:SetJustifyH("CENTER")
 gph:SetText("GPH:")
 gph:SetPoint("TOPLEFT", ML_UI, 5, -100)
-gph:SetFont(ML_FONT, 12)
+gph:SetFont(ML_FONT, 12, "")
 
 local GPH = ML_UI:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 GPH:SetJustifyV("CENTER")
 GPH:SetJustifyH("CENTER")
 GPH:SetText(GetCoinTextureString(0))
 GPH:SetPoint("TOPRIGHT", ML_UI, -8, -100)
-GPH:SetFont(ML_FONT, 12)
+GPH:SetFont(ML_FONT, 12, "")
 
 
 -- Se crea el frame del loot
 local loot = CreateFrame("ScrollingMessageFrame", "LootedItems", ML_UI, BackdropTemplateMixin and "BackdropTemplate")
 -- loot:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-loot:CreateFontString(nil, nil, GameFontNormal)
-loot:SetSize(380,170)
+loot:CreateFontString(nil, nil, "GameFontNormal")
+loot:SetSize(380, 170)
 loot:SetPoint("RIGHT", 380, 0)
 -- Mixin(loot, BackdropTemplateMixin)
 loot:SetBackdrop({
     bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
-	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-	tileSize = 7,
-	edgeSize = 8,
-	insets = { left = 1, right = 1, top = 1, bottom = 1, },
+    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+    tileSize = 7,
+    edgeSize = 8,
+    insets = { left = 1, right = 1, top = 1, bottom = 1, },
 })
 loot:SetBackdropColor(0, 0, 0, .5)
 loot:SetBackdropBorderColor(0, 0, 0)
@@ -137,7 +136,7 @@ loot:SetMaxLines(14)
 loot:SetFading(false)
 loot:SetIndentedWordWrap(true)
 -- loot:SetFontObject(ChatFontNormal) "Fonts\\FRIZQT__.TTF"
-loot:SetFont(ML_FONT, 12)
+loot:SetFont(ML_FONT, 12, "")
 -- loot:SetFont('Fonts\\FRIZQT__.TTF', 12)
 loot:SetJustifyH("LEFT")
 loot:EnableMouse(true)
@@ -171,7 +170,7 @@ function ML_UPDATE_LOOT_OnUpdate(self, elapsed)
     if GET_IS_RUNNING() and GET_UPDATE() then
         local looted = GET_LOOTED_ITEMS()
         for n, v in ipairs(looted) do
-            loot:AddMessage(v.amount .. "x" .. v.name ..  " " .. GetCoinTextureString(v.value, 12))
+            loot:AddMessage(v.amount .. "x" .. v.name .. " " .. GetCoinTextureString(v.value, 12))
         end
         SET_LOOTED_ITEMS({})
         SET_UPDATE(false)
@@ -186,31 +185,28 @@ function ML_UPDATE_GPH_OnUpdate(self, elapsed)
             local perhour = 0
             if money > 0 then
                 perhour = (money / Timer) * 3600
-            end            
+            end
             GPH:SetText(GetCoinTextureString(perhour))
         end
         TimeSinceLastUpdateGPH = 0
     end
 end
 
-
 -- Comandos de chat
 local function slash(msg, editbox)
-	if msg == "show" then
-		ML_UI:Show()
-	end
-	if msg == "hide" then
-		ML_UI:Hide()
-	end
-	if msg == "" or msg == "help" then
-		print("USAGE\n/ml help - Muestra la ayuda\n/ml show - Muestra la herramienta\n/ml hide - Esconde la herramienta")
-	end
+    if msg == "show" then
+        ML_UI:Show()
+    elseif msg == "hide" then
+        ML_UI:Hide()
+    else
+        print("USAGE\n/ml help - Show the help\n/ml show - Show MoneyLooter\n/ml hide - Hide MoneyLooter")
+    end
 end
 SlashCmdList["ML"] = slash
 
 
 -- Registrar eventos
-reset:SetScript("OnClick", function ()
+reset:SetScript("OnClick", function()
     TimeSinceLastUpdate = 0
     TimeSinceLastUpdateGPH = 0
     Timer = 0
@@ -247,9 +243,11 @@ startstop:SetScript("OnClick", function()
     end
 end)
 
-close:SetScript("OnClick", function() ML_UI:Hide(); print("/ml show para mostrar la herramienta"); end)
+close:SetScript("OnClick", function()
+    ML_UI:Hide(); print("/ml show to show MoneyLooter");
+end)
 
-ML_UPDATE_STARTSTOP:SetScript("OnLoad", function ()
+ML_UPDATE_STARTSTOP:SetScript("OnLoad", function()
     TimeSinceLastUpdate = 0
     TimeSinceLastUpdateGPH = 0
 end)
@@ -266,3 +264,6 @@ loot:SetScript("OnHyperlinkClick", function(ML_UI, link, text)
 end)
 loot:SetScript("OnHyperlinkEnter", OnHyperlinkEnter)
 loot:SetScript("OnHyperlinkLeave", OnHyperlinkLeave)
+
+-- Oculto por defecto
+ML_UI:Hide()

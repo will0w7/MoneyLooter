@@ -1,0 +1,19 @@
+{
+    "Lua.diagnostics.globals": [
+        "SlashCmdList",
+        "SetItemRef",
+        "CreateFrame",
+        "setmetatable",
+        "GetMoney",
+        "GetItemInfo",
+        "GetUnitName",
+        "strsplit",
+        "string",
+        "GetCoinTextureString",
+        "UIParent",
+        "print",
+        "BackdropTemplateMixin",
+        "ipairs",
+        "date"
+    ]
+}

@@ -1,9 +1,10 @@
 ## Title: MoneyLooter
 ## Version: 0.21
 ## Author: Will0w7
-## Interface: 90002
+## Interface: 11403
 ## SavedVariables: MoneyLooterDB
-## Dependencies: TradeSKillMaster
+## Dependencies: Auctionator
+## OptionalDeps: TradeSKillMaster
 
 MoneyLooter.lua
 ui\UI.lua
@@ -11,4 +12,4 @@ ui\UI.lua
 const\LootedItem.lua
 const\Consts.lua
 
-ext\FastLoot.lua
+#ext\FastLoot.lua

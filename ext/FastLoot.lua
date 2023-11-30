@@ -1,3 +1,6 @@
+-- Author      : Will0w7
+-- AutoLoot --
+
 WHEN_LOOT_READY = CreateFrame("Frame")
 
 function WHEN_LOOT_READY_OnEvent()

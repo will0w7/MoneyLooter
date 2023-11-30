@@ -1,10 +1,13 @@
+-- Author      : Will0w7
+-- Constants --
+
 local VISIBLE = true
 
 local RECORD_LOOT = false
 local UPDATE = false
 local IS_RUNNING = false
 
-local MIN_PRICE = 10000000  -- (MIN_PRICE * 10000) // GOLD * 10000
+local MIN_PRICE = 0.00005 * 10000  -- (MIN_PRICE * 10000) // GOLD * 10000
 
 local RAW_MONEY = 0
 local ITEMS_MONEY = 0
