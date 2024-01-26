@@ -1,7 +1,7 @@
 ## Title: MoneyLooter
 ## Version: 0.21
 ## Author: Will0w7
-## Interface: 11403
+## Interface: 11500
 ## SavedVariables: MoneyLooterDB
 ## Dependencies: Auctionator
 ## OptionalDeps: TradeSKillMaster
