@@ -341,7 +341,6 @@ function IsScrollLootFrameVisible()
 end
 
 function SetScrollLootFrameVisible(val)
-    print("Data val: " .. tostring(val))
     if val ~= nil then
         MoneyLooterDB.ScrollLootFrameVisible = val
         if val then MoneyLooterScrollLootFrame:Show() else MoneyLooterScrollLootFrame:Hide() end

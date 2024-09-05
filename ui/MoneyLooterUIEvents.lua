@@ -76,7 +76,6 @@ MoneyLooterCloseButton:SetScript(ML_EVENTS.OnClick, function()
 end)
 
 MoneyLooterMinimizeCheck:SetScript(ML_EVENTS.OnClick, function()
-    print("UIEvents isVisible: " .. tostring(IsScrollLootFrameVisible()))
     if IsScrollLootFrameVisible() then
         SetScrollLootFrameVisible(false)
     else
