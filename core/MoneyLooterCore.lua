@@ -5,7 +5,7 @@
 local TSM_API = TSM_API
 local AUCTIONATOR_API = Auctionator and Auctionator.API and Auctionator.API.v1
 -----------------------------------------------------
-local GetItemInfo = C_Item and C_Item.GetItemInfo or GetItemInfo
+local GetItemInfo = C_Item.GetItemInfo or GetItemInfo
 -----------------------------------------------------
 
 local GetTSMPrice = {
@@ -66,56 +66,6 @@ local GetAucPrice = {
     end
 }
 
--- local function OnMoneyLoot(self, event, ...)
---     if event == ML_EVENTS.ChatMsgMoney and GetRecordLoot() then
---         local newmoney = GetMoney()
---         local change = (newmoney - GetOldMoney())
---         AddRawMoney(change)
---         AddTotalMoney(change)
---         SetOldMoney(GetMoney())
---     end
--- end
-
--- local function OnItemLoot(self, event, ...)
---     if event == ML_EVENTS.ChatMsgLoot and GetRecordLoot() then
---         local lootstring, _, _, _, p2 = ...
---         if lootstring == nil then return false end
-
---         local p0, _ = GetUnitName("player")
---         local p1, _ = strsplit('-', p2, 2)
---         if p0 ~= p1 then return false end
-
---         local itemLink = string.match(lootstring, "|%x+|Hitem:.-|h.-|h|r")
---         if itemLink == nil then return false end
-
---         local itemString = string.match(itemLink, "item[%-?%d:]+")
---         local itemName, _, quality, _, _, _, _, _, _, _, sellPrice, _, _, _, _, _, isCraftingReagent =
---             GetItemInfo(itemString)
-
---         local amount = string.match(lootstring, "x(%d+)%p") or 1
---         if amount == nil then amount = 1 end
---         if (string.len(itemName) > 30) then itemName = string.sub(itemName, 1, 30) .. "..." end
-
---         local price = 0
---         price = CalculatePriceTSM(quality, sellPrice, itemLink, isCraftingReagent)
---         if price == 0 then
---             price = CalculatePriceAuc(quality, sellPrice, itemLink, isCraftingReagent)
---         end
---         if price == 0 then
---             price = sellPrice or 0
---         end
---         price = price * amount
---         AddItemsMoney(price)
---         local itemID = GetItemInfoFromHyperlink(itemLink)
---         local i = LootedItem.new(itemID, itemLink, price, amount)
---         InsertLootedItem(i)
---         SetPriciest(price, itemID)
---         SetUpdate(true)
---         AddTotalMoney(price)
---         return true
---     end
--- end
-
 function CalculatePriceTSM(quality, sellPrice, itemLink, isCraftingReagent)
     if TSM_API == nil then return 0 end
     local tsmItemString = TSM_API.ToItemString(itemLink)
@@ -141,12 +91,6 @@ function CalculatePriceAuc(quality, sellPrice, itemLink, isCraftingReagent)
     end
     return price
 end
-
--- function OnSellAction(self, event, ...)
---     if event == ML_EVENTS.MerchantUpdate and GetRecordLoot() then
---         SetOldMoney(GetMoney())
---     end
--- end
 
 function LootEventHandler(self, event, ...)
     if not GetRecordLoot() then return end
@@ -198,17 +142,3 @@ end
 
 MoneyLooterLootEventsFrame = CreateFrame("Frame")
 MoneyLooterLootEventsFrame:SetScript(ML_EVENTS.OnEvent, LootEventHandler)
-
--- local moneyLoot = CreateFrame("Frame")
--- moneyLoot:RegisterEvent(ML_EVENTS.ChatMsgMoney)
--- moneyLoot:SetScript(ML_EVENTS.OnEvent, OnMoneyLoot)
-
--- local itemLoot = CreateFrame("Frame")
--- itemLoot:RegisterEvent(ML_EVENTS.ChatMsgLoot)
--- itemLoot:SetScript(ML_EVENTS.OnEvent, OnItemLoot)
-
--- local sellAction = CreateFrame("Frame")
--- sellAction:RegisterEvent(ML_EVENTS.PlayerMoney)
--- sellAction:RegisterEvent(ML_EVENTS.MerchantUpdate)
--- sellAction:SetScript(ML_EVENTS.OnEvent, OnSellAction)
--- MoneyLooterLootEventsFrame:SetScript(ML_EVENTS.OnEvent, LootEventHandler)

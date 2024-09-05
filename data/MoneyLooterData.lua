@@ -3,7 +3,7 @@
 
 ML_STRINGS = {
     ML_ADDON_NAME = "MoneyLooter",
-    ML_ADDON_VERSION = 0.80,
+    ML_ADDON_VERSION = 0.85,
     ML_TITLE = "|cFFd8de35MoneyLooter!|r",
     ML_FONT = "Fonts\\FRIZQT__.TTF",
     ML_TSM_STRING = "DBMarket"
@@ -55,18 +55,29 @@ DefaultMoneyLooterDB = {
     CurrentStartStopText = _G.MONEYLOOTER_L_START,
     CurrentTimeText = date("!%X", 0),
     ----------------------------------------------
-    MinPrice1 = 10000 * 1,
+    ScrollLootFrameVisible = true,
+    ----------------------------------------------
+    DBVersion = ML_STRINGS.ML_ADDON_VERSION
+}
+
+MoneyLooterDB = MoneyLooterDB
+
+DefaultMoneyLooterXDB = {
+    CurrentTSMString = "DBMarket",
+    ----------------------------------------------
+    MinPrice1 = 10000 * 1000,
     MinPrice2 = 10000 * 1000,
     MinPrice3 = 10000 * 1000,
     MinPrice4 = 10000 * 1000,
-    ----------------------------------------------
-    CurrentTSMString = "DBMarket"
 }
 
-MoneyLooterDB = table.ShallowCopy(DefaultMoneyLooterDB)
+MoneyLooterXDB = MoneyLooterXDB
+if MoneyLooterXDB == nil then
+    MoneyLooterXDB = table.deep_copy_meta(DefaultMoneyLooterXDB)
+end
 
 function IsVisible()
-    return MoneyLooterDB.Visible or true
+    return MoneyLooterDB.Visible
 end
 
 function SetVisible(val)
@@ -81,7 +92,7 @@ function SetVisible(val)
 end
 
 function GetRecordLoot()
-    return MoneyLooterDB.RecordLoot or false
+    return MoneyLooterDB.RecordLoot
 end
 
 function SetRecordLoot(val)
@@ -92,7 +103,7 @@ function SetRecordLoot(val)
 end
 
 function GetUpdate()
-    return MoneyLooterDB.Update or false
+    return MoneyLooterDB.Update
 end
 
 function SetUpdate(val)
@@ -103,7 +114,7 @@ function SetUpdate(val)
 end
 
 function IsRunning()
-    return MoneyLooterDB.Running or false
+    return MoneyLooterDB.Running
 end
 
 function SetRunning(val)
@@ -308,7 +319,7 @@ function GetMinPrice4()
 end
 
 function GetCurrentTSMString()
-    return MoneyLooterDB.CurrentTSMString or ML_STRINGS.ML_TSM_STRING
+    return MoneyLooterXDB.CurrentTSMString or ML_STRINGS.ML_TSM_STRING
 end
 
 function SetTSMString(val)
@@ -321,8 +332,20 @@ function SetTSMString(val)
         print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING_NOT_VALID .. val)
         return
     end
-    MoneyLooterDB.CurrentTSMString = val
+    MoneyLooterXDB.CurrentTSMString = val
     print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING_VALID .. val)
+end
+
+function IsScrollLootFrameVisible()
+    return MoneyLooterDB.ScrollLootFrameVisible
+end
+
+function SetScrollLootFrameVisible(val)
+    print("Data val: " .. tostring(val))
+    if val ~= nil then
+        MoneyLooterDB.ScrollLootFrameVisible = val
+        if val then MoneyLooterScrollLootFrame:Show() else MoneyLooterScrollLootFrame:Hide() end
+    end
 end
 
 function SetCurrentTimeText(val)
@@ -341,5 +364,13 @@ function CalcGPH()
 end
 
 function ResetMoneyLooterDB()
-    MoneyLooterDB = table.ShallowCopy(DefaultMoneyLooterDB)
+    MoneyLooterDB = table.deep_copy_meta(DefaultMoneyLooterDB)
+end
+
+function UpdateMLDB()
+    if MoneyLooterDB == nil or MoneyLooterDB.DBVersion == nil or MoneyLooterDB.DBVersion < DefaultMoneyLooterDB.DBVersion then
+        print(_G.MONEYLOOTER_L_NEW_DB_VERSION)
+        ResetMoneyLooterDB()
+        print(_G.MONEYLOOTER_L_DB_UPDATED)
+    end
 end

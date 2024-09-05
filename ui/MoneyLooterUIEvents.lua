@@ -2,7 +2,7 @@
 -- MoneyLooterUIEvents --
 
 ----------------------------------------------------------------------------------
-GetCoinTextureString = C_CurrencyInfo and C_CurrencyInfo.GetCoinTextureString or GetCoinTextureString
+GetCoinTextureString = C_CurrencyInfo.GetCoinTextureString or GetCoinTextureString
 ----------------------------------------------------------------------------------
 
 function PopulateData()
@@ -73,6 +73,15 @@ end)
 MoneyLooterCloseButton:SetScript(ML_EVENTS.OnClick, function()
     SetVisible(false)
     print(_G.MONEYLOOTER_L_CLOSE);
+end)
+
+MoneyLooterMinimizeCheck:SetScript(ML_EVENTS.OnClick, function()
+    print("UIEvents isVisible: " .. tostring(IsScrollLootFrameVisible()))
+    if IsScrollLootFrameVisible() then
+        SetScrollLootFrameVisible(false)
+    else
+        SetScrollLootFrameVisible(true)
+    end
 end)
 
 MoneyLooterPriciestFS:SetScript(ML_EVENTS.OnEnter, function()
@@ -162,9 +171,10 @@ watcher:RegisterEvent(ML_EVENTS.AddonLoaded)
 
 function WatcherOnEvent(self, event, arg1)
     if event == ML_EVENTS.AddonLoaded and arg1 == ML_STRINGS.ML_ADDON_NAME then
+        print(_G.MONEYLOOTER_L_WELCOME)
+        UpdateMLDB()
         PopulateData()
         PopulateLoot()
-        print(_G.MONEYLOOTER_L_WELCOME)
         watcher:UnregisterEvent(ML_EVENTS.AddonLoaded)
     end
 end

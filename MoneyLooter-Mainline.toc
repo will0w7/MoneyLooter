@@ -1,9 +1,10 @@
 ## Title: MoneyLooter
-## Version: 0.80
+## Version: 0.85
 ## Author: Will0w7
 ## Interface: 110002
 ## Notes: A lightweight and fast addon to see how much gold you earn on your farms
 ## Notes-esES: Un addon ligero y rápido para ver cuanto oro ganas en tus farmeos
+## SavedVariables: MoneyLooterXDB
 ## SavedVariablesPerCharacter: MoneyLooterDB
 ## OptionalDeps: TradeSkillMaster, Auctionator
 ## IconTexture: Interface\Icons\inv_misc_coin_02

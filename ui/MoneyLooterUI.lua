@@ -2,7 +2,7 @@
 -- MoneyLooterUI --
 
 ----------------------------------------------------------------------------------
-GetCoinTextureString = C_CurrencyInfo and C_CurrencyInfo.GetCoinTextureString or GetCoinTextureString
+GetCoinTextureString = C_CurrencyInfo.GetCoinTextureString or GetCoinTextureString
 ----------------------------------------------------------------------------------
 
 MoneyLooterMainUIFrame = CreateFrame("Frame", ML_STRINGS.ML_ADDON_NAME, UIParent,
@@ -24,12 +24,16 @@ MoneyLooterMainUIFrame:SetMovable(true)
 MoneyLooterMainUIFrame:RegisterForDrag("LeftButton")
 
 MoneyLooterCloseButton = CreateFrame("Button", "Close", MoneyLooterMainUIFrame, "UIPanelCloseButton")
-MoneyLooterCloseButton:SetPoint("TOPRIGHT", MoneyLooterMainUIFrame, "TOPRIGHT")
+MoneyLooterCloseButton:SetPoint("TOPLEFT", MoneyLooterMainUIFrame, "TOPLEFT")
+
+MoneyLooterMinimizeCheck = CreateFrame("CheckButton", "Minimize", MoneyLooterMainUIFrame, "UICheckButtonTemplate")
+MoneyLooterMinimizeCheck:SetPoint("TOPRIGHT", MoneyLooterMainUIFrame, "TOPRIGHT")
+MoneyLooterMinimizeCheck:SetChecked(true)
 
 MoneyLooterStartButton = CreateFrame("Button", "Start", MoneyLooterMainUIFrame, "UIPanelButtonTemplate")
 MoneyLooterStartButton:SetPoint("BOTTOMLEFT", MoneyLooterMainUIFrame, 5, 5)
 MoneyLooterStartButton:SetSize(100, 20)
-MoneyLooterStartButton:SetText(GetCurrentStartStopText())
+MoneyLooterStartButton:SetText(_G.MONEYLOOTER_L_START)
 
 MoneyLooterResetButton = CreateFrame("Button", "Reset", MoneyLooterMainUIFrame, "UIPanelButtonTemplate")
 MoneyLooterResetButton:SetPoint("BOTTOMRIGHT", MoneyLooterMainUIFrame, -5, 5)
@@ -55,7 +59,7 @@ MoneyLooterTimeFS:SetJustifyV("MIDDLE")
 MoneyLooterTimeFS:SetJustifyH("CENTER")
 MoneyLooterTimeFS:SetPoint("TOPRIGHT", MoneyLooterMainUIFrame, -8, -40)
 MoneyLooterTimeFS:SetFont(ML_STRINGS.ML_FONT, 12, "")
-MoneyLooterTimeFS:SetText(date("!%X", GetTimer()))
+MoneyLooterTimeFS:SetText(date("!%X", 0))
 
 local MoneyLooterRawGoldLabelFS = MoneyLooterMainUIFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 MoneyLooterRawGoldLabelFS:SetJustifyV("MIDDLE")
@@ -69,7 +73,7 @@ MoneyLooterRawGoldFS:SetJustifyV("MIDDLE")
 MoneyLooterRawGoldFS:SetJustifyH("CENTER")
 MoneyLooterRawGoldFS:SetPoint("TOPRIGHT", MoneyLooterMainUIFrame, -8, -60)
 MoneyLooterRawGoldFS:SetFont(ML_STRINGS.ML_FONT, 12, "")
-MoneyLooterRawGoldFS:SetText(GetCoinTextureString(GetRawGold()))
+MoneyLooterRawGoldFS:SetText(GetCoinTextureString(0))
 
 local MoneyLooterItemsGoldLabelFS = MoneyLooterMainUIFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 MoneyLooterItemsGoldLabelFS:SetJustifyV("MIDDLE")
@@ -83,7 +87,7 @@ MoneyLooterItemsGoldFS:SetJustifyV("MIDDLE")
 MoneyLooterItemsGoldFS:SetJustifyH("CENTER")
 MoneyLooterItemsGoldFS:SetPoint("TOPRIGHT", MoneyLooterMainUIFrame, -8, -80)
 MoneyLooterItemsGoldFS:SetFont(ML_STRINGS.ML_FONT, 12, "")
-MoneyLooterItemsGoldFS:SetText(GetCoinTextureString(GetItemsMoney()))
+MoneyLooterItemsGoldFS:SetText(GetCoinTextureString(0))
 
 local MoneyLooterGPHLabelFS = MoneyLooterMainUIFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 MoneyLooterGPHLabelFS:SetJustifyV("MIDDLE")
@@ -97,7 +101,7 @@ MoneyLooterGPHFS:SetJustifyV("MIDDLE")
 MoneyLooterGPHFS:SetJustifyH("CENTER")
 MoneyLooterGPHFS:SetPoint("TOPRIGHT", MoneyLooterMainUIFrame, -8, -100)
 MoneyLooterGPHFS:SetFont(ML_STRINGS.ML_FONT, 12, "")
-MoneyLooterGPHFS:SetText(GetCoinTextureString(CalcGPH()))
+MoneyLooterGPHFS:SetText(GetCoinTextureString(0))
 
 local MoneyLooterPriciestLabelFS = MoneyLooterMainUIFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 MoneyLooterPriciestLabelFS:SetJustifyV("MIDDLE")
@@ -111,7 +115,7 @@ MoneyLooterPriciestFS:SetJustifyV("MIDDLE")
 MoneyLooterPriciestFS:SetJustifyH("CENTER")
 MoneyLooterPriciestFS:SetPoint("TOPRIGHT", MoneyLooterMainUIFrame, -8, -120)
 MoneyLooterPriciestFS:SetFont(ML_STRINGS.ML_FONT, 12, "")
-MoneyLooterPriciestFS:SetText(GetCoinTextureString(GetPriciest()))
+MoneyLooterPriciestFS:SetText(GetCoinTextureString(0))
 
 MoneyLooterScrollLootFrame = CreateFrame("ScrollingMessageFrame", "LootedItems", MoneyLooterMainUIFrame,
     BackdropTemplateMixin and "BackdropTemplate")
