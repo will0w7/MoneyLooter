@@ -1,0 +1,178 @@
+-- Author      : Will0w7
+-- UIEvents --
+
+----------------------------------------------------------------------------------
+-- MoneyLooterEvents = MoneyLooterEvents
+-- MoneyLooterStrings = MoneyLooterStrings
+----------------------------------------------------------------------------------
+-- MoneyLooterMainUIFrame = MoneyLooterMainUIFrame
+-- MoneyLooterStartButton = MoneyLooterStartButton
+-- MoneyLooterResetButton = MoneyLooterResetButton
+-- MoneyLooterTimeFS = MoneyLooterTimeFS
+-- MoneyLooterRawGoldFS = MoneyLooterRawGoldFS
+-- MoneyLooterItemsGoldFS = MoneyLooterItemsGoldFS
+-- MoneyLooterGPHFS = MoneyLooterGPHFS
+-- MoneyLooterPriciestFS = MoneyLooterPriciestFS
+-- MoneyLooterCloseButton = MoneyLooterCloseButton
+----------------------------------------------------------------------------------
+-- CreateFrame = CreateFrame
+-- GetCoinTextureString = C_CurrencyInfo.GetCoinTextureString or GetCoinTextureString
+-- GetMoney = GetMoney
+----------------------------------------------------------------------------------
+
+ML_UPDATE_STARTSTOP = CreateFrame("Frame")
+ML_UPDATE_LOOT = CreateFrame("Frame")
+ML_UPDATE_GPH = CreateFrame("Frame")
+
+function PopulateData()
+    MoneyLooterStartButton:SetText(GetCurrentStartStopText())
+    MoneyLooterResetButton:SetText(_G.MONEYLOOTER_L_RESET)
+    MoneyLooterTimeFS:SetText(date("!%X", GetTimer()))
+    MoneyLooterRawGoldFS:SetText(GetCoinTextureString(GetRawMoney()))
+    MoneyLooterItemsGoldFS:SetText(GetCoinTextureString(GetItemsMoney()))
+    MoneyLooterGPHFS:SetText(GetCoinTextureString(CalcGPH()))
+    MoneyLooterPriciestFS:SetText(GetCoinTextureString(GetPriciest()))
+    if GetVisible() and not MoneyLooterMainUIFrame:IsVisible() then MoneyLooterMainUIFrame:Show() else MoneyLooterMainUIFrame:Hide() end
+end
+
+function PopulateLoot()
+    if GetListLootedItemsCount() > 0 then
+        local lootedItems = GetListLootedItems()
+        for _, lootedItem in ipairs(lootedItems) do
+            MoneyLooterScrollLootFrame:AddMessage(lootedItem.amount ..
+                "x" .. createTextureFromItemID(lootedItem.id) .. lootedItem.name .. " " .. GetCoinTextureString(lootedItem.value, 12))
+        end
+    end
+end
+
+function MLStartStopOnUpdate(self, elapsed)
+    AddTimeSinceLastUpdate(elapsed)
+    if GetTimeSinceLastUpdate() > 1.0 then
+        if GetIsRunning() then
+            MoneyLooterTimeFS:SetText(SetCurrentTimeText(date("!%X", GetTimer())))
+            AddOneToTimer()
+        end
+        SetTimeSinceLastUpdate(0)
+    end
+    if GetIsRunning() then
+        MoneyLooterRawGoldFS:SetText(GetCoinTextureString(GetRawMoney()))
+        MoneyLooterItemsGoldFS:SetText(GetCoinTextureString(GetItemsMoney()))
+    end
+end
+
+function MLLootOnUpdate(self, elapsed)
+    if GetIsRunning() and GetUpdate() then
+        local lootedItems = GetLootedItems()
+        for _, lootedItem in ipairs(lootedItems) do
+            MoneyLooterScrollLootFrame:AddMessage(lootedItem.amount ..
+                "x" .. createTextureFromItemID(lootedItem.id) .. lootedItem.name .. " " .. GetCoinTextureString(lootedItem.value, 12))
+        end
+        MoneyLooterPriciestFS:SetText(GetCoinTextureString(GetPriciest()))
+        SetLootedItems({})
+        SetUpdate(false)
+    end
+end
+
+function createTextureFromItemID(itemId)
+    return ("|T%s:0|t"):format(tostring(C_Item.GetItemIconByID(itemId)));
+end
+
+function MLGPHOnUpdate(self, elapsed)
+    AddTimeSinceLastUpdateGPH(elapsed)
+    if GetTimeSinceLastUpdateGPH() > 2.0 then
+        if GetIsRunning() then
+            MoneyLooterGPHFS:SetText(GetCoinTextureString(CalcGPH()))
+        end
+        SetTimeSinceLastUpdateGPH(0)
+    end
+end
+
+MoneyLooterResetButton:SetScript(MoneyLooterEvents.OnClick, function()
+    ResetMoneyLooterDB()
+    MoneyLooterStartButton:SetText(GetCurrentStartStopText())
+    MoneyLooterTimeFS:SetText(SetCurrentTimeText(date("!%X", 0)))
+    MoneyLooterRawGoldFS:SetText(GetCoinTextureString(0))
+    MoneyLooterItemsGoldFS:SetText(GetCoinTextureString(0))
+    MoneyLooterGPHFS:SetText(GetCoinTextureString(0))
+    MoneyLooterPriciestFS:SetText(GetCoinTextureString(0))
+    SetOldMoney(GetMoney())
+    MoneyLooterScrollLootFrame:Clear()
+end)
+
+MoneyLooterStartButton:SetScript(MoneyLooterEvents.OnClick, function()
+    if GetIsRunning() then
+        SetIsRunning(false)
+        MoneyLooterStartButton:SetText(SetCurrentStartStopText(_G.MONEYLOOTER_L_CONTINUE))
+        SetRecordLoot(false)
+    else
+        SetIsRunning(true)
+        SetOldMoney(GetMoney())
+        MoneyLooterStartButton:SetText(SetCurrentStartStopText(_G.MONEYLOOTER_L_PAUSE))
+        SetRecordLoot(true)
+    end
+end)
+
+MoneyLooterCloseButton:SetScript(MoneyLooterEvents.OnClick, function()
+    MoneyLooterMainUIFrame:Hide();
+    print(_G.MONEYLOOTER_L_CLOSE);
+end)
+
+ML_UPDATE_STARTSTOP:SetScript(MoneyLooterEvents.OnLoad, function()
+    SetTimeSinceLastUpdate(0)
+    SetTimeSinceLastUpdateGPH(0)
+end)
+
+MoneyLooterPriciestFS:SetScript(MoneyLooterEvents.OnEnter, function()
+    if GetPriciestID() == nil then return end
+    GameTooltip:SetOwner(MoneyLooterPriciestFS, "ANCHOR_BOTTOMRIGHT")
+    GameTooltip:SetItemByID(GetPriciestID())
+    GameTooltip:Show()
+end)
+
+MoneyLooterPriciestFS:SetScript(MoneyLooterEvents.OnLeave, function()
+    GameTooltip:Hide()
+end)
+
+MoneyLooterMainUIFrame:SetScript(MoneyLooterEvents.OnDragStart, MoneyLooterMainUIFrame.StartMoving)
+MoneyLooterMainUIFrame:SetScript(MoneyLooterEvents.OnDragStop, MoneyLooterMainUIFrame.StopMovingOrSizing)
+MoneyLooterMainUIFrame:SetScript(MoneyLooterEvents.OnHide, MoneyLooterMainUIFrame.StopMovingOrSizing)
+ML_UPDATE_LOOT:SetScript(MoneyLooterEvents.OnUpdate, MLLootOnUpdate)
+ML_UPDATE_STARTSTOP:SetScript(MoneyLooterEvents.OnUpdate, MLStartStopOnUpdate)
+ML_UPDATE_GPH:SetScript(MoneyLooterEvents.OnUpdate, MLGPHOnUpdate)
+
+MoneyLooterScrollLootFrame:SetScript(MoneyLooterEvents.OnHyperLinkClick, function(_, link, text)
+    SetItemRef(link, text);
+end)
+MoneyLooterScrollLootFrame:SetScript(MoneyLooterEvents.OnHyperLinkEnter, OnHyperlinkEnter)
+MoneyLooterScrollLootFrame:SetScript(MoneyLooterEvents.OnHyperLinkLeave, OnHyperlinkLeave)
+
+SLASH_MONEYLOOTER1 = "/ml"
+SLASH_MONEYLOOTER2 = "/moneylooter"
+
+local function slash(msg, _)
+    if msg == "show" or (msg == "" and not MoneyLooterMainUIFrame:IsVisible()) then
+        MoneyLooterMainUIFrame:Show()
+    elseif msg == "hide" or (msg == "" and MoneyLooterMainUIFrame:IsVisible()) then
+        MoneyLooterMainUIFrame:Hide()
+    elseif msg == "info" then
+        print(_G.INFO)
+    else
+        print(_G.USAGE .. ML_STRINGS.ML_ADDON_VERSION)
+    end
+end
+SlashCmdList["MONEYLOOTER"] = slash
+
+local watcher = CreateFrame("Frame")
+watcher:RegisterEvent(MoneyLooterEvents.AddonLoaded)
+watcher:RegisterEvent(MoneyLooterEvents.VariablesLoaded)
+watcher:RegisterEvent(MoneyLooterEvents.PlayerLogout)
+
+function WatcherOnEvent(self, event, arg1)
+    if event == MoneyLooterEvents.AddonLoaded and arg1 == ML_STRINGS.ML_ADDON_NAME then
+        PopulateData()
+        PopulateLoot()
+        print(_G.MONEYLOOTER_L_WELCOME)
+    end
+end
+
+watcher:SetScript(MoneyLooterEvents.OnEvent, WatcherOnEvent)

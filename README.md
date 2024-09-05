@@ -1,0 +1,2 @@
+# MoneyLooter
+ MoneyLooter, WOW Addon
