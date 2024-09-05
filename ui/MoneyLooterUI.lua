@@ -2,7 +2,7 @@
 -- MoneyLooterUI --
 
 ----------------------------------------------------------------------------------
-GetCoinTextureString = C_CurrencyInfo.GetCoinTextureString or GetCoinTextureString
+GetCoinTextureString = C_CurrencyInfo and C_CurrencyInfo.GetCoinTextureString or GetCoinTextureString
 ----------------------------------------------------------------------------------
 
 MoneyLooterMainUIFrame = CreateFrame("Frame", ML_STRINGS.ML_ADDON_NAME, UIParent,
@@ -69,7 +69,7 @@ MoneyLooterRawGoldFS:SetJustifyV("MIDDLE")
 MoneyLooterRawGoldFS:SetJustifyH("CENTER")
 MoneyLooterRawGoldFS:SetPoint("TOPRIGHT", MoneyLooterMainUIFrame, -8, -60)
 MoneyLooterRawGoldFS:SetFont(ML_STRINGS.ML_FONT, 12, "")
-MoneyLooterRawGoldFS:SetText(GetCoinTextureString(GetRawMoney()))
+MoneyLooterRawGoldFS:SetText(GetCoinTextureString(GetRawGold()))
 
 local MoneyLooterItemsGoldLabelFS = MoneyLooterMainUIFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 MoneyLooterItemsGoldLabelFS:SetJustifyV("MIDDLE")

@@ -1,9 +1,9 @@
 -- Author      : Will0w7
--- Data --
+-- MoneyLooterData --
 
 ML_STRINGS = {
     ML_ADDON_NAME = "MoneyLooter",
-    ML_ADDON_VERSION = 0.75,
+    ML_ADDON_VERSION = 0.80,
     ML_TITLE = "|cFFd8de35MoneyLooter!|r",
     ML_FONT = "Fonts\\FRIZQT__.TTF",
     ML_TSM_STRING = "DBMarket"
@@ -37,8 +37,8 @@ DefaultMoneyLooterDB = {
     Visible = true,
     RecordLoot = false,
     Update = false,
-    IsRunning = false,
-    RawMoney = 0,
+    Running = false,
+    RawGold = 0,
     ItemsMoney = 0,
     TotalMoney = 0,
     Priciest = 0,
@@ -65,7 +65,7 @@ DefaultMoneyLooterDB = {
 
 MoneyLooterDB = table.ShallowCopy(DefaultMoneyLooterDB)
 
-function GetVisible()
+function IsVisible()
     return MoneyLooterDB.Visible or true
 end
 
@@ -102,31 +102,31 @@ function SetUpdate(val)
     end
 end
 
-function GetIsRunning()
-    return MoneyLooterDB.IsRunning or false
+function IsRunning()
+    return MoneyLooterDB.Running or false
 end
 
-function SetIsRunning(val)
-    MoneyLooterDB.IsRunning = false
+function SetRunning(val)
+    MoneyLooterDB.Running = false
     if val ~= nil then
-        MoneyLooterDB.IsRunning = val
+        MoneyLooterDB.Running = val
     end
 end
 
-function GetRawMoney()
-    return MoneyLooterDB.RawMoney or 0
+function GetRawGold()
+    return MoneyLooterDB.RawGold or 0
 end
 
-function SetRawMoney(val)
-    MoneyLooterDB.RawMoney = 0
+function SetRawGold(val)
+    MoneyLooterDB.RawGold = 0
     if val ~= nil then
-        MoneyLooterDB.RawMoney = val
+        MoneyLooterDB.RawGold = val
     end
 end
 
-function AddRawMoney(val)
+function AddRawGold(val)
     if val ~= nil then
-        MoneyLooterDB.RawMoney = MoneyLooterDB.RawMoney + val
+        MoneyLooterDB.RawGold = MoneyLooterDB.RawGold + val
     else
         return false
     end
@@ -249,7 +249,9 @@ function GetTimeSinceLastUpdate()
 end
 
 function AddTimeSinceLastUpdate(val)
-    MoneyLooterDB.TimeSinceLastUpdate = (MoneyLooterDB.TimeSinceLastUpdate or 0) + val
+    local totalTime = (MoneyLooterDB.TimeSinceLastUpdate or 0) + val
+    MoneyLooterDB.TimeSinceLastUpdate = totalTime
+    return totalTime
 end
 
 function SetTimeSinceLastUpdate(val)
@@ -263,7 +265,9 @@ function GetTimeSinceLastUpdateGPH()
 end
 
 function AddTimeSinceLastUpdateGPH(val)
-    MoneyLooterDB.TimeSinceLastUpdateGPH = (MoneyLooterDB.TimeSinceLastUpdateGPH or 0) + val
+    local totalTime = (MoneyLooterDB.TimeSinceLastUpdateGPH or 0) + val
+    MoneyLooterDB.TimeSinceLastUpdateGPH = totalTime
+    return totalTime
 end
 
 function SetTimeSinceLastUpdateGPH(val)

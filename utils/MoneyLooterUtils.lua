@@ -1,5 +1,5 @@
 -- Author      : Will0w7
--- Utils --
+-- MoneyLooterUtils --
 
 -- https://stackoverflow.com/questions/640642/how-do-you-copy-a-lua-table-by-value
 function table.ShallowCopy(t)

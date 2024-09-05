@@ -1,5 +1,5 @@
 -- Author      : Will0w7
--- Data --
+-- MoneyLooterLootedItem --
 
 LootedItem = {}
 local LootedItem_metatab = {}
