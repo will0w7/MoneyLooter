@@ -311,7 +311,7 @@ function SetTSMString(val)
         print(_G.MONEYLOOTER_L_TSM_NOT_AVAILABLE)
         return
     end
-    if !TSM_API.IsCustomPriceValid(val) then
+    if ! TSM_API.IsCustomPriceValid(val) then
         print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING_NOT_VALID .. val)
         return
     end

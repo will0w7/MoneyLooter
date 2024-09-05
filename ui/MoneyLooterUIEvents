@@ -32,7 +32,8 @@ function PopulateData()
     MoneyLooterItemsGoldFS:SetText(GetCoinTextureString(GetItemsMoney()))
     MoneyLooterGPHFS:SetText(GetCoinTextureString(CalcGPH()))
     MoneyLooterPriciestFS:SetText(GetCoinTextureString(GetPriciest()))
-    if GetVisible() and not MoneyLooterMainUIFrame:IsVisible() then MoneyLooterMainUIFrame:Show() else MoneyLooterMainUIFrame:Hide() end
+    if GetVisible() and not MoneyLooterMainUIFrame:IsVisible() then MoneyLooterMainUIFrame:Show() else
+        MoneyLooterMainUIFrame:Hide() end
 end
 
 function PopulateLoot()
@@ -40,7 +41,9 @@ function PopulateLoot()
         local lootedItems = GetListLootedItems()
         for _, lootedItem in ipairs(lootedItems) do
             MoneyLooterScrollLootFrame:AddMessage(lootedItem.amount ..
-                "x" .. createTextureFromItemID(lootedItem.id) .. lootedItem.name .. " " .. GetCoinTextureString(lootedItem.value, 12))
+                "x" ..
+                createTextureFromItemID(lootedItem.id) ..
+                lootedItem.name .. " " .. GetCoinTextureString(lootedItem.value, 12))
         end
     end
 end
@@ -65,7 +68,9 @@ function MLLootOnUpdate(self, elapsed)
         local lootedItems = GetLootedItems()
         for _, lootedItem in ipairs(lootedItems) do
             MoneyLooterScrollLootFrame:AddMessage(lootedItem.amount ..
-                "x" .. createTextureFromItemID(lootedItem.id) .. lootedItem.name .. " " .. GetCoinTextureString(lootedItem.value, 12))
+                "x" ..
+                createTextureFromItemID(lootedItem.id) ..
+                lootedItem.name .. " " .. GetCoinTextureString(lootedItem.value, 12))
         end
         MoneyLooterPriciestFS:SetText(GetCoinTextureString(GetPriciest()))
         SetLootedItems({})
