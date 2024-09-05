@@ -1,19 +1,15 @@
 -- Author      : Will0w7
 -- Data --
 
----------------------------------------
--- table.shallow_copy = table.shallow_copy
----------------------------------------
-
 ML_STRINGS = {
     ML_ADDON_NAME = "MoneyLooter",
-    ML_ADDON_VERSION = 0.74,
+    ML_ADDON_VERSION = 0.75,
     ML_TITLE = "|cFFd8de35MoneyLooter!|r",
     ML_FONT = "Fonts\\FRIZQT__.TTF",
     ML_TSM_STRING = "DBMarket"
 }
 
-MoneyLooterEvents = {
+ML_EVENTS = {
     OnEvent = "OnEvent",
     -------------------------------------
     OnDragStart = "OnDragStart",
@@ -27,6 +23,7 @@ MoneyLooterEvents = {
     OnHyperLinkEnter = "OnHyperlinkEnter",
     OnHyperLinkLeave = "OnHyperlinkLeave",
     OnClick = "OnClick",
+    --------------------------------------
     ChatMsgMoney = "CHAT_MSG_MONEY",
     ChatMsgLoot = "CHAT_MSG_LOOT",
     PlayerMoney = "PLAYER_MONEY",
@@ -66,16 +63,20 @@ DefaultMoneyLooterDB = {
     CurrentTSMString = "DBMarket"
 }
 
-MoneyLooterDB = table.shallow_copy(DefaultMoneyLooterDB)
+MoneyLooterDB = table.ShallowCopy(DefaultMoneyLooterDB)
 
 function GetVisible()
     return MoneyLooterDB.Visible or true
 end
 
 function SetVisible(val)
-    MoneyLooterDB.Visible = true
     if val ~= nil then
         MoneyLooterDB.Visible = val
+        if val then
+            MoneyLooterMainUIFrame:Show()
+        else
+            MoneyLooterMainUIFrame:Hide()
+        end
     end
 end
 
@@ -199,9 +200,11 @@ function AddListLootedItems(val)
     if MoneyLooterDB.ListLootedItems == nil then MoneyLooterDB.ListLootedItems = {} end
     if val ~= nil then
         table.insert(MoneyLooterDB.ListLootedItems, val)
+        MoneyLooterDB.ListLootedItemsCount = (MoneyLooterDB.ListLootedItemsCount or 0) + 1
     end
     if MoneyLooterDB.ListLootedItemsCount > 20 then
         table.remove(MoneyLooterDB.ListLootedItems, 1)
+        MoneyLooterDB.ListLootedItemsCount = MoneyLooterDB.ListLootedItemsCount - 1
     end
 end
 
@@ -210,7 +213,6 @@ function InsertLootedItem(val)
     if val ~= nil then
         table.insert(MoneyLooterDB.LootedItems, val)
         AddListLootedItems(val)
-        MoneyLooterDB.ListLootedItemsCount = (MoneyLooterDB.ListLootedItemsCount or 0) + 1
     end
 end
 
@@ -311,7 +313,7 @@ function SetTSMString(val)
         print(_G.MONEYLOOTER_L_TSM_NOT_AVAILABLE)
         return
     end
-    if ! TSM_API.IsCustomPriceValid(val) then
+    if not TSM_API.IsCustomPriceValid(val) then
         print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING_NOT_VALID .. val)
         return
     end
@@ -335,5 +337,5 @@ function CalcGPH()
 end
 
 function ResetMoneyLooterDB()
-    MoneyLooterDB = table.shallow_copy(DefaultMoneyLooterDB)
+    MoneyLooterDB = table.ShallowCopy(DefaultMoneyLooterDB)
 end

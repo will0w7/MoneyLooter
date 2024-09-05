@@ -1,3 +1,6 @@
+-- Author      : Will0w7
+-- esES --
+
 MONEYLOOTER_LOCALES.esES = function()
   L = {}
   L["START"] = "Comenzar"
@@ -11,12 +14,12 @@ MONEYLOOTER_LOCALES.esES = function()
   L["PRICIEST_LABEL"] = "Más valor:"
   ---------------------------------------------------------------------------------------------------------
   L["USAGE"] = [[====== |cFFd8de35Información de uso de Money Looter|r ======
-  |cFF36e8e6/ml|r: \tAlterna entre mostrar y ocultar
-  |cFF36e8e6/ml|r |cFFf1f488help|r: \tMuestra la ayuda
-  |cFF36e8e6/ml|r |cFFf1f488show|r: \tMuestra MoneyLooter
-  |cFF36e8e6/ml|r |cFFf1f488hide|r: \tOculta MoneyLooter
-  |cFF36e8e6/ml|r |cFFf1f488info|r: \tMuestra información sobre el addon
-  |cFF36e8e6/ml|r |cFFf1f488custom "Custom TSM String"|r: \tSets a custom TSM string to be used in the price calc.
+  |cFF36e8e6/ml|r: Alterna entre mostrar y ocultar
+  |cFF36e8e6/ml|r |cFFf1f488help|r: Muestra la ayuda
+  |cFF36e8e6/ml|r |cFFf1f488show|r: Muestra MoneyLooter
+  |cFF36e8e6/ml|r |cFFf1f488hide|r: Oculta MoneyLooter
+  |cFF36e8e6/ml|r |cFFf1f488info|r: Muestra información sobre el addon
+  |cFF36e8e6/ml|r |cFFf1f488custom "Custom TSM String"|r: Sets a custom TSM string to be used in the price calc.
     Example: /ml custom dbmarket
   |cFF36e8e6Versión del addon:|r ]]
   L["WELCOME"] =

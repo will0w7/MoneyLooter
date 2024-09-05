@@ -2,11 +2,7 @@
 -- MoneyLooterUI --
 
 ----------------------------------------------------------------------------------
--- MoneyLooterEvents = MoneyLooterEvents
--- MoneyLooterStrings = MoneyLooterStrings
-----------------------------------------------------------------------------------
--- GetCoinTextureString = C_CurrencyInfo.GetCoinTextureString or GetCoinTextureString
--- CreateFrame = CreateFrame
+GetCoinTextureString = C_CurrencyInfo.GetCoinTextureString or GetCoinTextureString
 ----------------------------------------------------------------------------------
 
 MoneyLooterMainUIFrame = CreateFrame("Frame", ML_STRINGS.ML_ADDON_NAME, UIParent,
@@ -40,12 +36,12 @@ MoneyLooterResetButton:SetPoint("BOTTOMRIGHT", MoneyLooterMainUIFrame, -5, 5)
 MoneyLooterResetButton:SetSize(50, 20)
 MoneyLooterResetButton:SetText(_G.MONEYLOOTER_L_RESET)
 
-MoneyLooterTitleFS = MoneyLooterMainUIFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+local MoneyLooterTitleFS = MoneyLooterMainUIFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
 MoneyLooterTitleFS:SetJustifyV("MIDDLE")
 MoneyLooterTitleFS:SetJustifyH("CENTER")
 MoneyLooterTitleFS:SetPoint("TOP", MoneyLooterMainUIFrame, -3, -8)
 MoneyLooterTitleFS:SetFont(ML_STRINGS.ML_FONT, 17, "")
-MoneyLooterTitleFS:SetText(ML_STRINGS.TITLE)
+MoneyLooterTitleFS:SetText(ML_STRINGS.ML_TITLE)
 
 local MoneyLooterTimeLabelFS = MoneyLooterMainUIFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 MoneyLooterTimeLabelFS:SetJustifyV("MIDDLE")

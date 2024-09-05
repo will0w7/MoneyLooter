@@ -1,26 +1,15 @@
 -- Author      : Will0w7
 -- MoneyLooter --
 
----------------------------------------------------------
+-----------------------------------------------------
 local TSM_API = TSM_API
----------------------------------------------------------
 local AUCTIONATOR_API = Auctionator.API.v1
----------------------------------------------------------
--- MoneyLooterEvents = MoneyLooterEvents
--- MoneyLooterStrings = MoneyLooterStrings
----------------------------------------------------------
--- local GetItemInfo = C_Item.GetItemInfo or GetItemInfo
--- local GetItemInfoFromHyperlink = GetItemInfoFromHyperlink
--- local GetMoney = GetMoney
--- local GetUnitName = GetUnitName
--- local CreateFrame = CreateFrame
----------------------------------------------------------
-SetOldMoney(GetMoney())
-local amount = 0
----------------------------------------------------------
+-----------------------------------------------------
+local GetItemInfo = C_Item.GetItemInfo or GetItemInfo
+-----------------------------------------------------
 
 local function OnMoneyLoot(self, event, ...)
-    if event == MoneyLooterEvents.ChatMsgMoney and GetRecordLoot() == true then
+    if event == ML_EVENTS.ChatMsgMoney and GetRecordLoot() == true then
         local newmoney = GetMoney()
         local change = (newmoney - GetOldMoney())
         AddRawMoney(change)
@@ -30,7 +19,7 @@ local function OnMoneyLoot(self, event, ...)
 end
 
 local function OnItemLoot(self, event, ...)
-    if event == MoneyLooterEvents.ChatMsgLoot and GetRecordLoot() then
+    if event == ML_EVENTS.ChatMsgLoot and GetRecordLoot() then
         local lootstring, _, _, _, p2 = ...
         local p0, _ = GetUnitName("player")
         local p1, _ = strsplit('-', p2, 2)
@@ -45,7 +34,7 @@ local function OnItemLoot(self, event, ...)
         local itemName, _, quality, _, _, _, _, _, _, _, sellPrice, _, _, _, _, _, isCraftingReagent =
             GetItemInfo(itemString)
 
-        amount = string.match(lootstring, "x(%d+)%p") or 1
+        local amount = string.match(lootstring, "x(%d+)%p") or 1
         if amount == nil then amount = 1 end
         if (string.len(itemName) > 30) then itemName = string.sub(itemName, 1, 30) .. "..." end
 
@@ -116,22 +105,22 @@ function CalculatePriceAuc(quality, sellPrice, itemLink, isCraftingReagent)
             return sellPrice
         end,
         [1] = function()
-            local auc = AUCTIONATOR_API.GetAuctionPriceByItemLink(_G.AddonName, itemLink)
+            local auc = AUCTIONATOR_API.GetAuctionPriceByItemLink(ML_STRINGS.ML_ADDON_NAME, itemLink)
             if auc ~= nil and (auc >= GetMinPrice1() or isCraftingReagent) then price = auc end
             return price
         end,
         [2] = function()
-            local auc = AUCTIONATOR_API.GetAuctionPriceByItemLink(_G.AddonName, itemLink)
+            local auc = AUCTIONATOR_API.GetAuctionPriceByItemLink(ML_STRINGS.ML_ADDON_NAME, itemLink)
             if auc ~= nil and (auc >= GetMinPrice2() or isCraftingReagent) then price = auc end
             return price
         end,
         [3] = function()
-            local auc = AUCTIONATOR_API.GetAuctionPriceByItemLink(_G.AddonName, itemLink)
+            local auc = AUCTIONATOR_API.GetAuctionPriceByItemLink(ML_STRINGS.ML_ADDON_NAME, itemLink)
             if auc ~= nil and (auc >= GetMinPrice3() or isCraftingReagent) then price = auc end
             return price
         end,
         [4] = function()
-            local auc = AUCTIONATOR_API.GetAuctionPriceByItemLink(_G.AddonName, itemLink)
+            local auc = AUCTIONATOR_API.GetAuctionPriceByItemLink(ML_STRINGS.ML_ADDON_NAME, itemLink)
             if auc ~= nil and (auc >= GetMinPrice4() or isCraftingReagent) then price = auc end
             return price
         end,
@@ -145,20 +134,20 @@ function CalculatePriceAuc(quality, sellPrice, itemLink, isCraftingReagent)
 end
 
 function OnSellAction(self, event, ...)
-    if event == MoneyLooterEvents.MerchantUpdate and GetRecordLoot() == true then
+    if event == ML_EVENTS.MerchantUpdate and GetRecordLoot() == true then
         SetOldMoney(GetMoney())
     end
 end
 
 local moneyLoot = CreateFrame("Frame")
-moneyLoot:RegisterEvent(MoneyLooterEvents.ChatMsgMoney)
-moneyLoot:SetScript(MoneyLooterEvents.OnEvent, OnMoneyLoot)
+moneyLoot:RegisterEvent(ML_EVENTS.ChatMsgMoney)
+moneyLoot:SetScript(ML_EVENTS.OnEvent, OnMoneyLoot)
 
 local itemLoot = CreateFrame("Frame")
-itemLoot:RegisterEvent(MoneyLooterEvents.ChatMsgLoot)
-itemLoot:SetScript(MoneyLooterEvents.OnEvent, OnItemLoot)
+itemLoot:RegisterEvent(ML_EVENTS.ChatMsgLoot)
+itemLoot:SetScript(ML_EVENTS.OnEvent, OnItemLoot)
 
 local sellAction = CreateFrame("Frame")
-sellAction:RegisterEvent(MoneyLooterEvents.PlayerMoney)
-sellAction:RegisterEvent(MoneyLooterEvents.MerchantUpdate)
-sellAction:SetScript(MoneyLooterEvents.OnEvent, OnSellAction)
+sellAction:RegisterEvent(ML_EVENTS.PlayerMoney)
+sellAction:RegisterEvent(ML_EVENTS.MerchantUpdate)
+sellAction:SetScript(ML_EVENTS.OnEvent, OnSellAction)

@@ -1,9 +1,7 @@
 ## Title: MoneyLooter
-## Version: 0.74
+## Version: 0.75
 ## Author: Will0w7
 ## Interface: 110002
-# X-Category: Auction/Economy
-# X-Localizations: enUS
 ## Notes: A lightweight and fast addon to see how much gold you earn on your farms
 ## Notes-esES: Un addon ligero y rápido para ver cuanto oro ganas en tus farmeos
 ## SavedVariablesPerCharacter: MoneyLooterDB
@@ -17,14 +15,3 @@ data\Manifest.xml
 
 core\Manifest.xml
 ui\Manifest.xml
-
-
-
-
-# utils\MoneyLooterUtils.lua
-# data\MoneyLooterData.lua
-# data\MoneyLooterLootedItem.lua
-
-# core\MoneyLooterCore.lua
-# ui\MoneyLooterUI.lua
-# ui\MoneyLooterUIEvents.lua

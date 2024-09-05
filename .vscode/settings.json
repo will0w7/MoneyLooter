@@ -9,7 +9,8 @@
         "Add",
         "DEFAULT",
         "MONEY",
-        "TRANSMOG_SLOT_APPEARANCE_INVISIBLE"
+        "TRANSMOG_SLOT_APPEARANCE_INVISIBLE",
+        "TRANSMOG_ALL_SPECIALIZATIONS"
     ],
     "Lua.runtime.version": "Lua 5.1",
     "Lua.runtime.builtin": {
