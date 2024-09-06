@@ -2,16 +2,20 @@
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-A lightweight and blazingly-fast 🦀 World of Warcraft addon designed to track your gold farms, encompassing both raw currency and the value of looted items thanks to amazing addons like Auctionator or TradeSkillMaster.
+A lightweight and blazingly-fast 🦀 World of Warcraft addon designed to track your gold farms. Track both raw gold and the gold value of looted items thanks to amazing addons like Auctionator or TradeSkillMaster.
 
 ## Key Features
 
-* **Lightweight & Efficient:** Minimal impact on your game's performance, ensuring a smooth and responsive experience.
+* **Lightweight & Efficient:** Minimal impact on your game's performance. Low memory footprint and 
 * **No dependencies on third-party party libraries:** Ensures maximum compatibility and reducing the risk of conflicts and instability with new game versions. Third-party libraries do a great job making it much easier to develop addons with complex interfaces, but they also introduce a lot of new vectors for potential errors, and for an addon as simple as this, they would only make things more complicated.
 * **Accurate Gold Tracking:** Monitors your gold gains from looted gold and items. Excludes vendor sales from the count, allowing you to clear your inventory without affecting your loot tracking. Item prices are determined using TradeSkillMaster (if available), Auctionator (if available), or vendor sell price as a fallback. Crafting reagents are always valued at their auction sell price (if TradeSkillMaster or Auctionator are available), regardless of minimum price thresholds.
 * **Reload protection:** If another of your addons crashes or you are forced to reload the interface or even logout, when you come back your gold numbers will still be there. It doesn't matter if you previously paused the gold tracking or the counter was running when you /reload'ed or disconnected, it will still be the same when you come back.
 * **Intuitive Interface:** A user-friendly display that presents your gold farm in a clear and organized manner.
 * **Minimal Configuration:** Designed for a seamless experience with minimal setup. All configuration is done through simple chat commands, without the need for complex interfaces. Customize the TSM custom price string and set minimum price thresholds for different item qualities.
+
+## Installation
+
+    TODO
 
 ## Manual Installation
 
@@ -19,7 +23,22 @@ A lightweight and blazingly-fast 🦀 World of Warcraft addon designed to track 
 2. Extract the contents of the zip file into your `World of Warcraft\VERSION\Interface\AddOns` directory.
 3. Launch World of Warcraft and enable the addon in the AddOns list.
 
-**Note:** Currently only tested in retail, but I hope to have support for other versions soon.
+## Compatibility Status
+
+|        Version         | Status |
+| ---------------------- | ------ |
+| Retail                 |   ✅   |
+| Cataclysm Classic      |   ✅   |
+| Classic Era            |   ✅   |
+| Classic Hardcore       |   ✅   |
+| Season of Discovery    |   ✅   |
+| Wrath of the Lich King |   ❔   |
+
+✅ = Compatible
+
+❔ = Untested
+
+❌ = Not compatible
 
 ## Usage
 
