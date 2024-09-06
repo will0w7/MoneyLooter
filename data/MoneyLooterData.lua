@@ -63,12 +63,12 @@ DefaultMoneyLooterDB = {
 MoneyLooterDB = MoneyLooterDB
 
 DefaultMoneyLooterXDB = {
-    CurrentTSMString = "DBMarket",
-    ----------------------------------------------
-    MinPrice1 = 10000 * 1000,
-    MinPrice2 = 10000 * 1000,
-    MinPrice3 = 10000 * 1000,
-    MinPrice4 = 10000 * 1000,
+    CurrentTSMString = "dbmarket",
+    ------------------------------
+    MinPrice1 = 0,
+    MinPrice2 = 0,
+    MinPrice3 = 0,
+    MinPrice4 = 0,
 }
 
 MoneyLooterXDB = MoneyLooterXDB
@@ -306,16 +306,32 @@ function GetMinPrice1()
     return MoneyLooterDB.MinPrice1 or 0
 end
 
+function SetMinPrice1(val)
+    MoneyLooterDB.MinPrice1 = val
+end
+
 function GetMinPrice2()
     return MoneyLooterDB.MinPrice2 or 0
+end
+
+function SetMinPrice2(val)
+    MoneyLooterDB.MinPrice2 = val
 end
 
 function GetMinPrice3()
     return MoneyLooterDB.MinPrice3 or 0
 end
 
+function SetMinPrice3(val)
+    MoneyLooterDB.MinPrice3 = val
+end
+
 function GetMinPrice4()
     return MoneyLooterDB.MinPrice4 or 0
+end
+
+function SetMinPrice4(val)
+    MoneyLooterDB.MinPrice4 = val
 end
 
 function GetCurrentTSMString()
