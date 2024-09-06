@@ -139,6 +139,7 @@ MoneyLooterResetButton:SetScript(ML_EVENTS.OnClick, function()
         MoneyLooterLootItemsEventsFrame:SetScript(ML_EVENTS.OnUpdate, nil)
         MoneyLooterTextEventsFrame:SetScript(ML_EVENTS.OnUpdate, nil)
     end
+    local minimizeButtonState = IsScrollLootFrameVisible()
     ResetMoneyLooterDB()
     MoneyLooterStartButton:SetText(GetCurrentStartStopText())
     MoneyLooterTimeFS:SetText(SetCurrentTimeText(tostring(date("!%X", 0))))
@@ -148,6 +149,8 @@ MoneyLooterResetButton:SetScript(ML_EVENTS.OnClick, function()
     MoneyLooterPriciestFS:SetText(GetCoinTextureString(0))
     SetOldMoney(GetMoney())
     MoneyLooterScrollLootFrame:Clear()
+    SetScrollLootFrameVisible(minimizeButtonState)
+
 end)
 -----------------------------------------------------------------------------------------------
 
