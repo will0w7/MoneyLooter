@@ -4,6 +4,8 @@
 ----------------------------------------------------------------------------------
 GetCoinTextureString = C_CurrencyInfo.GetCoinTextureString or GetCoinTextureString
 ----------------------------------------------------------------------------------
+local _, ml_table = ...
+----------------------------------------------------------------------------------
 
 MoneyLooterMainUIFrame = CreateFrame("Frame", ML_STRINGS.ML_ADDON_NAME, UIParent,
     BackdropTemplateMixin and "BackdropTemplate")
@@ -24,7 +26,11 @@ MoneyLooterMainUIFrame:SetMovable(true)
 MoneyLooterMainUIFrame:RegisterForDrag("LeftButton")
 
 MoneyLooterCloseButton = CreateFrame("Button", "Close", MoneyLooterMainUIFrame, "UIPanelCloseButton")
-MoneyLooterCloseButton:SetPoint("TOPLEFT", MoneyLooterMainUIFrame, "TOPLEFT", -2, 2)
+if ml_table.isClassic then
+    MoneyLooterCloseButton:SetPoint("TOPLEFT", MoneyLooterMainUIFrame, "TOPLEFT", -2, 2)
+else
+    MoneyLooterCloseButton:SetPoint("TOPLEFT", MoneyLooterMainUIFrame, "TOPLEFT", 2, -2)
+end
 
 MoneyLooterMinimizeCheck = CreateFrame("CheckButton", "Minimize", MoneyLooterMainUIFrame, "UICheckButtonTemplate")
 MoneyLooterMinimizeCheck:SetPoint("TOPRIGHT", MoneyLooterMainUIFrame, "TOPRIGHT")

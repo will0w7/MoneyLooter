@@ -9,6 +9,7 @@
 ## OptionalDeps: TradeSkillMaster, Auctionator
 ## IconTexture: Interface\Icons\inv_misc_coin_02
 
+versions\InitClassic.lua
 locales\Manifest.xml
 
 utils\Manifest.xml
