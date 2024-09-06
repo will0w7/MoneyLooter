@@ -6,7 +6,7 @@ A lightweight and blazingly-fast 🦀 World of Warcraft addon designed to track 
 
 ## Key Features
 
-* **Lightweight & Efficient:** Minimal impact on your game's performance. Low memory footprint and 
+* **Lightweight & Efficient:** Minimal impact on your game's performance. Low memory footprint and minimal CPU usage.
 * **No dependencies on third-party party libraries:** Ensures maximum compatibility and reducing the risk of conflicts and instability with new game versions. Third-party libraries do a great job making it much easier to develop addons with complex interfaces, but they also introduce a lot of new vectors for potential errors, and for an addon as simple as this, they would only make things more complicated.
 * **Accurate Gold Tracking:** Monitors your gold gains from looted gold and items. Excludes vendor sales from the count, allowing you to clear your inventory without affecting your loot tracking. Item prices are determined using TradeSkillMaster (if available), Auctionator (if available), or vendor sell price as a fallback. Crafting reagents are always valued at their auction sell price (if TradeSkillMaster or Auctionator are available), regardless of minimum price thresholds.
 * **Reload protection:** If another of your addons crashes or you are forced to reload the interface or even logout, when you come back your gold numbers will still be there. It doesn't matter if you previously paused the gold tracking or the counter was running when you /reload'ed or disconnected, it will still be the same when you come back.
