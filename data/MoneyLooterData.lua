@@ -3,10 +3,10 @@
 
 ML_STRINGS = {
     ML_ADDON_NAME = "MoneyLooter",
-    ML_ADDON_VERSION = 0.85,
+    ML_ADDON_VERSION = 0.89,
     ML_TITLE = "|cFFd8de35MoneyLooter!|r",
     ML_FONT = "Fonts\\FRIZQT__.TTF",
-    ML_TSM_STRING = "DBMarket"
+    ML_TSM_STRING = "dbmarket"
 }
 
 ML_EVENTS = {

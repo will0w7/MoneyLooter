@@ -1,5 +1,5 @@
 ## Interface: 110002
-## Version: 0.85
+## Version: 0.89
 ## Title: MoneyLooter
 ## Author: Will0w7
 ## Notes: A lightweight and fast addon to see how much gold you earn on your farms
