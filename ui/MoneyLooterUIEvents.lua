@@ -26,7 +26,8 @@ end
 function PopulateLoot()
     if GetListLootedItemsCount() > 0 then
         local lootedItems = GetListLootedItems()
-        for _, lootedItem in ipairs(lootedItems) do
+        for i = 1, #lootedItems do
+            local lootedItem = lootedItems[i]
             MoneyLooterScrollLootFrame:AddMessage(lootedItem.amount ..
                 "x" ..
                 CreateTextureFromItemID(lootedItem.id) ..
@@ -47,7 +48,8 @@ end
 
 function MoneyLooterUpdateLoot(self, _)
     local lootedItems = GetLootedItems()
-    for _, lootedItem in ipairs(lootedItems) do
+    for i = 1, #lootedItems do
+        local lootedItem = lootedItems[i]
         MoneyLooterScrollLootFrame:AddMessage(lootedItem.amount ..
             "x" ..
             CreateTextureFromItemID(lootedItem.id) ..
@@ -98,8 +100,8 @@ end)
 local MoneyLooterLootEvents = CreateFrame("Frame")
 
 local MoneyLooterTextEvents = MoneyLooterMainUIFrame:CreateAnimationGroup()
-MoneyLooterTextEvents.Timer = MoneyLooterTextEvents:CreateAnimation()
-MoneyLooterTextEvents.Timer:SetDuration(1)
+local MoneyLooterTextEventsTimer = MoneyLooterTextEvents:CreateAnimation()
+MoneyLooterTextEventsTimer:SetDuration(1)
 MoneyLooterTextEvents:SetLooping("REPEAT")
 
 function RegisterStartEvents()

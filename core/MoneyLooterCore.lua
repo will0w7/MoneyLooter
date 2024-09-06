@@ -1,12 +1,16 @@
 -- Author      : Will0w7
 -- MoneyLooterCore --
 
------------------------------------------------------
+------------------------------------------------------------------------------
 local TSM_API = TSM_API
 local AUCTIONATOR_API = Auctionator and Auctionator.API and Auctionator.API.v1
------------------------------------------------------
+------------------------------------------------------------------------------
 local GetItemInfo = C_Item.GetItemInfo or GetItemInfo
------------------------------------------------------
+local GetItemInfoFromHyperlink = GetItemInfoFromHyperlink
+local GetMoney = GetMoney
+local GetUnitName = GetUnitName
+local strsplit = strsplit
+------------------------------------------------------------------------------
 
 local GetTSMPrice = {
     [0] = function(_, _, sellPrice)
@@ -100,7 +104,7 @@ function LootEventHandler(self, event, ...)
         local change = (newmoney - GetOldMoney())
         AddRawGold(change)
         AddTotalMoney(change)
-        SetOldMoney(GetMoney())
+        SetOldMoney(newmoney)
     elseif event == ML_EVENTS.ChatMsgLoot then
         local lootstring, _, _, _, p2 = ...
         if lootstring == nil then return end

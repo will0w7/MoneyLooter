@@ -15,7 +15,6 @@ ML_EVENTS = {
     OnDragStart = "OnDragStart",
     OnDragStop = "OnDragStop",
     OnHide = "OnHide",
-    OnUpdate = "OnUpdate",
     OnLoad = "OnLoad",
     OnEnter = "OnEnter",
     OnLeave = "OnLeave",
@@ -27,11 +26,8 @@ ML_EVENTS = {
     --------------------------------------
     ChatMsgMoney = "CHAT_MSG_MONEY",
     ChatMsgLoot = "CHAT_MSG_LOOT",
-    PlayerMoney = "PLAYER_MONEY",
     MerchantUpdate = "MERCHANT_UPDATE",
     AddonLoaded = "ADDON_LOADED",
-    VariablesLoaded = "VARIABLES_LOADED",
-    PlayerLogout = "PLAYER_LOGOUT"
 }
 
 local DefaultMoneyLooterDB = {
