@@ -1,4 +1,4 @@
-## Interface: 110002
+## Interface: 30403
 ## Version: 0.85
 ## Title: MoneyLooter
 ## Author: Will0w7

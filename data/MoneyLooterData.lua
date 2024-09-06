@@ -53,7 +53,7 @@ DefaultMoneyLooterDB = {
     Timer = 0,
     ----------------------------------------------
     CurrentStartStopText = _G.MONEYLOOTER_L_START,
-    CurrentTimeText = date("!%X", 0),
+    CurrentTimeText = tostring(date("!%X", 0)),
     ----------------------------------------------
     ScrollLootFrameVisible = true,
     ----------------------------------------------
@@ -299,7 +299,7 @@ function SetCurrentStartStopText(val)
 end
 
 function GetCurrentTimeText()
-    return MoneyLooterDB.CurrentTimeText or date("!%X", 0)
+    return MoneyLooterDB.CurrentTimeText or tostring(date("!%X", 0))
 end
 
 function GetMinPrice1()
@@ -351,7 +351,7 @@ function SetCurrentTimeText(val)
     if val ~= nil then
         MoneyLooterDB.CurrentTimeText = val
     end
-    return MoneyLooterDB.CurrentTimeText or date("!%X", 0)
+    return MoneyLooterDB.CurrentTimeText or tostring(date("!%X", 0))
 end
 
 function CalcGPH()

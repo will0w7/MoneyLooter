@@ -59,7 +59,7 @@ MoneyLooterTimeFS:SetJustifyV("MIDDLE")
 MoneyLooterTimeFS:SetJustifyH("CENTER")
 MoneyLooterTimeFS:SetPoint("TOPRIGHT", MoneyLooterMainUIFrame, -8, -40)
 MoneyLooterTimeFS:SetFont(ML_STRINGS.ML_FONT, 12, "")
-MoneyLooterTimeFS:SetText(date("!%X", 0))
+MoneyLooterTimeFS:SetText(tostring(tostring(date("!%X", 0))))
 
 local MoneyLooterRawGoldLabelFS = MoneyLooterMainUIFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 MoneyLooterRawGoldLabelFS:SetJustifyV("MIDDLE")

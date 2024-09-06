@@ -7,7 +7,7 @@ GetCoinTextureString = C_CurrencyInfo.GetCoinTextureString or GetCoinTextureStri
 
 function PopulateData()
     MoneyLooterStartButton:SetText(GetCurrentStartStopText())
-    MoneyLooterTimeFS:SetText(date("!%X", GetTimer()))
+    MoneyLooterTimeFS:SetText(tostring(date("!%X", GetTimer())))
     MoneyLooterRawGoldFS:SetText(GetCoinTextureString(GetRawGold()))
     MoneyLooterItemsGoldFS:SetText(GetCoinTextureString(GetItemsMoney()))
     MoneyLooterGPHFS:SetText(GetCoinTextureString(CalcGPH()))
@@ -31,7 +31,7 @@ end
 function MoneyLooterUpdateTexts(self, elapsed)
     if AddTimeSinceLastUpdate(elapsed) > 1.0 and IsRunning() then
         AddOneToTimer()
-        MoneyLooterTimeFS:SetText(SetCurrentTimeText(date("!%X", GetTimer())))
+        MoneyLooterTimeFS:SetText(SetCurrentTimeText(tostring(date("!%X", GetTimer()))))
         MoneyLooterRawGoldFS:SetText(GetCoinTextureString(GetRawGold()))
         MoneyLooterItemsGoldFS:SetText(GetCoinTextureString(GetItemsMoney()))
         SetTimeSinceLastUpdate(0)
@@ -134,7 +134,7 @@ MoneyLooterResetButton:SetScript(ML_EVENTS.OnClick, function()
     end
     ResetMoneyLooterDB()
     MoneyLooterStartButton:SetText(GetCurrentStartStopText())
-    MoneyLooterTimeFS:SetText(SetCurrentTimeText(date("!%X", 0)))
+    MoneyLooterTimeFS:SetText(SetCurrentTimeText(tostring(date("!%X", 0))))
     MoneyLooterRawGoldFS:SetText(GetCoinTextureString(0))
     MoneyLooterItemsGoldFS:SetText(GetCoinTextureString(0))
     MoneyLooterGPHFS:SetText(GetCoinTextureString(0))
