@@ -35,45 +35,38 @@ function PopulateLoot()
     end
 end
 
-function MoneyLooterUpdateTexts(self, elapsed)
-    if AddTimeSinceLastUpdate(elapsed) > 1.0 and IsRunning() then
-        AddOneToTimer()
-        MoneyLooterTimeFS:SetText(SetCurrentTimeText(tostring(date("!%X", GetTimer()))))
-        MoneyLooterRawGoldFS:SetText(GetCoinTextureString(GetRawGold()))
-        MoneyLooterItemsGoldFS:SetText(GetCoinTextureString(GetItemsMoney()))
-        SetTimeSinceLastUpdate(0)
-        MoneyLooterGPHFS:SetText(GetCoinTextureString(CalcGPH()))
-        SetTimeSinceLastUpdateGPH(0)
-    end
+function MoneyLooterUpdateTexts(self, _)
+    AddOneToTimer()
+    MoneyLooterTimeFS:SetText(SetCurrentTimeText(tostring(date("!%X", GetTimer()))))
+    MoneyLooterRawGoldFS:SetText(GetCoinTextureString(GetRawGold()))
+    MoneyLooterItemsGoldFS:SetText(GetCoinTextureString(GetItemsMoney()))
+    SetTimeSinceLastUpdate(0)
+    MoneyLooterGPHFS:SetText(GetCoinTextureString(CalcGPH()))
+    SetTimeSinceLastUpdateGPH(0)
 end
 
-function MoneyLooterUpdateLoot(self, elapsed)
-    if GetUpdate() and IsRunning() then
-        local lootedItems = GetLootedItems()
-        for _, lootedItem in ipairs(lootedItems) do
-            MoneyLooterScrollLootFrame:AddMessage(lootedItem.amount ..
-                "x" ..
-                CreateTextureFromItemID(lootedItem.id) ..
-                lootedItem.name .. " " .. GetCoinTextureString(lootedItem.value, 12))
-        end
-        MoneyLooterPriciestFS:SetText(GetCoinTextureString(GetPriciest()))
-        SetLootedItems({})
-        SetUpdate(false)
+function MoneyLooterUpdateLoot(self, _)
+    local lootedItems = GetLootedItems()
+    for _, lootedItem in ipairs(lootedItems) do
+        MoneyLooterScrollLootFrame:AddMessage(lootedItem.amount ..
+            "x" ..
+            CreateTextureFromItemID(lootedItem.id) ..
+            lootedItem.name .. " " .. GetCoinTextureString(lootedItem.value, 12))
     end
+    MoneyLooterPriciestFS:SetText(GetCoinTextureString(GetPriciest()))
+    SetLootedItems({})
 end
 
 MoneyLooterStartButton:SetScript(ML_EVENTS.OnClick, function()
     if IsRunning() then
         SetRunning(false)
         MoneyLooterStartButton:SetText(SetCurrentStartStopText(_G.MONEYLOOTER_L_CONTINUE))
-        SetRecordLoot(false)
         UnregisterStartEvents()
     else
         SetRunning(true)
         SetOldMoney(GetMoney())
         MoneyLooterStartButton:SetText(SetCurrentStartStopText(_G.MONEYLOOTER_L_PAUSE))
         RegisterStartEvents()
-        SetRecordLoot(true)
     end
 end)
 
@@ -102,25 +95,31 @@ MoneyLooterPriciestFS:SetScript(ML_EVENTS.OnLeave, function()
 end)
 
 -----------------------------------------------------------------------------------------------
-local MoneyLooterLootItemsEventsFrame = CreateFrame("Frame")
-local MoneyLooterTextEventsFrame = CreateFrame("Frame")
+local MoneyLooterLootEvents = CreateFrame("Frame")
+
+local MoneyLooterTextEvents = MoneyLooterMainUIFrame:CreateAnimationGroup()
+MoneyLooterTextEvents.Timer = MoneyLooterTextEvents:CreateAnimation()
+MoneyLooterTextEvents.Timer:SetDuration(1)
+MoneyLooterTextEvents:SetLooping("REPEAT")
 
 function RegisterStartEvents()
-    MoneyLooterLootEventsFrame:RegisterEvent(ML_EVENTS.ChatMsgMoney)
-    MoneyLooterLootEventsFrame:RegisterEvent(ML_EVENTS.ChatMsgLoot)
-    MoneyLooterLootEventsFrame:RegisterEvent(ML_EVENTS.MerchantUpdate)
+    MoneyLooterLootEvents:RegisterEvent(ML_EVENTS.ChatMsgMoney)
+    MoneyLooterLootEvents:RegisterEvent(ML_EVENTS.ChatMsgLoot)
+    MoneyLooterLootEvents:RegisterEvent(ML_EVENTS.MerchantUpdate)
+    MoneyLooterLootEvents:SetScript(ML_EVENTS.OnEvent, LootEventHandler)
 
-    MoneyLooterLootItemsEventsFrame:SetScript(ML_EVENTS.OnUpdate, MoneyLooterUpdateLoot)
-    MoneyLooterTextEventsFrame:SetScript(ML_EVENTS.OnUpdate, MoneyLooterUpdateTexts)
+    MoneyLooterTextEvents:Play()
+    MoneyLooterTextEvents:SetScript(ML_EVENTS.OnLoop, MoneyLooterUpdateTexts)
 end
 
 function UnregisterStartEvents()
-    MoneyLooterLootEventsFrame:UnregisterEvent(ML_EVENTS.ChatMsgMoney)
-    MoneyLooterLootEventsFrame:UnregisterEvent(ML_EVENTS.ChatMsgLoot)
-    MoneyLooterLootEventsFrame:UnregisterEvent(ML_EVENTS.MerchantUpdate)
+    MoneyLooterLootEvents:UnregisterEvent(ML_EVENTS.ChatMsgMoney)
+    MoneyLooterLootEvents:UnregisterEvent(ML_EVENTS.ChatMsgLoot)
+    MoneyLooterLootEvents:UnregisterEvent(ML_EVENTS.MerchantUpdate)
+    MoneyLooterLootEvents:SetScript(ML_EVENTS.OnEvent, nil)
 
-    MoneyLooterLootItemsEventsFrame:SetScript(ML_EVENTS.OnUpdate, nil)
-    MoneyLooterTextEventsFrame:SetScript(ML_EVENTS.OnUpdate, nil)
+    MoneyLooterTextEvents:Stop()
+    MoneyLooterTextEvents:SetScript(ML_EVENTS.OnLoop, nil)
 end
 
 MoneyLooterMainUIFrame:SetScript(ML_EVENTS.OnDragStart, MoneyLooterMainUIFrame.StartMoving)
@@ -136,8 +135,8 @@ MoneyLooterScrollLootFrame:SetScript(ML_EVENTS.OnHyperLinkLeave, OnHyperlinkLeav
 MoneyLooterResetButton:SetScript(ML_EVENTS.OnClick, function()
     if IsRunning() then
         UnregisterStartEvents()
-        MoneyLooterLootItemsEventsFrame:SetScript(ML_EVENTS.OnUpdate, nil)
-        MoneyLooterTextEventsFrame:SetScript(ML_EVENTS.OnUpdate, nil)
+        MoneyLooterLootEvents:SetScript(ML_EVENTS.OnEvent, nil)
+        MoneyLooterTextEvents:SetScript(ML_EVENTS.OnLoop, nil)
     end
     local minimizeButtonState = IsScrollLootFrameVisible()
     ResetMoneyLooterDB()
@@ -226,6 +225,7 @@ function WatcherOnEvent(self, event, arg1)
     if event == ML_EVENTS.AddonLoaded and arg1 == ML_STRINGS.ML_ADDON_NAME then
         print(_G.MONEYLOOTER_L_WELCOME)
         UpdateMLDB()
+        UpdateMLXDB()
         PopulateData()
         PopulateLoot()
         watcher:UnregisterEvent(ML_EVENTS.AddonLoaded)

@@ -93,7 +93,6 @@ function CalculatePriceAuc(quality, sellPrice, itemLink, isCraftingReagent)
 end
 
 function LootEventHandler(self, event, ...)
-    if not GetRecordLoot() then return end
     if event == ML_EVENTS.MerchantUpdate then
         SetOldMoney(GetMoney())
     elseif event == ML_EVENTS.ChatMsgMoney then
@@ -135,10 +134,7 @@ function LootEventHandler(self, event, ...)
         local i = LootedItem.new(itemID, itemLink, price, amount)
         InsertLootedItem(i)
         SetPriciest(price, itemID)
-        SetUpdate(true)
         AddTotalMoney(price)
+        MoneyLooterUpdateLoot()
     end
 end
-
-MoneyLooterLootEventsFrame = CreateFrame("Frame")
-MoneyLooterLootEventsFrame:SetScript(ML_EVENTS.OnEvent, LootEventHandler)

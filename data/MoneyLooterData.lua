@@ -19,6 +19,7 @@ ML_EVENTS = {
     OnLoad = "OnLoad",
     OnEnter = "OnEnter",
     OnLeave = "OnLeave",
+    OnLoop = "OnLoop",
     OnHyperLinkClick = "OnHyperlinkClick",
     OnHyperLinkEnter = "OnHyperlinkEnter",
     OnHyperLinkLeave = "OnHyperlinkLeave",
@@ -33,10 +34,8 @@ ML_EVENTS = {
     PlayerLogout = "PLAYER_LOGOUT"
 }
 
-DefaultMoneyLooterDB = {
+local DefaultMoneyLooterDB = {
     Visible = true,
-    RecordLoot = false,
-    Update = false,
     Running = false,
     RawGold = 0,
     ItemsMoney = 0,
@@ -57,12 +56,12 @@ DefaultMoneyLooterDB = {
     ----------------------------------------------
     ScrollLootFrameVisible = true,
     ----------------------------------------------
-    DBVersion = ML_STRINGS.ML_ADDON_VERSION
+    DBVersion = 1725659574995
 }
 
 MoneyLooterDB = MoneyLooterDB
 
-DefaultMoneyLooterXDB = {
+local DefaultMoneyLooterXDB = {
     CurrentTSMString = "dbmarket",
     ------------------------------
     MinPrice1 = 0,
@@ -72,9 +71,6 @@ DefaultMoneyLooterXDB = {
 }
 
 MoneyLooterXDB = MoneyLooterXDB
-if MoneyLooterXDB == nil then
-    MoneyLooterXDB = table.deep_copy_meta(DefaultMoneyLooterXDB)
-end
 
 function IsVisible()
     return MoneyLooterDB.Visible
@@ -88,28 +84,6 @@ function SetVisible(val)
         else
             MoneyLooterMainUIFrame:Hide()
         end
-    end
-end
-
-function GetRecordLoot()
-    return MoneyLooterDB.RecordLoot
-end
-
-function SetRecordLoot(val)
-    MoneyLooterDB.RecordLoot = false
-    if val ~= nil then
-        MoneyLooterDB.RecordLoot = val
-    end
-end
-
-function GetUpdate()
-    return MoneyLooterDB.Update
-end
-
-function SetUpdate(val)
-    MoneyLooterDB.Update = false
-    if val ~= nil then
-        MoneyLooterDB.Update = val
     end
 end
 
@@ -303,35 +277,35 @@ function GetCurrentTimeText()
 end
 
 function GetMinPrice1()
-    return MoneyLooterDB.MinPrice1 or 0
+    return MoneyLooterXDB.MinPrice1 or 0
 end
 
 function SetMinPrice1(val)
-    MoneyLooterDB.MinPrice1 = val
+    MoneyLooterXDB.MinPrice1 = val
 end
 
 function GetMinPrice2()
-    return MoneyLooterDB.MinPrice2 or 0
+    return MoneyLooterXDB.MinPrice2 or 0
 end
 
 function SetMinPrice2(val)
-    MoneyLooterDB.MinPrice2 = val
+    MoneyLooterXDB.MinPrice2 = val
 end
 
 function GetMinPrice3()
-    return MoneyLooterDB.MinPrice3 or 0
+    return MoneyLooterXDB.MinPrice3 or 0
 end
 
 function SetMinPrice3(val)
-    MoneyLooterDB.MinPrice3 = val
+    MoneyLooterXDB.MinPrice3 = val
 end
 
 function GetMinPrice4()
-    return MoneyLooterDB.MinPrice4 or 0
+    return MoneyLooterXDB.MinPrice4 or 0
 end
 
 function SetMinPrice4(val)
-    MoneyLooterDB.MinPrice4 = val
+    MoneyLooterXDB.MinPrice4 = val
 end
 
 function GetCurrentTSMString()
@@ -387,5 +361,11 @@ function UpdateMLDB()
         print(_G.MONEYLOOTER_L_NEW_DB_VERSION)
         ResetMoneyLooterDB()
         print(_G.MONEYLOOTER_L_DB_UPDATED)
+    end
+end
+
+function UpdateMLXDB()
+    if MoneyLooterXDB == nil then
+        MoneyLooterXDB = table.deep_copy_meta(DefaultMoneyLooterXDB)
     end
 end
