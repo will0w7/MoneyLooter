@@ -12,6 +12,13 @@ function PopulateData()
     MoneyLooterItemsGoldFS:SetText(GetCoinTextureString(GetItemsMoney()))
     MoneyLooterGPHFS:SetText(GetCoinTextureString(CalcGPH()))
     MoneyLooterPriciestFS:SetText(GetCoinTextureString(GetPriciest()))
+    if IsScrollLootFrameVisible() then
+        SetScrollLootFrameVisible(true)
+        MoneyLooterMinimizeCheck:SetChecked(true)
+    else
+        SetScrollLootFrameVisible(false)
+        MoneyLooterMinimizeCheck:SetChecked(false)
+    end
     SetVisible(IsVisible())
     if IsRunning() then RegisterStartEvents() end
 end

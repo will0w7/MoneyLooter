@@ -24,7 +24,7 @@ MoneyLooterMainUIFrame:SetMovable(true)
 MoneyLooterMainUIFrame:RegisterForDrag("LeftButton")
 
 MoneyLooterCloseButton = CreateFrame("Button", "Close", MoneyLooterMainUIFrame, "UIPanelCloseButton")
-MoneyLooterCloseButton:SetPoint("TOPLEFT", MoneyLooterMainUIFrame, 4, -4)
+MoneyLooterCloseButton:SetPoint("TOPLEFT", MoneyLooterMainUIFrame, "TOPLEFT", -2, 2)
 
 MoneyLooterMinimizeCheck = CreateFrame("CheckButton", "Minimize", MoneyLooterMainUIFrame, "UICheckButtonTemplate")
 MoneyLooterMinimizeCheck:SetPoint("TOPRIGHT", MoneyLooterMainUIFrame, "TOPRIGHT")
