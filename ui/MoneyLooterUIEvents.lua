@@ -150,7 +150,6 @@ MoneyLooterResetButton:SetScript(ML_EVENTS.OnClick, function()
     SetOldMoney(GetMoney())
     MoneyLooterScrollLootFrame:Clear()
     SetScrollLootFrameVisible(minimizeButtonState)
-
 end)
 -----------------------------------------------------------------------------------------------
 
@@ -166,12 +165,57 @@ local function slash(msg, _)
         print(_G.MONEYLOOTER_L_INFO)
     elseif strsub(msg, 1, 6) == "custom" then
         local tsmString = strsub(msg, 8)
+        if tsmString == nil or tsmString == "" then
+            print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING .. "|cFF36e8e6" .. GetCurrentTSMString() .. "|r")
+            return
+        end
         SetTSMString(tsmString)
+    elseif strsub(msg, 1, 6) == "mprice" then
+        ParseMinPrice(msg)
     else
         print(_G.MONEYLOOTER_L_USAGE .. ML_STRINGS.ML_ADDON_VERSION)
     end
 end
 SlashCmdList["MONEYLOOTER"] = slash
+
+function ParseMinPrice(input)
+    local mprice, value, coin = strsplit(" ", input, 3)
+    if strlenutf8(mprice) < 7 then
+        print(_G.MONEYLOOTER_L_MPRICE_ERROR)
+        return
+    end
+    local mprices = {
+        [1] = function(val)
+            SetMinPrice1(val)
+        end,
+        [2] = function(val)
+            SetMinPrice2(val)
+        end,
+        [3] = function(val)
+            SetMinPrice3(val)
+        end,
+        [4] = function(val)
+            SetMinPrice4(val)
+        end
+    }
+    local coinValue
+    if coin == nil or coin == "g" then
+        coinValue = 10000
+        coin = "G"
+    elseif coin == "s" then
+        coinValue = 100
+        coin = "S"
+    else
+        coinValue = 1
+        coin = "C"
+    end
+    local qual = tonumber(strsub(mprice, 7, 8))
+    mprices[qual](value * coinValue)
+    local formatted = string.format("%s %s %s %s [%s]", _G.MONEYLOOTER_L_MPRICE_VALID, tostring(value),
+        _G["MONEYLOOTER_L_MPRICE_COIN_" .. coin], _G["MONEYLOOTER_L_MPRICE_QUALITY_" .. tostring(qual)],
+        tostring(qual))
+    print(formatted)
+end
 
 -----------------------------------------------------------------------------------------------
 

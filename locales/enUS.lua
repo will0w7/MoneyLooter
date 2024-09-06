@@ -30,7 +30,17 @@ MONEYLOOTER_LOCALES.enUS = function()
   L["TSM_CUSTOM_STRING_NOT_VALID"] =
   "|cFFd8de35Money Looter:|r The next TSM custom string is not valid and was not set: "
   L["TSM_CUSTOM_STRING_VALID"] = "|cFFd8de35Money Looter:|r The next TSM custom string is valid and was set: "
+  L["TSM_CUSTOM_STRING"] = "|cFFd8de35Money Looter:|r Using the next TSM custom string: "
   L["NEW_DB_VERSION"] = "|cFFd8de35Money Looter:|r A new version of the database has been detected, updating..."
   L["DB_UPDATED"] = "|cFFd8de35Money Looter:|r The database has been updated successfully!"
+  L["MPRICE_ERROR"] = "|cFFd8de35Money Looter:|r The next minimum price is invalid: "
+  L["MPRICE_VALID"] = "|cFFd8de35Money Looter:|r The next minimum price is valid and was set:"
+  L["MPRICE_QUALITY_1"] = "Common"
+  L["MPRICE_QUALITY_2"] = "Uncommon"
+  L["MPRICE_QUALITY_3"] = "Rare"
+  L["MPRICE_QUALITY_4"] = "Epic"
+  L["MPRICE_COIN_G"] = "Gold"
+  L["MPRICE_COIN_S"] = "Silver"
+  L["MPRICE_COIN_C"] = "Copper"
   return L
 end
