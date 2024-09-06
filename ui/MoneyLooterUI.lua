@@ -28,6 +28,7 @@ MoneyLooterCloseButton:SetPoint("TOPLEFT", MoneyLooterMainUIFrame, "TOPLEFT", -2
 
 MoneyLooterMinimizeCheck = CreateFrame("CheckButton", "Minimize", MoneyLooterMainUIFrame, "UICheckButtonTemplate")
 MoneyLooterMinimizeCheck:SetPoint("TOPRIGHT", MoneyLooterMainUIFrame, "TOPRIGHT")
+MoneyLooterMinimizeCheck:SetSize(28, 28)
 MoneyLooterMinimizeCheck:SetChecked(true)
 
 MoneyLooterStartButton = CreateFrame("Button", "Start", MoneyLooterMainUIFrame, "UIPanelButtonTemplate")
