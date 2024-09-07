@@ -17,9 +17,9 @@ jobs:
         include:
           - type: retail
             pkgmeta: .pkgmeta
-          - type: cata
-            pkgmeta: .pkgmeta_classic
           - type: classic
+            pkgmeta: .pkgmeta_classic
+          - type: cata
             pkgmeta: .pkgmeta_cata
           # - type: wrath
           #   pkgmeta: .pkgmeta_wrath
