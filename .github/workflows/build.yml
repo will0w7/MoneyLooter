@@ -2,8 +2,6 @@ name: Package MoneyLooter
 
 on:
   push:
-    branches:
-      - main
     tags:
       - '*'
     paths-ignore:

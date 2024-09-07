@@ -15,7 +15,7 @@ A lightweight and blazingly-fast 🦀 World of Warcraft addon designed to track 
 
 ## Installation
 
-    TODO
+Download the latest release from [Wago](https://addons.wago.io/addons/moneylooter), [CurseForge](https://legacy.curseforge.com/wow/addons/moneylooter-loot-and-gold-tracker) using your favourite addon manager.
 
 ## Manual Installation
 
@@ -25,14 +25,15 @@ A lightweight and blazingly-fast 🦀 World of Warcraft addon designed to track 
 
 ## Compatibility Status
 
-|        Version         | Status |
-| ---------------------- | ------ |
-| Retail                 |   ✅   |
-| Cataclysm Classic      |   ✅   |
-| Classic Era            |   ✅   |
-| Classic Hardcore       |   ✅   |
-| Season of Discovery    |   ✅   |
-| Wrath of the Lich King |   ❔   |
+|             Version            | Status |
+| ------------------------------ | ------ |
+| Retail                         |   ✅   |
+| Cataclysm Classic              |   ✅   |
+| Classic Era                    |   ✅   |
+| Classic Hardcore               |   ✅   |
+| Season of Discovery            |   ✅   |
+| Wrath of the Lich King Classic |   ❔   |
+| The Burning Crusade Classic    |   ❔   |
 
 ✅ = Compatible
 
@@ -117,9 +118,11 @@ So after several days of hard work (never look at that code you wrote all those 
 
 Plus, I think even if I leave the game, it would cost me little to no effort to keep it updated (I hope).
 
-## Contributing
+## Contributing and Issues
 
 Contributions are welcome! If you have any suggestions, bug reports, or feature requests, please open an issue on the [Issues](https://github.com/will0w7/MoneyLooter/issues) page.
+
+Feel free to report issues or doubts 😊
 
 ## License
 
