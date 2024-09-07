@@ -6,7 +6,7 @@ local DefaultMoneyLooterDB = {
     Running = false,
     RawGold = 0,
     ItemsMoney = 0,
-    -- TotalMoney = 0,
+    TotalMoney = 0,
     Priciest = 0,
     PriciestID = nil,
     LootedItems = {},
@@ -101,9 +101,9 @@ function AddItemsMoney(val)
     end
 end
 
--- function GetTotalMoney()
---     return MoneyLooterDB.TotalMoney or 0
--- end
+function GetTotalMoney()
+    return MoneyLooterDB.TotalMoney or 0
+end
 
 -- function SetTotalMoney(val)
 --     MoneyLooterDB.TotalMoney = 0
@@ -112,11 +112,11 @@ end
 --     end
 -- end
 
--- function AddTotalMoney(val)
---     if val ~= nil then
---         MoneyLooterDB.TotalMoney = MoneyLooterDB.TotalMoney + val
---     end
--- end
+function AddTotalMoney(val)
+    if val ~= nil then
+        MoneyLooterDB.TotalMoney = MoneyLooterDB.TotalMoney + val
+    end
+end
 
 function GetPriciest()
     return MoneyLooterDB.Priciest or 0
@@ -320,8 +320,9 @@ end
 
 function CalcGPH()
     local perhour = 0
-    if MoneyLooterDB.TotalMoney > 0 and MoneyLooterDB.Timer > 0 then
-        perhour = (MoneyLooterDB.TotalMoney / MoneyLooterDB.Timer) * 3600
+    local total = GetTotalMoney()
+    if total > 0 and GetTimer() > 0 then
+        perhour = (total / MoneyLooterDB.Timer) * 3600
     end
     return perhour
 end

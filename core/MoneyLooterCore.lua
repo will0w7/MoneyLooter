@@ -103,7 +103,7 @@ function LootEventHandler(self, event, ...)
         local newmoney = GetMoney()
         local change = (newmoney - GetOldMoney())
         AddRawGold(change)
-        -- AddTotalMoney(change)
+        AddTotalMoney(change)
         SetOldMoney(newmoney)
     elseif event == ML_EVENTS.ChatMsgLoot or event == ML_EVENTS.QuestLootReceived then
         local lootstring, _, _, _, playerName2 = ...
@@ -138,7 +138,7 @@ function LootEventHandler(self, event, ...)
         InsertLootedItem(i)
         -- only individual items, not groups (1xBismuth not 5xBismuth)
         SetPriciest(price, itemID)
-        -- AddTotalMoney(totalPrice)
+        AddTotalMoney(totalPrice)
         MoneyLooterUpdateLoot()
     end
 end
