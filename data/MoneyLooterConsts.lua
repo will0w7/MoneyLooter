@@ -7,8 +7,6 @@ ML_STRINGS = {
     ML_TSM_STRING = "dbmarket"
 }
 
-ML_STRINGS.ML_ADDON_VERSION = GetAddOnMetadata(ML_STRINGS.ML_ADDON_NAME, "Version")
-
 ML_EVENTS = {
     OnEvent = "OnEvent",
     -------------------------------------

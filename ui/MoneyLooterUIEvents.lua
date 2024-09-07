@@ -1,11 +1,17 @@
 -- Author      : Will0w7
 -- MoneyLooterUIEvents --
 
-----------------------------------------------------------------------------------
-GetCoinTextureString = C_CurrencyInfo.GetCoinTextureString or GetCoinTextureString
-----------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
+local GetCoinTextureString = C_CurrencyInfo.GetCoinTextureString or GetCoinTextureString
+local CreateFrame = CreateFrame
+local GetAddOnMetadata = C_AddOns.GetAddOnMetadata or GetAddOnMetadata
+----------------------------------------------------------------------------------------
+local date = date
+local tostring = tostring
+----------------------------------------------------------------------------------------
 
 function PopulateData()
+    ML_STRINGS.ML_ADDON_VERSION = GetAddOnMetadata(ML_STRINGS.ML_ADDON_NAME, "Version")
     MoneyLooterStartButton:SetText(GetCurrentStartStopText())
     MoneyLooterTimeFS:SetText(tostring(date("!%X", GetTimer())))
     MoneyLooterRawGoldFS:SetText(GetCoinTextureString(GetRawGold()))
