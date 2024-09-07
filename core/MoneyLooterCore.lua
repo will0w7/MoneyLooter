@@ -106,12 +106,12 @@ function LootEventHandler(self, event, ...)
         AddTotalMoney(change)
         SetOldMoney(newmoney)
     elseif event == ML_EVENTS.ChatMsgLoot then
-        local lootstring, _, _, _, p2 = ...
+        local lootstring, _, _, _, playerName2 = ...
         if lootstring == nil then return end
 
-        local p0, _ = GetUnitName("player")
-        local p1, _ = strsplit('-', p2, 2)
-        if p0 ~= p1 then return end
+        local playerName, _ = GetUnitName("player")
+        local playerNameFromPN2, _ = strsplit('-', playerName2, 2)
+        if playerName ~= playerNameFromPN2 then return end
 
         local itemLink = string.match(lootstring, "|%x+|Hitem:.-|h.-|h|r")
         if itemLink == nil then return end
@@ -120,8 +120,8 @@ function LootEventHandler(self, event, ...)
         local itemName, _, quality, _, _, _, _, _, _, _, sellPrice, _, _, _, _, _, isCraftingReagent =
             GetItemInfo(itemString)
 
-        local amount = string.match(lootstring, "x(%d+)%p") or 1
-        if amount == nil then amount = 1 end
+        local amount = string.match(lootstring, "x(%d+)%p$") or 1
+        -- if amount == nil then amount = 1 end
         if (string.len(itemName) > 30) then itemName = string.sub(itemName, 1, 30) .. "..." end
 
         local price = 0
