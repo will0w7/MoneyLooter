@@ -52,9 +52,10 @@ You can alternate between /ml or /moneylooter for chat commands. In the followin
         /ml hide: Hide MoneyLooter
         /ml info: Shows information about the addon
         
-        /ml custom: Sets a custom TSM string to be used in the price calculation
+        /ml custom: Sets a custom TSM string to be used in the price calculation. If empty, returns the custom TSM string it's currently using.
         
-        /ml mpricex: Sets the minimum price threshold for a given quality.
+        /ml mprice: Sets the minimum price threshold for a given quality.
+            mpricex: All available qualities.
             mprice1: Quality 1 - Common - White
             mprice2: Quality 2 - Uncommon - Green
             mprice3: Quality 3 - Rare - Blue
