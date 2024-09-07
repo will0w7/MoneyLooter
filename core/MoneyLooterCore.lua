@@ -132,13 +132,14 @@ function LootEventHandler(self, event, ...)
         if price == 0 then
             price = sellPrice or 0
         end
-        price = price * amount
-        AddItemsMoney(price)
+        local totalPrice = price * amount
+        AddItemsMoney(totalPrice)
         local itemID = GetItemInfoFromHyperlink(itemLink)
-        local i = LootedItem.new(itemID, itemLink, price, amount)
+        local i = LootedItem.new(itemID, itemLink, totalPrice, amount)
         InsertLootedItem(i)
+        -- only individual items, not groups (1xBismuth not 5xBismuth)
         SetPriciest(price, itemID)
-        AddTotalMoney(price)
+        AddTotalMoney(totalPrice)
         MoneyLooterUpdateLoot()
     end
 end

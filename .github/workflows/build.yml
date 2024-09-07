@@ -13,6 +13,7 @@ jobs:
     strategy:
       matrix:
         type: [retail, classic, cata]
+        # type: [retail, classic, cata, wrath, tbc]
         include:
           - type: retail
             pkgmeta: .pkgmeta
