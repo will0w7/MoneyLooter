@@ -108,6 +108,7 @@ function LootEventHandler(self, event, ...)
     elseif event == ML_EVENTS.ChatMsgLoot or event == ML_EVENTS.QuestLootReceived then
         local lootstring, _, _, _, playerName2 = ...
         if lootstring == nil then return end
+        if playerName2 == nil then return end
 
         local playerName, _ = GetUnitName("player")
         local playerNameFromPN2, _ = strsplit('-', playerName2, 2)
