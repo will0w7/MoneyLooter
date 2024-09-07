@@ -1,0 +1,17 @@
+package-as: MoneyLooter
+ignore:
+  - README.md
+  - test-data
+  - scripts
+  - DB2_Scripts
+  - *Classic*
+  - *Cata*
+  - *TBC*
+  - *Wrath*
+  - Patches
+plain-copy:
+  - core
+  - data
+  - locales
+  - ui
+  - utils

@@ -40,6 +40,8 @@ jobs:
       - name: Release Retail
         if: ${{ inputs.retail }}
         uses: BigWigsMods/packager@master
+        with:
+          args: -m .pkgmeta
         env:
           GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
@@ -48,6 +50,8 @@ jobs:
       - name: Release Cataclysm
         if: ${{ inputs.cata }}
         uses: BigWigsMods/packager@master
+        with:
+          args: -m .pkgmeta_cata
         env:
           GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
@@ -56,6 +60,8 @@ jobs:
       - name: Release Wrath
         if: ${{ inputs.wrath }}
         uses: BigWigsMods/packager@master
+        with:
+          args: -m .pkgmeta_wrath
         env:
           GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
@@ -64,6 +70,8 @@ jobs:
       - name: Release Burning
         if: ${{ inputs.bcc }}
         uses: BigWigsMods/packager@master
+        with:
+          args: -m .pkgmeta_tbc
         env:
           GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
@@ -72,6 +80,8 @@ jobs:
       - name: Release Classic
         if: ${{ inputs.classic }}
         uses: BigWigsMods/packager@master
+        with:
+          args: -m .pkgmeta_classic
         env:
           GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
