@@ -1,3 +1,5 @@
+-- Author      : Will0w7
+-- MoneyLooterConsts --
 
 ML_STRINGS = {
     ML_ADDON_NAME = "MoneyLooter",
