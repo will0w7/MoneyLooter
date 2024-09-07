@@ -1,23 +1,6 @@
 name: Package MoneyLooter
 
 on:
-  workflow_dispatch:
-    inputs:
-      retail:
-        type: boolean
-        description: Retail
-      cata:
-        type: boolean
-        description: Cataclysm
-      wrath:
-        type: boolean
-        description: Wrath
-      bcc:
-        type: boolean
-        description: Burning
-      classic:
-        type: boolean
-        description: Classic
   push:
     branches:
       - main
@@ -38,7 +21,6 @@ jobs:
           fetch-depth: 0
           
       - name: Release Retail
-        if: ${{ inputs.retail }}
         uses: BigWigsMods/packager@master
         with:
           args: -m .pkgmeta
@@ -48,7 +30,6 @@ jobs:
           WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
   
       - name: Release Cataclysm
-        if: ${{ inputs.cata }}
         uses: BigWigsMods/packager@master
         with:
           args: -m .pkgmeta_cata
@@ -58,7 +39,6 @@ jobs:
           WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
   
       - name: Release Wrath
-        if: ${{ inputs.wrath }}
         uses: BigWigsMods/packager@master
         with:
           args: -m .pkgmeta_wrath
@@ -68,7 +48,6 @@ jobs:
           WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
   
       - name: Release Burning
-        if: ${{ inputs.bcc }}
         uses: BigWigsMods/packager@master
         with:
           args: -m .pkgmeta_tbc
@@ -78,7 +57,6 @@ jobs:
           WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
   
       - name: Release Classic
-        if: ${{ inputs.classic }}
         uses: BigWigsMods/packager@master
         with:
           args: -m .pkgmeta_classic
