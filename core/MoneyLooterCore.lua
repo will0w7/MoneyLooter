@@ -96,6 +96,21 @@ function CalculatePriceAuc(quality, sellPrice, itemLink, isCraftingReagent)
     return price
 end
 
+function CalculatePrice(itemLink)
+    local itemString = string.match(itemLink, "item[%-?%d:]+")
+    local itemName, _, quality, _, _, _, _, _, _, _, sellPrice, _, _, _, _, _, isCraftingReagent =
+        GetItemInfo(itemString)
+    local price = 0
+    price = CalculatePriceTSM(quality, sellPrice, itemLink, isCraftingReagent)
+    if not TSM_API and price == 0 then
+        price = CalculatePriceAuc(quality, sellPrice, itemLink, isCraftingReagent)
+    end
+    if price == 0 then
+        price = sellPrice or 0
+    end
+    return price, itemName
+end
+
 function LootEventHandler(self, event, ...)
     if event == ML_EVENTS.MerchantUpdate then
         SetOldMoney(GetMoney())
@@ -105,10 +120,9 @@ function LootEventHandler(self, event, ...)
         AddRawGold(change)
         AddTotalMoney(change)
         SetOldMoney(newmoney)
-    elseif event == ML_EVENTS.ChatMsgLoot or event == ML_EVENTS.QuestLootReceived then
+    elseif event == ML_EVENTS.ChatMsgLoot then
         local lootstring, _, _, _, playerName2 = ...
         if lootstring == nil then return end
-        if playerName2 == nil then return end
 
         local playerName, _ = GetUnitName("player")
         local playerNameFromPN2, _ = strsplit('-', playerName2, 2)
@@ -117,29 +131,34 @@ function LootEventHandler(self, event, ...)
         local itemLink = string.match(lootstring, "|%x+|Hitem:.-|h.-|h|r")
         if itemLink == nil then return end
 
-        local itemString = string.match(itemLink, "item[%-?%d:]+")
-        local itemName, _, quality, _, _, _, _, _, _, _, sellPrice, _, _, _, _, _, isCraftingReagent =
-            GetItemInfo(itemString)
+        local price, itemName = CalculatePrice(itemLink)
 
-        local amount = string.match(lootstring, "x(%d+)%p$") or 1
         if (string.len(itemName) > 30) then itemName = string.sub(itemName, 1, 30) .. "..." end
+        local quantity = string.match(lootstring, "x(%d+)%p$") or 1
 
-        local price = 0
-        price = CalculatePriceTSM(quality, sellPrice, itemLink, isCraftingReagent)
-        if not TSM_API and price == 0 then
-            price = CalculatePriceAuc(quality, sellPrice, itemLink, isCraftingReagent)
-        end
-        if price == 0 then
-            price = sellPrice or 0
-        end
-        local totalPrice = price * amount
-        AddItemsMoney(totalPrice)
+        local totalPrice = price * quantity
         local itemID = GetItemInfoFromHyperlink(itemLink)
-        local i = LootedItem.new(itemID, itemLink, totalPrice, amount)
+        local i = LootedItem.new(itemID, itemLink, totalPrice, quantity)
         InsertLootedItem(i)
         -- only individual items, not groups (1xBismuth not 5xBismuth)
-        SetPriciest(price, itemID)
+        AddItemsMoney(totalPrice)
         AddTotalMoney(totalPrice)
+        SetPriciest(price, itemID)
+        MoneyLooterUpdateLoot()
+    elseif event == ML_EVENTS.QuestLootReceived then
+        local _, itemLink, quantity = ...
+        if itemLink == nil then return end
+
+        local price = CalculatePrice(itemLink)
+        
+        local totalPrice = price * quantity
+        local itemID = GetItemInfoFromHyperlink(itemLink)
+        local i = LootedItem.new(itemID, itemLink, totalPrice, quantity)
+        InsertLootedItem(i)
+        -- only individual items, not groups (1xBismuth not 5xBismuth)
+        AddItemsMoney(totalPrice)
+        AddTotalMoney(totalPrice)
+        SetPriciest(price, itemID)
         MoneyLooterUpdateLoot()
     end
 end
