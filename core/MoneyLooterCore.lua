@@ -126,7 +126,7 @@ function LootEventHandler(self, event, ...)
 
         local price = 0
         price = CalculatePriceTSM(quality, sellPrice, itemLink, isCraftingReagent)
-        if price == 0 then
+        if not TSM_API and price == 0 then
             price = CalculatePriceAuc(quality, sellPrice, itemLink, isCraftingReagent)
         end
         if price == 0 then
