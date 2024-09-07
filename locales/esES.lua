@@ -12,29 +12,41 @@ MONEYLOOTER_LOCALES.esES = function()
   L["ITEMS_LABEL"] = "Objetos:"
   L["GPH_LABEL"] = "OPH:"
   L["PRICIEST_LABEL"] = "Más valor:"
-  ---------------------------------------------------------------------------------------------------------
-  L["USAGE"] = [[====== |cFFd8de35Información de uso de Money Looter|r ======
+  L["USAGE"] = [[====== |cFFd8de35Información de uso de MoneyLooter|r ======
   |cFF36e8e6/ml|r: Alterna entre mostrar y ocultar
   |cFF36e8e6/ml|r |cFFf1f488help|r: Muestra la ayuda
   |cFF36e8e6/ml|r |cFFf1f488show|r: Muestra MoneyLooter
   |cFF36e8e6/ml|r |cFFf1f488hide|r: Oculta MoneyLooter
   |cFF36e8e6/ml|r |cFFf1f488info|r: Muestra información sobre el addon
-  |cFF36e8e6/ml|r |cFFf1f488custom "Custom TSM String"|r: Sets a custom TSM string to be used in the price calc.
-    Example: /ml custom dbmarket
+  |cFF36e8e6/ml|r |cFFf1f488custom "Custom TSM String"|r: Establece una cadena TSM custom que será usada para calcular el precio. Si está vacía, se devuelve la cadena que está siendo usada.
+    Ejemplos: /ml custom dbmarket
+              /ml custom
+  |cFF36e8e6/ml|r |cFFf1f488mprice 'value'|r: Sets the minimum price threshold for a given quality.
+            mpricex: All available qualities.
+            mprice1: Quality 1 - Común - Blanco
+            mprice2: Quality 2 - Poco común - Verde
+            mprice3: Quality 3 - Raro - Azul
+            mprice4: Quality 4 - Épico - Morado
+      El resto de calidades usarán el precio de vendedor, si lo tienen.
+    Ejemplos: /ml mprice1 50 s
+              /ml mprice2 5000
+              /ml mprice3 500 g
+              /ml mprice4 5 c
+      El formato de precio para mprice es un número seguido de g(old), s(ilver) o c(opper) (oro, plata y cobre respectivamente). Si solo indicas un número, se usará oro por defecto.
   |cFF36e8e6Versión del addon:|r ]]
   L["WELCOME"] =
   "Bienvenido a |cFFd8de35Money Looter|r! Usa |cFF36e8e6/ml|r |cFFf1f488help|r para ver las opciones del addon."
   L["CLOSE"] = "|cFF36e8e6/ml|r |cFFf1f488show|r: Vuelve a mostrar |cFFd8de35MoneyLooter|r"
-  L["INFO"] = "|cFFd8de35MoneyLooter|r addon ligero y rápido creado por Will0w7."
-  ----------------------------------------------------------------------------------------------------------
-  L["TSM_NOT_AVAILABLE"] = "|cFFd8de35Money Looter:|r TSM is not available"
+  L["INFO"] = "|cFFd8de35MoneyLooter|r addon ligero y rápido para rastrear el botín creado por Will0w7."
+  L["TSM_NOT_AVAILABLE"] = "|cFFd8de35Money Looter:|r TSM no está disponible."
   L["TSM_CUSTOM_STRING_NOT_VALID"] =
-  "|cFFd8de35Money Looter:|r The next TSM custom string is not valid and was not set: "
-  L["TSM_CUSTOM_STRING_VALID"] = "|cFFd8de35Money Looter:|r The next TSM custom string is valid and was set: "
-  L["NEW_DB_VERSION"] = "|cFFd8de35Money Looter:|r A new version of the database has been detected, updating..."
-  L["DB_UPDATED"] = "|cFFd8de35Money Looter:|r The database has been updated successfully!"
-  L["MPRICE_ERROR"] = "|cFFd8de35Money Looter:|r The next minimum price is invalid: "
-  L["MPRICE_VALID"] = "|cFFd8de35Money Looter:|r The next minimum price is valid and was set:"
+  "|cFFd8de35Money Looter:|r La siguiente cadena de TSM no es válida y no fue configurada: "
+  L["TSM_CUSTOM_STRING_VALID"] = "|cFFd8de35Money Looter:|r La siguiente cadena de TSM es válida y fue configurada: "
+  L["NEW_DB_VERSION"] =
+  "|cFFd8de35Money Looter:|r Se ha detectado una nueva versión de la base de datos, actualizando..."
+  L["DB_UPDATED"] = "|cFFd8de35Money Looter:|r La base de datos se ha actualizado correctamente!"
+  L["MPRICE_ERROR"] = "|cFFd8de35Money Looter:|r El siguiente precio mínimo es inválido: "
+  L["MPRICE_VALID"] = "|cFFd8de35Money Looter:|r El siguiente precio mínimo es válido y fue configurado:"
   L["MPRICE_QUALITY_1"] = "Común"
   L["MPRICE_QUALITY_2"] = "Poco común"
   L["MPRICE_QUALITY_3"] = "Raro"
