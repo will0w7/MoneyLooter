@@ -275,6 +275,13 @@ function SetMinPrice4(val)
     MoneyLooterXDB.MinPrice4 = val
 end
 
+function SetAllMinPrices(val)
+    MoneyLooterXDB.MinPrice1 = val
+    MoneyLooterXDB.MinPrice2 = val
+    MoneyLooterXDB.MinPrice3 = val
+    MoneyLooterXDB.MinPrice4 = val
+end
+
 function GetCurrentTSMString()
     return MoneyLooterXDB.CurrentTSMString or ML_STRINGS.ML_TSM_STRING
 end

@@ -171,12 +171,7 @@ local function slash(msg, _)
     elseif msg == "info" then
         print(_G.MONEYLOOTER_L_INFO)
     elseif strsub(msg, 1, 6) == "custom" then
-        local tsmString = strsub(msg, 8)
-        if tsmString == nil or tsmString == "" then
-            print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING .. "|cFF36e8e6" .. GetCurrentTSMString() .. "|r")
-            return
-        end
-        SetTSMString(tsmString)
+        ParseCustomString(msg)
     elseif strsub(msg, 1, 6) == "mprice" then
         ParseMinPrice(msg)
     else
@@ -185,8 +180,17 @@ local function slash(msg, _)
 end
 SlashCmdList["MONEYLOOTER"] = slash
 
-function ParseMinPrice(input)
-    local mprice, value, coin = strsplit(" ", input, 3)
+function ParseCustomString(msg)
+    local _, tsmString = strsplit(" ", msg, 2)
+    if tsmString == nil or tsmString == "" then
+        print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING .. "|cFF36e8e6" .. GetCurrentTSMString() .. "|r")
+        return
+    end
+    SetTSMString(tsmString)
+end
+
+function ParseMinPrice(msg)
+    local mprice, value, coin = strsplit(" ", msg, 3)
     if strlenutf8(mprice) < 7 then
         print(_G.MONEYLOOTER_L_MPRICE_ERROR)
         return
@@ -203,6 +207,9 @@ function ParseMinPrice(input)
         end,
         [4] = function(val)
             SetMinPrice4(val)
+        end,
+        [99] = function(val)
+            SetAllMinPrices(val)
         end
     }
     local coinValue
@@ -212,11 +219,20 @@ function ParseMinPrice(input)
     elseif coin == "s" then
         coinValue = 100
         coin = "S"
-    else
+    elseif coin == "c" then
         coinValue = 1
         coin = "C"
+    else
+        print(_G.MONEYLOOTER_L_MPRICE_UNRECOGNIZED_COIN)
+        return
     end
-    local qual = tonumber(strsub(mprice, 7, 8))
+    local type = strsub(mprice, 7, 8)
+    local qual
+    if type == "x" then
+        qual = 99
+    else
+        qual = tonumber(type)
+    end
     mprices[qual](value * coinValue)
     local formatted = string.format("%s %s %s %s [%s]", _G.MONEYLOOTER_L_MPRICE_VALID, tostring(value),
         _G["MONEYLOOTER_L_MPRICE_COIN_" .. coin], _G["MONEYLOOTER_L_MPRICE_QUALITY_" .. tostring(qual)],

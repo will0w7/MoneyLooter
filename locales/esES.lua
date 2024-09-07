@@ -51,6 +51,7 @@ MONEYLOOTER_LOCALES.esES = function()
   L["MPRICE_QUALITY_2"] = "Poco común"
   L["MPRICE_QUALITY_3"] = "Raro"
   L["MPRICE_QUALITY_4"] = "Épico"
+  L["MPRICE_UNRECOGNIZED_COIN"] = "|cFFd8de35Money Looter:|r Moneda no reconocida, comprueba la entrada."
   L["MPRICE_COIN_G"] = "Oro"
   L["MPRICE_COIN_S"] = "Plata"
   L["MPRICE_COIN_C"] = "Cobre"
