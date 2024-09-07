@@ -15,7 +15,7 @@
 ## SavedVariablesPerCharacter: MoneyLooterDB
 ## OptionalDeps: TradeSkillMaster, Auctionator
 
-versions\Init.lua
+versions\InitMainline.lua
 locales\Manifest.xml
 
 utils\Manifest.xml
