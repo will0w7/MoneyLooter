@@ -20,10 +20,10 @@ jobs:
             pkgmeta: .pkgmeta_classic
           - type: classic
             pkgmeta: .pkgmeta_cata
-          - type: wrath
-            pkgmeta: .pkgmeta_wrath
-          - type: tbc
-            pkgmeta: .pkgmeta_tbc
+          # - type: wrath
+          #   pkgmeta: .pkgmeta_wrath
+          # - type: tbc
+          #   pkgmeta: .pkgmeta_tbc
 
     runs-on: ubuntu-latest
 
