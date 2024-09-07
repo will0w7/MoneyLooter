@@ -1,11 +1,13 @@
 
 ML_STRINGS = {
     ML_ADDON_NAME = "MoneyLooter",
-    ML_ADDON_VERSION = "\@project-version\@",
+    ML_ADDON_VERSION = "",
     ML_TITLE = "|cFFd8de35MoneyLooter!|r",
     ML_FONT = "Fonts\\FRIZQT__.TTF",
     ML_TSM_STRING = "dbmarket"
 }
+
+ML_STRINGS.ML_ADDON_VERSION = GetAddOnMetadata(ML_STRINGS.ML_ADDON_NAME, "Version")
 
 ML_EVENTS = {
     OnEvent = "OnEvent",
