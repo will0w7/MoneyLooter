@@ -9,11 +9,11 @@ on:
 
 
 jobs:
-  build:
+  package_curse:
     strategy:
       matrix:
         type: [retail, classic, cata]
-        # type: [retail, classic, cata, wrath, tbc]
+        
         include:
           - type: retail
             pkgmeta: .pkgmeta
@@ -21,10 +21,6 @@ jobs:
             pkgmeta: .pkgmeta_classic
           - type: cata
             pkgmeta: .pkgmeta_cata
-          # - type: wrath
-          #   pkgmeta: .pkgmeta_wrath
-          # - type: tbc
-          #   pkgmeta: .pkgmeta_tbc
 
     runs-on: ubuntu-latest
 
@@ -35,8 +31,37 @@ jobs:
 
       - uses: BigWigsMods/packager@master
         with:
-          args: -p 1098459 -a qKQxDo6x -g ${{matrix.type}} -m ${{matrix.pkgmeta}}
+          args: -p 1098459 -g ${{matrix.type}} -m ${{matrix.pkgmeta}}
         env:
           GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
+
+  package_wago:
+    strategy:
+      matrix:
+        type: [retail, classic, cata, wrath, tbc]
+        include:
+          - type: retail
+            pkgmeta: .pkgmeta
+          - type: classic
+            pkgmeta: .pkgmeta_classic
+          - type: cata
+            pkgmeta: .pkgmeta_cata
+          - type: wrath
+            pkgmeta: .pkgmeta_wrath
+          - type: tbc
+            pkgmeta: .pkgmeta_tbc
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: BigWigsMods/packager@master
+        with:
+          args: -a qKQxDo6x -g ${{matrix.type}} -m ${{matrix.pkgmeta}}
+        env:
+          GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
           WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
