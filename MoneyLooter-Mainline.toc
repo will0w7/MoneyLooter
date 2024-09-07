@@ -4,10 +4,13 @@
 ## Author: Will0w7
 ## Notes: A lightweight and fast addon to see how much gold you earn on your farms
 ## Notes-esES: Un addon ligero y rápido para ver cuanto oro ganas en tus farmeos
+## IconTexture: Interface\Icons\inv_misc_coin_02
+
+## X-Wago-ID: qKQxDo6x
+
 ## SavedVariables: MoneyLooterXDB
 ## SavedVariablesPerCharacter: MoneyLooterDB
 ## OptionalDeps: TradeSkillMaster, Auctionator
-## IconTexture: Interface\Icons\inv_misc_coin_02
 
 versions\Init.lua
 locales\Manifest.xml

@@ -1,8 +1,23 @@
-# This is a basic workflow to help you get started with Actions
 name: Package addon
 
-# Controls when the workflow will run
 on:
+  workflow_dispatch:
+    inputs:
+      retail:
+        type: boolean
+        description: Retail
+      cata:
+        type: boolean
+        description: Cataclysm
+      wrath:
+        type: boolean
+        description: Wrath
+      bcc:
+        type: boolean
+        description: Burning
+      classic:
+        type: boolean
+        description: Classic
   push:
     branches:
       - main
@@ -10,6 +25,7 @@ on:
       - '*'
     paths-ignore:
       - '.github/**'
+
 
 jobs:
   build:
@@ -21,10 +37,42 @@ jobs:
         with:
           fetch-depth: 0
           
-      - name: Package
-        uses: BigWigsMods/packager@v2
+      - name: Release Retail
+        if: ${{ inputs.retail }}
+        uses: BigWigsMods/packager@master
         env:
+          GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
           WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
-          WOWI_API_TOKEN: ${{ secrets.WOWI_API_TOKEN }}
+  
+      - name: Release Cata
+        if: ${{ inputs.cata }}
+        uses: BigWigsMods/packager@master
+        env:
           GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+          CF_API_KEY: ${{ secrets.CF_API_KEY }}
+          WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
+  
+      - name: Create Wrath Package
+        if: ${{ inputs.wrath }}
+        uses: BigWigsMods/packager@master
+        env:
+          GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+          CF_API_KEY: ${{ secrets.CF_API_KEY }}
+          WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
+  
+      - name: Create BCC Package
+        if: ${{ inputs.bcc }}
+        uses: BigWigsMods/packager@master
+        env:
+          GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+          CF_API_KEY: ${{ secrets.CF_API_KEY }}
+          WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
+  
+      - name: Create Vanilla Package
+        if: ${{ inputs.classic }}
+        uses: BigWigsMods/packager@master
+        env:
+          GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+          CF_API_KEY: ${{ secrets.CF_API_KEY }}
+          WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
