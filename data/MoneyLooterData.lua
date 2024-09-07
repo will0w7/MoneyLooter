@@ -6,7 +6,7 @@ local DefaultMoneyLooterDB = {
     Running = false,
     RawGold = 0,
     ItemsMoney = 0,
-    TotalMoney = 0,
+    -- TotalMoney = 0,
     Priciest = 0,
     PriciestID = nil,
     LootedItems = {},
@@ -23,7 +23,7 @@ local DefaultMoneyLooterDB = {
     ----------------------------------------------
     ScrollLootFrameVisible = true,
     ----------------------------------------------
-    DBVersion = 1725659574995
+    DBVersion = 1725738241524
 }
 
 MoneyLooterDB = MoneyLooterDB
@@ -101,22 +101,22 @@ function AddItemsMoney(val)
     end
 end
 
-function GetTotalMoney()
-    return MoneyLooterDB.TotalMoney or 0
-end
+-- function GetTotalMoney()
+--     return MoneyLooterDB.TotalMoney or 0
+-- end
 
-function SetTotalMoney(val)
-    MoneyLooterDB.TotalMoney = 0
-    if val ~= nil then
-        MoneyLooterDB.TotalMoney = val
-    end
-end
+-- function SetTotalMoney(val)
+--     MoneyLooterDB.TotalMoney = 0
+--     if val ~= nil then
+--         MoneyLooterDB.TotalMoney = val
+--     end
+-- end
 
-function AddTotalMoney(val)
-    if val ~= nil then
-        MoneyLooterDB.TotalMoney = MoneyLooterDB.TotalMoney + val
-    end
-end
+-- function AddTotalMoney(val)
+--     if val ~= nil then
+--         MoneyLooterDB.TotalMoney = MoneyLooterDB.TotalMoney + val
+--     end
+-- end
 
 function GetPriciest()
     return MoneyLooterDB.Priciest or 0

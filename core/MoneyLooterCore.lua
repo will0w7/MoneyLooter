@@ -99,13 +99,13 @@ end
 function LootEventHandler(self, event, ...)
     if event == ML_EVENTS.MerchantUpdate then
         SetOldMoney(GetMoney())
-    elseif event == ML_EVENTS.ChatMsgMoney then
+    elseif event == ML_EVENTS.ChatMsgMoney or event == ML_EVENTS.QuestTurnedIn then
         local newmoney = GetMoney()
         local change = (newmoney - GetOldMoney())
         AddRawGold(change)
-        AddTotalMoney(change)
+        -- AddTotalMoney(change)
         SetOldMoney(newmoney)
-    elseif event == ML_EVENTS.ChatMsgLoot then
+    elseif event == ML_EVENTS.ChatMsgLoot or event == ML_EVENTS.QuestLootReceived then
         local lootstring, _, _, _, playerName2 = ...
         if lootstring == nil then return end
 
@@ -121,7 +121,6 @@ function LootEventHandler(self, event, ...)
             GetItemInfo(itemString)
 
         local amount = string.match(lootstring, "x(%d+)%p$") or 1
-        -- if amount == nil then amount = 1 end
         if (string.len(itemName) > 30) then itemName = string.sub(itemName, 1, 30) .. "..." end
 
         local price = 0
@@ -139,7 +138,7 @@ function LootEventHandler(self, event, ...)
         InsertLootedItem(i)
         -- only individual items, not groups (1xBismuth not 5xBismuth)
         SetPriciest(price, itemID)
-        AddTotalMoney(totalPrice)
+        -- AddTotalMoney(totalPrice)
         MoneyLooterUpdateLoot()
     end
 end
