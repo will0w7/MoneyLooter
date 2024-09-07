@@ -1,4 +1,4 @@
-# MoneyLooter - Loot and Gold Tracker Addon
+# MoneyLooter - Loot and Gold Farm Tracker Addon
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
