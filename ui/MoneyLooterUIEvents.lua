@@ -234,10 +234,9 @@ function ParseMinPrice(msg)
         qual = tonumber(type)
     end
     mprices[qual](value * coinValue)
-    local formatted = string.format("%s %s %s %s [%s]", _G.MONEYLOOTER_L_MPRICE_VALID, tostring(value),
+    print(string.format("%s %s %s %s [%s]", _G.MONEYLOOTER_L_MPRICE_VALID, tostring(value),
         _G["MONEYLOOTER_L_MPRICE_COIN_" .. coin], _G["MONEYLOOTER_L_MPRICE_QUALITY_" .. tostring(qual)],
-        tostring(qual))
-    print(formatted)
+        tostring(qual)))
 end
 
 -----------------------------------------------------------------------------------------------
