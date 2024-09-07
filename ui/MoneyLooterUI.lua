@@ -1,11 +1,11 @@
 -- Author      : Will0w7
 -- MoneyLooterUI --
 
-----------------------------------------------------------------------------------
-GetCoinTextureString = C_CurrencyInfo.GetCoinTextureString or GetCoinTextureString
-----------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
+local GetCoinTextureString = C_CurrencyInfo.GetCoinTextureString or GetCoinTextureString
+----------------------------------------------------------------------------------------
 local _, ml_table = ...
-----------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
 
 MoneyLooterMainUIFrame = CreateFrame("Frame", ML_STRINGS.ML_ADDON_NAME, UIParent,
     BackdropTemplateMixin and "BackdropTemplate")
