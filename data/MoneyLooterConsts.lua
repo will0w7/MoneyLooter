@@ -1,7 +1,7 @@
 
 ML_STRINGS = {
     ML_ADDON_NAME = "MoneyLooter",
-    ML_ADDON_VERSION = "0.89.2",
+    ML_ADDON_VERSION = "\@project-version\@",
     ML_TITLE = "|cFFd8de35MoneyLooter!|r",
     ML_FONT = "Fonts\\FRIZQT__.TTF",
     ML_TSM_STRING = "dbmarket"

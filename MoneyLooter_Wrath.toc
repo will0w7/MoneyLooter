@@ -1,5 +1,5 @@
-## Interface: 110002
-## Version: 0.89.2
+## Interface: 30403
+## Version: @project-version@
 ## Title: MoneyLooter
 ## Author: Will0w7
 ## Notes: A lightweight and fast addon to see how much gold you earn on your farms
@@ -9,12 +9,13 @@
 ## X-Wago-ID: qKQxDo6x
 ## X-Curse-Project-ID: 1098459
 ## X-Category: Auction/Economy
+## X-Localizations: enUS, esES
 
 ## SavedVariables: MoneyLooterXDB
 ## SavedVariablesPerCharacter: MoneyLooterDB
 ## OptionalDeps: TradeSkillMaster, Auctionator
 
-versions\Init.lua
+versions\InitClassic.lua
 locales\Manifest.xml
 
 utils\Manifest.xml

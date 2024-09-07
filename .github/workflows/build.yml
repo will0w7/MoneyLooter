@@ -12,54 +12,31 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        type: [retail, classic, cata, wrath, tbc]
+        include:
+          - type: retail
+            pkgmeta: .pkgmeta
+          - type: cata
+            pkgmeta: .pkgmeta_classic
+          - type: classic
+            pkgmeta: .pkgmeta_cata
+          - type: classic
+            pkgmeta: .pkgmeta_wrath
+          - type: classic
+            pkgmeta: .pkgmeta_tbc
+
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Checkout MoneyLooter
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
-      - name: Release Retail
-        uses: BigWigsMods/packager@master
+
+      - uses: BigWigsMods/packager@master
         with:
-          args: -m .pkgmeta
-        env:
-          GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
-          CF_API_KEY: ${{ secrets.CF_API_KEY }}
-          WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
-  
-      - name: Release Cataclysm
-        uses: BigWigsMods/packager@master
-        with:
-          args: -m .pkgmeta_cata
-        env:
-          GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
-          CF_API_KEY: ${{ secrets.CF_API_KEY }}
-          WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
-  
-      - name: Release Wrath
-        uses: BigWigsMods/packager@master
-        with:
-          args: -m .pkgmeta_wrath
-        env:
-          GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
-          CF_API_KEY: ${{ secrets.CF_API_KEY }}
-          WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
-  
-      - name: Release Burning
-        uses: BigWigsMods/packager@master
-        with:
-          args: -m .pkgmeta_tbc
-        env:
-          GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
-          CF_API_KEY: ${{ secrets.CF_API_KEY }}
-          WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
-  
-      - name: Release Classic
-        uses: BigWigsMods/packager@master
-        with:
-          args: -m .pkgmeta_classic
+          args: -p 1098459 -a qKQxDo6x -g ${{matrix.type}} -m ${{matrix.pkgmeta}}
         env:
           GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
