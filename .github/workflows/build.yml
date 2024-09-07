@@ -22,9 +22,9 @@ jobs:
             pkgmeta: .pkgmeta_classic
           - type: classic
             pkgmeta: .pkgmeta_cata
-          - type: classic
+          - type: wrath
             pkgmeta: .pkgmeta_wrath
-          - type: classic
+          - type: tbc
             pkgmeta: .pkgmeta_tbc
 
     runs-on: ubuntu-latest
