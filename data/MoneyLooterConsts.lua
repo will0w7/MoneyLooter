@@ -2,11 +2,12 @@
 -- MoneyLooterConsts --
 
 ML_STRINGS = {
-    ML_ADDON_NAME = "MoneyLooter",
-    ML_ADDON_VERSION = "",
-    ML_TITLE = "|cFFd8de35MoneyLooter!|r",
-    ML_FONT = "Fonts\\FRIZQT__.TTF",
-    ML_TSM_STRING = "dbmarket"
+    ADDON_NAME = "MoneyLooter",
+    ADDON_VERSION = "",
+    TITLE_OLD = "|cFFd8de35MoneyLooter!|r",
+    FONT_OLD = "Fonts\\FRIZQT__.TTF",
+    TSM_STRING = "dbmarket",
+    TITLE = "MoneyLooter"
 }
 
 ML_EVENTS = {

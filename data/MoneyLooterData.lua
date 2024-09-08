@@ -283,7 +283,7 @@ function SetAllMinPrices(val)
 end
 
 function GetCurrentTSMString()
-    return MoneyLooterXDB.CurrentTSMString or ML_STRINGS.ML_TSM_STRING
+    return MoneyLooterXDB.CurrentTSMString or ML_STRINGS.TSM_STRING
 end
 
 function SetTSMString(val)

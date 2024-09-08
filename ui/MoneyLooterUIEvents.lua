@@ -11,7 +11,7 @@ local tostring = tostring
 ----------------------------------------------------------------------------------------
 
 function PopulateData()
-    ML_STRINGS.ML_ADDON_VERSION = GetAddOnMetadata(ML_STRINGS.ML_ADDON_NAME, "Version")
+    ML_STRINGS.ADDON_VERSION = GetAddOnMetadata(ML_STRINGS.ADDON_NAME, "Version")
     MoneyLooterStartButton:SetText(GetCurrentStartStopText())
     MoneyLooterTimeFS:SetText(tostring(date("!%X", GetTimer())))
     MoneyLooterRawGoldFS:SetText(GetCoinTextureString(GetRawGold()))
@@ -80,7 +80,7 @@ end)
 
 MoneyLooterCloseButton:SetScript(ML_EVENTS.OnClick, function()
     SetVisible(false)
-    print(_G.MONEYLOOTER_L_CLOSE);
+    print(_G.MONEYLOOTER_L_CLOSE)
 end)
 
 MoneyLooterMinimizeCheck:SetScript(ML_EVENTS.OnClick, function()
@@ -138,7 +138,7 @@ MoneyLooterMainUIFrame:SetScript(ML_EVENTS.OnDragStop, MoneyLooterMainUIFrame.St
 MoneyLooterMainUIFrame:SetScript(ML_EVENTS.OnHide, MoneyLooterMainUIFrame.StopMovingOrSizing)
 
 MoneyLooterScrollLootFrame:SetScript(ML_EVENTS.OnHyperLinkClick, function(_, link, text)
-    SetItemRef(link, text);
+    SetItemRef(link, text)
 end)
 MoneyLooterScrollLootFrame:SetScript(ML_EVENTS.OnHyperLinkEnter, OnHyperlinkEnter)
 MoneyLooterScrollLootFrame:SetScript(ML_EVENTS.OnHyperLinkLeave, OnHyperlinkLeave)
@@ -178,7 +178,7 @@ local function slash(msg, _)
     elseif strsub(msg, 1, 6) == "mprice" then
         ParseMinPrice(msg)
     else
-        print(_G.MONEYLOOTER_L_USAGE .. ML_STRINGS.ML_ADDON_VERSION)
+        print(_G.MONEYLOOTER_L_USAGE .. ML_STRINGS.ADDON_VERSION)
     end
 end
 SlashCmdList["MONEYLOOTER"] = slash
@@ -248,7 +248,7 @@ local watcher = CreateFrame("Frame")
 watcher:RegisterEvent(ML_EVENTS.AddonLoaded)
 
 function WatcherOnEvent(self, event, arg1)
-    if event == ML_EVENTS.AddonLoaded and arg1 == ML_STRINGS.ML_ADDON_NAME then
+    if event == ML_EVENTS.AddonLoaded and arg1 == ML_STRINGS.ADDON_NAME then
         print(_G.MONEYLOOTER_L_WELCOME)
         UpdateMLDB()
         UpdateMLXDB()

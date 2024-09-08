@@ -12,6 +12,12 @@ MONEYLOOTER_LOCALES.enUS = function()
   L["ITEMS_LABEL"] = "Items:"
   L["GPH_LABEL"] = "GPH:"
   L["PRICIEST_LABEL"] = "Priciest:"
+
+  L[""] = ""
+  L["LOG_BAR"] = "Test"
+  L["RESET_INSTANCE"] = "Reset Instance"
+  L["OPTIONS"] = "Options"
+
   L["USAGE"] = [[====== |cFFd8de35MoneyLooter Usage Info|r ======
   |cFF36e8e6/ml|r: Toggle Show/Hide
   |cFF36e8e6/ml|r |cFFf1f488help|r: Show the help

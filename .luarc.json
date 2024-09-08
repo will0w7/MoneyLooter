@@ -11,7 +11,16 @@
     "OnHyperlinkEnter",
     "OnHyperlinkLeave",
     "TSM_API",
-    "SlashCmdList"
+    "SlashCmdList",
+        "ToolWindowOwnerMixin",
+        "ButtonFrameTemplate_HidePortrait",
+        "ScrollUtil",
+        "CreateDataProvider",
+        "MoneyLooterTooltip",
+        "GameTooltip_AddHighlightLine",
+        "GameTooltip_AddColoredDoubleLine",
+        "AddTooltipArguments",
+        "CreateScrollBoxListLinearView"
   ],
   "runtime.version": "Lua 5.1",
   "workspace.ignoreDir": [

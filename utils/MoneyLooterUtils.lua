@@ -26,5 +26,5 @@ function table.deep_copy_meta(obj)
 end
 
 function CreateTextureFromItemID(itemId)
-    return ("|T%s:0|t"):format(tostring(C_Item.GetItemIconByID(itemId)));
+    return ("|T%s:0|t"):format(tostring(C_Item.GetItemIconByID(itemId)))
 end
