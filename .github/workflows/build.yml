@@ -23,8 +23,8 @@ jobs:
             pkgmeta: .pkgmeta_cata
           - type: wrath
             pkgmeta: .pkgmeta_wrath
-          - type: tbc
-            pkgmeta: .pkgmeta_tbc
+          - type: bcc
+            pkgmeta: .pkgmeta_bcc
 
     runs-on: ubuntu-latest
 
