@@ -1,7 +1,10 @@
 package-as: MoneyLooter
 ignore:
   - README.md
-  - *Mainline*
+  - *Mainline*,
+  - *TBC*
+  - *Wrath*
+  - *Classic*
 plain-copy:
   - core
   - data
