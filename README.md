@@ -15,7 +15,7 @@ A lightweight and blazingly-fast 🦀 World of Warcraft addon designed to track 
 
 ## Installation
 
-Download the latest release from [Wago](https://addons.wago.io/addons/moneylooter), [CurseForge](https://legacy.curseforge.com/wow/addons/moneylooter-loot-and-gold-tracker) using your favourite addon manager.
+Download the latest release from [Wago](https://addons.wago.io/addons/moneylooter), [CurseForge](https://www.curseforge.com/wow/addons/moneylooter) using your favourite addon manager.
 
 ## Manual Installation
 
