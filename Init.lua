@@ -1,4 +1,9 @@
+-- Author      : Will0w7
+-- Init --
+
+-----------------------
 local _, ml_table = ...
+-----------------------
 if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
     ml_table.isRetail = true
 elseif WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then

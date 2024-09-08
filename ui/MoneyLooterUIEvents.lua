@@ -1,6 +1,7 @@
 -- Author      : Will0w7
 -- MoneyLooterUIEvents --
 
+----------------------------------------------------------------------------------------
 local _, ml_table = ...
 ----------------------------------------------------------------------------------------
 local GetCoinTextureString = C_CurrencyInfo.GetCoinTextureString or GetCoinTextureString
@@ -115,7 +116,7 @@ function RegisterStartEvents()
     MoneyLooterLootEvents:RegisterEvent(ML_EVENTS.ChatMsgMoney)
     MoneyLooterLootEvents:RegisterEvent(ML_EVENTS.ChatMsgLoot)
     MoneyLooterLootEvents:RegisterEvent(ML_EVENTS.MerchantUpdate)
-    if not ml_table.isClassic then
+    if not ml_table.isClassic or not ml_table.isTBC then
         MoneyLooterLootEvents:RegisterEvent(ML_EVENTS.QuestLootReceived)
     end
     MoneyLooterLootEvents:SetScript(ML_EVENTS.OnEvent, LootEventHandler)
@@ -129,7 +130,7 @@ function UnregisterStartEvents()
     MoneyLooterLootEvents:UnregisterEvent(ML_EVENTS.ChatMsgLoot)
     MoneyLooterLootEvents:UnregisterEvent(ML_EVENTS.MerchantUpdate)
     MoneyLooterLootEvents:UnregisterEvent(ML_EVENTS.QuestTurnedIn)
-    if not ml_table.isClassic then
+    if not ml_table.isClassic or not ml_table.isTBC then
         MoneyLooterLootEvents:UnregisterEvent(ML_EVENTS.QuestLootReceived)
     end
     MoneyLooterLootEvents:SetScript(ML_EVENTS.OnEvent, nil)
