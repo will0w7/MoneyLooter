@@ -118,7 +118,7 @@ function GetLinkAndQuantity(lootString)
         local itemLink, quantity = string.match(lootString, pattern)
         if itemLink then return itemLink, tonumber(quantity) or 1 end
     end
-    return 1
+    return nil, nil
 end
 
 function LootEventHandler(self, event, ...)
