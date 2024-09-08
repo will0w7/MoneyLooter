@@ -4,7 +4,7 @@
 ----------------------------------------------------------------------------------------
 local GetCoinTextureString = C_CurrencyInfo.GetCoinTextureString or GetCoinTextureString
 ----------------------------------------------------------------------------------------
-local _, ml_table = ...
+local _, MoneyLooter = ...
 ----------------------------------------------------------------------------------------
 
 MoneyLooterMainUIFrame = CreateFrame("Frame", ML_STRINGS.ADDON_NAME, UIParent,
@@ -26,7 +26,7 @@ MoneyLooterMainUIFrame:SetMovable(true)
 MoneyLooterMainUIFrame:RegisterForDrag("LeftButton")
 
 MoneyLooterCloseButton = CreateFrame("Button", "Close", MoneyLooterMainUIFrame, "UIPanelCloseButton")
-if ml_table.isRetail then
+if MoneyLooter.isRetail then
     MoneyLooterCloseButton:SetPoint("TOPLEFT", MoneyLooterMainUIFrame, "TOPLEFT", 2, -2)
 else
     MoneyLooterCloseButton:SetPoint("TOPLEFT", MoneyLooterMainUIFrame, "TOPLEFT", -2, 2)
@@ -145,3 +145,4 @@ MoneyLooterScrollLootFrame:SetFont(ML_STRINGS.FONT, 12, "")
 MoneyLooterScrollLootFrame:SetJustifyH("LEFT")
 MoneyLooterScrollLootFrame:EnableMouse(true)
 MoneyLooterScrollLootFrame:SetHyperlinksEnabled(true)
+
