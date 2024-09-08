@@ -12,6 +12,10 @@ local date = date
 local tostring = tostring
 ----------------------------------------------------------------------------------------
 
+function CreateTextureFromItemID(itemId)
+    return ("|T" .. tostring(C_Item.GetItemIconByID(itemId)) .. ":0|t")
+end
+
 function PopulateData()
     ML_STRINGS.ADDON_VERSION = GetAddOnMetadata(ML_STRINGS.ADDON_NAME, "Version")
     MoneyLooterStartButton:SetText(GetCurrentStartStopText())

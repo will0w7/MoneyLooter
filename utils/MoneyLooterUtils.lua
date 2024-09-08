@@ -24,7 +24,3 @@ function table.deep_copy_meta(obj)
     for k, v in pairs(obj) do res[table.deep_copy_meta(k)] = table.deep_copy_meta(v) end
     return res
 end
-
-function CreateTextureFromItemID(itemId)
-    return ("|T%s:0|t"):format(tostring(C_Item.GetItemIconByID(itemId)));
-end
