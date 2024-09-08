@@ -116,7 +116,7 @@ end
 function GetLinkAndQuantity(lootString)
     for _, pattern in ipairs(LOOT_PATTERNS_SELF) do
         local itemLink, quantity = string.match(lootString, pattern)
-        if quantity then return itemLink, tonumber(quantity) or 1 end
+        if itemLink then return itemLink, tonumber(quantity) or 1 end
     end
     return 1
 end
