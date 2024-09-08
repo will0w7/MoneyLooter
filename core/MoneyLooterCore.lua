@@ -48,22 +48,22 @@ local GetAucPrice = {
         return sellPrice
     end,
     [1] = function(isCraftingReagent, itemLink, _)
-        local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(ML_STRINGS.ML_ADDON_NAME, itemLink)
+        local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(ML_STRINGS.ADDON_NAME, itemLink)
         if value ~= nil and (value >= GetMinPrice1() or isCraftingReagent) then return value end
         return 0
     end,
     [2] = function(isCraftingReagent, itemLink, _)
-        local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(ML_STRINGS.ML_ADDON_NAME, itemLink)
+        local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(ML_STRINGS.ADDON_NAME, itemLink)
         if value ~= nil and (value >= GetMinPrice2() or isCraftingReagent) then return value end
         return 0
     end,
     [3] = function(isCraftingReagent, itemLink, _)
-        local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(ML_STRINGS.ML_ADDON_NAME, itemLink)
+        local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(ML_STRINGS.ADDON_NAME, itemLink)
         if value ~= nil and (value >= GetMinPrice3() or isCraftingReagent) then return value end
         return 0
     end,
     [4] = function(isCraftingReagent, itemLink, _)
-        local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(ML_STRINGS.ML_ADDON_NAME, itemLink)
+        local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(ML_STRINGS.ADDON_NAME, itemLink)
         if value ~= nil and (value >= GetMinPrice4() or isCraftingReagent) then return value end
         return 0
     end,
