@@ -11,7 +11,15 @@
     "OnHyperlinkEnter",
     "OnHyperlinkLeave",
     "TSM_API",
-    "SlashCmdList"
+    "SlashCmdList",
+        "LOOT_ITEM_SELF",
+        "LOOT_ITEM_SELF_MULTIPLE",
+        "LOOT_ITEM_PUSHED_SELF",
+        "LOOT_ITEM_PUSHED_SELF_MULTIPLE",
+        "LOOT_ITEM",
+        "LOOT_ITEM_MULTIPLE",
+        "LOOT_ITEM_PUSHED",
+        "LOOT_ITEM_PUSHED_MULTIPLE"
   ],
   "runtime.version": "Lua 5.1",
   "workspace.ignoreDir": [

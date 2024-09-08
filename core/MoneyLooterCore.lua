@@ -111,38 +111,45 @@ function CalculatePrice(itemLink)
     return price, itemName
 end
 
+function GetLinkAndQuantity(lootString)
+    for _, pattern in #LOOT_PATTERNS_SELF do
+        local itemLink, quantity = string.match(lootString, pattern)
+        if quantity then return itemLink, tonumber(quantity) or 1 end
+    end
+    return 1
+end
+
 function LootEventHandler(self, event, ...)
     if event == ML_EVENTS.MerchantUpdate then
         SetOldMoney(GetMoney())
     elseif event == ML_EVENTS.ChatMsgMoney or event == ML_EVENTS.QuestTurnedIn then
-        local newmoney = GetMoney()
-        local change = (newmoney - GetOldMoney())
+        local newMoney = GetMoney()
+        local change = (newMoney - GetOldMoney())
         AddRawGold(change)
         AddTotalMoney(change)
-        SetOldMoney(newmoney)
+        SetOldMoney(newMoney)
     elseif event == ML_EVENTS.ChatMsgLoot then
-        local lootstring, _, _, _, playerName2 = ...
-        if lootstring == nil then return end
+        local lootString, _, _, _, playerName2 = ...
+        if lootString == nil then return end
 
         local playerName, _ = GetUnitName("player")
         local playerNameFromPN2, _ = strsplit('-', playerName2, 2)
         if playerName ~= playerNameFromPN2 then return end
 
-        local itemLink = string.match(lootstring, "|%x+|Hitem:.-|h.-|h|r")
+        local itemLink, quantity = GetLinkAndQuantity(lootString)
         if itemLink == nil then return end
 
         local price, itemName = CalculatePrice(itemLink)
 
         if (string.len(itemName) > 30) then itemName = string.sub(itemName, 1, 30) .. "..." end
-        local quantity = string.match(lootstring, "x(%d+)%p$") or 1
 
         local totalPrice = price * quantity
         local itemID = GetItemInfoFromHyperlink(itemLink)
         local i = LootedItem.new(itemID, itemLink, totalPrice, quantity)
         InsertLootedItem(i)
-        -- only individual items, not groups (1xBismuth not 5xBismuth)
         AddItemsMoney(totalPrice)
         AddTotalMoney(totalPrice)
+        -- only individual items, not groups (1xBismuth not 5xBismuth)
         SetPriciest(price, itemID)
         MoneyLooterUpdateLoot()
     elseif event == ML_EVENTS.QuestLootReceived then
@@ -150,14 +157,14 @@ function LootEventHandler(self, event, ...)
         if itemLink == nil then return end
 
         local price = CalculatePrice(itemLink)
-        
+
         local totalPrice = price * quantity
         local itemID = GetItemInfoFromHyperlink(itemLink)
         local i = LootedItem.new(itemID, itemLink, totalPrice, quantity)
         InsertLootedItem(i)
-        -- only individual items, not groups (1xBismuth not 5xBismuth)
         AddItemsMoney(totalPrice)
         AddTotalMoney(totalPrice)
+        -- only individual items, not groups (1xBismuth not 5xBismuth)
         SetPriciest(price, itemID)
         MoneyLooterUpdateLoot()
     end
