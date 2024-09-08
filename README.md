@@ -74,7 +74,7 @@ The price format for mpricex is a number followed by g(old), s(ilver) or c(opper
 MoneyLooter by default sets the minimum prices to 0 for all item qualities. Also, the TSM string it uses is 'dbmarket'.
 If you want to change this setting you can do the following:
 
-* **TSM Custom String:** Type /ml custom tsmCustomString
+* **TSM Custom String:** Type /ml custom 'tsmCustomString'
 
         For example:
         /ml custom check(dbmarket - 1000g, 95% dbmarket, 50% dbmarket)
@@ -84,7 +84,7 @@ If you want to change this setting you can do the following:
     If you want to return to the default settings use:
 
         /ml custom dbmarket
-* **TSM Minimum price threshold:** Type /ml mprice1 1234 (g|s|c)
+* **TSM Minimum price threshold:** Type /ml mprice1 '1234 (g|s|c)'
 
         For example:
         /ml mprice2 5500 g
@@ -93,10 +93,7 @@ If you want to change this setting you can do the following:
 
     If you want to return to the default settings use:
 
-        /ml mprice1 0
-        /ml mprice2 0
-        /ml mprice3 0
-        /ml mprice4 0
+        /ml mpricex 0
 
     See [Usage](#usage) and check available qualities.
 
