@@ -10,6 +10,8 @@ local GetItemInfoFromHyperlink = GetItemInfoFromHyperlink
 local GetMoney = GetMoney
 local GetUnitName = GetUnitName
 local strsplit = strsplit
+local tonumber = tonumber
+local ipairs = ipairs
 ------------------------------------------------------------------------------
 
 local GetTSMPrice = {
@@ -112,7 +114,7 @@ function CalculatePrice(itemLink)
 end
 
 function GetLinkAndQuantity(lootString)
-    for _, pattern in #LOOT_PATTERNS_SELF do
+    for _, pattern in ipairs(LOOT_PATTERNS_SELF) do
         local itemLink, quantity = string.match(lootString, pattern)
         if quantity then return itemLink, tonumber(quantity) or 1 end
     end
