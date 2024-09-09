@@ -131,6 +131,7 @@ function LootEventHandler(self, event, ...)
         AddRawGold(change)
         AddTotalMoney(change)
         SetOldMoney(newMoney)
+        UpdateRawGold()
     elseif event == Constants.Events.ChatMsgLoot then
         local lootString, _, _, _, playerName2 = ...
         if lootString == nil then return end

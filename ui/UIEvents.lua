@@ -64,11 +64,13 @@ function PopulateLoot()
     end
 end
 
+function UpdateRawGold()
+    UI.MoneyLooterRawGoldFS:SetText(GetCoinTextureString(GetRawGold()))
+end
+
 function MoneyLooterUpdateTexts()
     AddOneToTimer()
     UI.MoneyLooterTimeFS:SetText(SetCurrentTimeText(tostring(date("!%X", GetTimer()))))
-    UI.MoneyLooterRawGoldFS:SetText(GetCoinTextureString(GetRawGold()))
-    UI.MoneyLooterItemsGoldFS:SetText(GetCoinTextureString(GetItemsMoney()))
     UI.MoneyLooterGPHFS:SetText(GetCoinTextureString(CalcGPH()))
 end
 
@@ -82,6 +84,7 @@ function MoneyLooterUpdateLoot()
             lootedItem.name .. " " .. GetCoinTextureString(lootedItem.value, 12))
     end
     UI.MoneyLooterPriciestFS:SetText(GetCoinTextureString(GetPriciest()))
+    UI.MoneyLooterItemsGoldFS:SetText(GetCoinTextureString(GetItemsMoney()))
     SetLootedItems({})
 end
 
