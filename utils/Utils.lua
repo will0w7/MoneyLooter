@@ -1,6 +1,3 @@
--- Author      : Will0w7
--- MoneyLooterUtils --
-
 -- https://gist.github.com/tylerneylon/81333721109155b2d244
 function table.shallow_copy(obj)
     if type(obj) ~= 'table' then return obj end
