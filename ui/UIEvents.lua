@@ -146,7 +146,7 @@ function RegisterStartEvents()
     MoneyLooterLootEvents:RegisterEvent(Constants.Events.ChatMsgMoney)
     MoneyLooterLootEvents:RegisterEvent(Constants.Events.ChatMsgLoot)
     MoneyLooterLootEvents:RegisterEvent(Constants.Events.MerchantUpdate)
-    if not MoneyLooter.isClassic or not MoneyLooter.isTBC then
+    if not MoneyLooter.isClassic and not MoneyLooter.isTBC then
         MoneyLooterLootEvents:RegisterEvent(Constants.Events.QuestLootReceived)
     end
     MoneyLooterLootEvents:SetScript(Constants.Events.OnEvent, LootEventHandler)
@@ -160,7 +160,7 @@ function UnregisterStartEvents()
     MoneyLooterLootEvents:UnregisterEvent(Constants.Events.ChatMsgLoot)
     MoneyLooterLootEvents:UnregisterEvent(Constants.Events.MerchantUpdate)
     MoneyLooterLootEvents:UnregisterEvent(Constants.Events.QuestTurnedIn)
-    if not MoneyLooter.isClassic or not MoneyLooter.isTBC then
+    if not MoneyLooter.isClassic and not MoneyLooter.isTBC then
         MoneyLooterLootEvents:UnregisterEvent(Constants.Events.QuestLootReceived)
     end
     MoneyLooterLootEvents:SetScript(Constants.Events.OnEvent, nil)
