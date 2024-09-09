@@ -43,9 +43,16 @@ function PopulateData()
     UI.MoneyLooterGPHFS:SetText(GetCoinTextureString(CalcGPH()))
     UI.MoneyLooterPriciestFS:SetText(GetCoinTextureString(GetPriciest()))
 
-    local scrollVisible = IsScrollLootFrameVisible()
-    SetScrollLootFrameVisible(scrollVisible)
-    UI.MoneyLooterMinimizeCheck:SetChecked(scrollVisible)
+    
+    if IsScrollLootFrameVisible() then
+        SetScrollLootFrameVisible(true)
+        UI.MoneyLooterMinimizeCheck:SetChecked(true)
+        UI.MoneyLooterScrollLootFrame:Show()
+    else
+        SetScrollLootFrameVisible(false)
+        UI.MoneyLooterMinimizeCheck:SetChecked(false)
+        UI.MoneyLooterScrollLootFrame:Hide()
+    end
 
     SetMainVisible(IsVisible())
     if IsRunning() then RegisterStartEvents() end
@@ -109,8 +116,10 @@ end)
 UI.MoneyLooterMinimizeCheck:SetScript(Constants.Events.OnClick, function()
     if IsScrollLootFrameVisible() then
         SetScrollLootFrameVisible(false)
+        UI.MoneyLooterScrollLootFrame:Hide()
     else
         SetScrollLootFrameVisible(true)
+        UI.MoneyLooterScrollLootFrame:Show()
     end
 end)
 
