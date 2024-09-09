@@ -79,7 +79,7 @@ If you want to change this setting you can do the following:
         For example:
         /ml custom check(dbmarket - 1000g, 95% dbmarket, 50% dbmarket)
 
-    In this example, MoneyLooter will use TSM (if available) with the custom price string 'min(50% dbhistorical, 100g)' to value your items (I'm not recommending this custom string, it's just an example 🙂).
+    In this example, MoneyLooter will use TSM (if available) with the custom price string 'check(dbmarket - 1000g, 95% dbmarket, 50% dbmarket)' to value your items (I'm not recommending this custom string, it's just an example 🙂).
 
     If you want to return to the default settings use:
 
