@@ -35,7 +35,7 @@ jobs:
 
       - uses: BigWigsMods/packager@master
         with:
-          args: -p 1098459 -a qKQxDo6x -w 0000 -g ${{matrix.type}} -m ${{matrix.pkgmeta}}
+          args: -p 1098459 -a qKQxDo6x -w 26844 -g ${{matrix.type}} -m ${{matrix.pkgmeta}}
         env:
           GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
