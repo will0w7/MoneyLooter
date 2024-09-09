@@ -145,7 +145,7 @@ function SetLootedItems(val)
 end
 
 function InitListLootedItems()
-    if MoneyLooterDB.ListLootedItems == nil or MoneyLooterDB.ListLootedItems[0] == nil then
+    if MoneyLooterDB.ListLootedItems == nil or MoneyLooterDB.ListLootedItems.buffer == nil then
         MoneyLooterDB.ListLootedItems = CircularBuffer_New(MoneyLooterDB.ListLootedItems, BufferCapacity)
     end
 end
