@@ -1,5 +1,9 @@
--- Author      : Will0w7
--- MoneyLooterCore --
+---@class MoneyLooter
+local MoneyLooter = select(2, ...)
+
+local Constants = MoneyLooter.Constants
+
+local LootedItem = MoneyLooter.LootedItem
 
 ------------------------------------------------------------------------------
 local TSM_API = TSM_API
@@ -7,11 +11,8 @@ local AUCTIONATOR_API = Auctionator and Auctionator.API and Auctionator.API.v1
 ------------------------------------------------------------------------------
 local GetItemInfo = C_Item.GetItemInfo or GetItemInfo
 local GetItemInfoFromHyperlink = GetItemInfoFromHyperlink
-local GetMoney = GetMoney
-local GetUnitName = GetUnitName
-local strsplit = strsplit
-local tonumber = tonumber
-local ipairs = ipairs
+local GetMoney, GetUnitName = GetMoney, GetUnitName
+local strsplit, tonumber, ipairs = strsplit, tonumber, ipairs
 ------------------------------------------------------------------------------
 
 local GetTSMPrice = {
@@ -48,22 +49,22 @@ local GetAucPrice = {
         return sellPrice
     end,
     [1] = function(isCraftingReagent, itemLink, _)
-        local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(ML_STRINGS.ADDON_NAME, itemLink)
+        local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
         if value ~= nil and (value >= GetMinPrice1() or isCraftingReagent) then return value end
         return 0
     end,
     [2] = function(isCraftingReagent, itemLink, _)
-        local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(ML_STRINGS.ADDON_NAME, itemLink)
+        local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
         if value ~= nil and (value >= GetMinPrice2() or isCraftingReagent) then return value end
         return 0
     end,
     [3] = function(isCraftingReagent, itemLink, _)
-        local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(ML_STRINGS.ADDON_NAME, itemLink)
+        local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
         if value ~= nil and (value >= GetMinPrice3() or isCraftingReagent) then return value end
         return 0
     end,
     [4] = function(isCraftingReagent, itemLink, _)
-        local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(ML_STRINGS.ADDON_NAME, itemLink)
+        local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
         if value ~= nil and (value >= GetMinPrice4() or isCraftingReagent) then return value end
         return 0
     end,
@@ -114,7 +115,7 @@ function CalculatePrice(itemLink)
 end
 
 function GetLinkAndQuantity(lootString)
-    for _, pattern in ipairs(LOOT_PATTERNS_SELF) do
+    for _, pattern in ipairs(Constants.PATTERNS_SELF) do
         local itemLink, quantity = string.match(lootString, pattern)
         if itemLink then return itemLink, tonumber(quantity) or 1 end
     end
@@ -122,15 +123,15 @@ function GetLinkAndQuantity(lootString)
 end
 
 function LootEventHandler(self, event, ...)
-    if event == ML_EVENTS.MerchantUpdate then
+    if event == Constants.Events.MerchantUpdate then
         SetOldMoney(GetMoney())
-    elseif event == ML_EVENTS.ChatMsgMoney or event == ML_EVENTS.QuestTurnedIn then
+    elseif event == Constants.Events.ChatMsgMoney or event == Constants.Events.QuestTurnedIn then
         local newMoney = GetMoney()
         local change = (newMoney - GetOldMoney())
         AddRawGold(change)
         AddTotalMoney(change)
         SetOldMoney(newMoney)
-    elseif event == ML_EVENTS.ChatMsgLoot then
+    elseif event == Constants.Events.ChatMsgLoot then
         local lootString, _, _, _, playerName2 = ...
         if lootString == nil then return end
 
@@ -154,7 +155,7 @@ function LootEventHandler(self, event, ...)
         -- only individual items, not groups (1xBismuth not 5xBismuth)
         SetPriciest(price, itemID)
         MoneyLooterUpdateLoot()
-    elseif event == ML_EVENTS.QuestLootReceived then
+    elseif event == Constants.Events.QuestLootReceived then
         local _, itemLink, quantity = ...
         if itemLink == nil then return end
 
