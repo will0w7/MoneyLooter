@@ -1,7 +1,9 @@
--- Author      : Will0w7
--- enUS --
+---@class MoneyLooter
+local MoneyLooter = select(2, ...)
 
-MONEYLOOTER_LOCALES.enUS = function()
+local Locales = MoneyLooter.Locales
+
+Locales.enUS = function()
   L = {}
   L["START"] = "Start"
   L["CONTINUE"] = "Continue"

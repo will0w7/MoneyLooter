@@ -1,5 +1,4 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
-  <Script file="MoneyLooterLootedItem.lua"/>
-  <Script file="MoneyLooterConsts.lua"/>
-  <Script file="MoneyLooterData.lua"/>
+  <Script file="Constants.lua"/>
+  <Script file="Data.lua"/>
 </Ui>

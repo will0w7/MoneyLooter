@@ -1,6 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
-  <Script file="MoneyLooterLocales.lua"/>
+  <Script file="Locales.lua"/>
   <Script file="enUS.lua"/>
   <Script file="esES.lua"/>
-  <Script file="MoneyLooterLocalesMain.lua"/>
+  <Script file="LocalesMain.lua"/>
 </Ui>
