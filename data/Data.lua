@@ -293,6 +293,9 @@ function CalcGPH()
 end
 
 function ResetMoneyLooterDB()
+    if MoneyLooterDB == nil then
+        MoneyLooterDB = {}
+    end
     MoneyLooterDB = table.wipe(MoneyLooterDB)
     MoneyLooterDB = table.deep_copy_meta(DefaultMoneyLooterDB)
     MoneyLooterDB.ListLootedItems = CircularBuffer_New(MoneyLooterDB.ListLootedItems, BufferCapacity)
