@@ -20,6 +20,8 @@ I've been working for a few days on a new UI to get rid of the old look of the p
 
 I might still change a few things, but for now I'm happy with the result 🙂
 
+**_Note_:** I'm still in the testing phase to make sure it works well in all versions of the game, but it will be available in a couple of days at most.
+
 ## Installation
 
 Download the latest release from [Wago](https://addons.wago.io/addons/moneylooter), [CurseForge](https://www.curseforge.com/wow/addons/moneylooter) using your favourite addon manager.
