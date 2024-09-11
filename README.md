@@ -13,7 +13,8 @@ A lightweight and blazingly-fast 🦀 World of Warcraft addon designed to track 
 * **Intuitive Interface:** A user-friendly display that presents your gold farm in a clear and organized manner.
 * **Minimal Configuration:** Designed for a seamless experience with minimal setup. All configuration is done through simple chat commands, without the need for complex interfaces. Customize the TSM custom price string and set minimum price thresholds for different item qualities.
 
-## New UI!
+## New UI
+
 ![New UI](https://github.com/will0w7/MoneyLooter/blob/main/images/MoneyLooterNewUI.png?raw=true)
 
 I've been working for a few days on a new UI to get rid of the old look of the previous one but keep it simple and performant, and here it is!
