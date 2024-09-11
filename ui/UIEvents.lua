@@ -35,7 +35,7 @@ end
 local function PopulateData()
     Constants.Strings.ADDON_VERSION = GetAddOnMetadata(Constants.Strings.ADDON_NAME, "Version")
 
-    UpdateAllTexts(GetTimer(), GetRawGold(), GetItemsMoney(), CalcGPH(), GetPriciest())
+    UpdateAllTexts(GetTimer(), GetRawMoney(), GetItemsMoney(), CalcGPH(), GetPriciest())
 
     SetScrollVisible(IsScrollLootFrameVisible())
     SetMainVisible(IsVisible())
@@ -56,7 +56,7 @@ end
 
 -----------------------------------------------------------------------------------------------
 function UpdateRawGold()
-    UI.MLMainFrame.RawGoldFS:SetText(Utils.GetCoinTextString(GetRawGold()))
+    UI.MLMainFrame.RawGoldFS:SetText(Utils.GetCoinTextString(GetRawMoney()))
 end
 
 ---@param time integer

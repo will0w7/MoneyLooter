@@ -5,6 +5,10 @@ local MoneyLooter = select(2, ...)
 local LootedItem = {}
 MoneyLooter.LootedItem = LootedItem
 
+---@param id integer
+---@param itemLink string
+---@param value integer
+---@param quantity integer
 function LootedItem.new(id, itemLink, value, quantity)
     local self = {}
     self.id = id

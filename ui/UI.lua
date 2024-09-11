@@ -159,6 +159,8 @@ UI.MLMainFrame.ScrollBoxLoot.DataProvider = CreateDataProvider()
 UI.MLMainFrame.ScrollBoxLoot.ScrollView = CreateScrollBoxListLinearView()
 UI.MLMainFrame.ScrollBoxLoot.ScrollView:SetDataProvider(UI.MLMainFrame.ScrollBoxLoot.DataProvider)
 
+---@param frame Frame
+---@param alternate boolean
 local function ApplyAlternateState(frame, alternate)
     frame:SetAlternateOverlayShown(alternate)
 end
@@ -167,6 +169,7 @@ ScrollUtil.InitScrollBoxListWithScrollBar(UI.MLMainFrame.ScrollBoxLoot, UI.MLMai
     UI.MLMainFrame.ScrollBoxLoot.ScrollView)
 ScrollUtil.RegisterAlternateRowBehavior(UI.MLMainFrame.ScrollBoxLoot, ApplyAlternateState)
 
+---@param button Button
 local function Initializer(button)
     button:Init()
 end

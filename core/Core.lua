@@ -1,8 +1,9 @@
 ---@class MoneyLooter
 local MoneyLooter = select(2, ...)
 
+---@class ML_Constants
 local Constants = MoneyLooter.Constants
-
+---@class ML_LootedItem
 local LootedItem = MoneyLooter.LootedItem
 
 ------------------------------------------------------------------------------
@@ -16,64 +17,89 @@ local strsplit, tonumber, ipairs = strsplit, tonumber, ipairs
 ------------------------------------------------------------------------------
 
 local GetTSMPrice = {
+    ---@param sellPrice integer
     [0] = function(_, _, sellPrice)
         return sellPrice or 0
     end,
+    ---@param isCraftingReagent boolean
+    ---@param tsmItemString string
     [1] = function(isCraftingReagent, tsmItemString, _)
         local value = TSM_API.GetCustomPriceValue(GetCurrentTSMString(), tsmItemString)
         if value ~= nil and (value >= GetMinPrice1() or isCraftingReagent) then return value end
         return 0
     end,
+    ---@param isCraftingReagent boolean
+    ---@param tsmItemString string
     [2] = function(isCraftingReagent, tsmItemString, _)
         local value = TSM_API.GetCustomPriceValue(GetCurrentTSMString(), tsmItemString)
         if value ~= nil and (value >= GetMinPrice2() or isCraftingReagent) then return value end
         return 0
     end,
+    ---@param isCraftingReagent boolean
+    ---@param tsmItemString string
     [3] = function(isCraftingReagent, tsmItemString, _)
         local value = TSM_API.GetCustomPriceValue(GetCurrentTSMString(), tsmItemString)
         if value ~= nil and (value >= GetMinPrice3() or isCraftingReagent) then return value end
         return 0
     end,
+    ---@param isCraftingReagent boolean
+    ---@param tsmItemString string
     [4] = function(isCraftingReagent, tsmItemString, _)
         local value = TSM_API.GetCustomPriceValue(GetCurrentTSMString(), tsmItemString)
         if value ~= nil and (value >= GetMinPrice4() or isCraftingReagent) then return value end
         return 0
     end,
+    ---@param sellPrice integer
     [-1] = function(_, _, sellPrice)
         return sellPrice or 0
     end
 }
 
+---@
 local GetAucPrice = {
+    ---@param sellPrice integer
     [0] = function(_, _, sellPrice)
         return sellPrice
     end,
+    ---@param isCraftingReagent boolean
+    ---@param itemLink string
     [1] = function(isCraftingReagent, itemLink, _)
         local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
         if value ~= nil and (value >= GetMinPrice1() or isCraftingReagent) then return value end
         return 0
     end,
+    ---@param isCraftingReagent boolean
+    ---@param itemLink string
     [2] = function(isCraftingReagent, itemLink, _)
         local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
         if value ~= nil and (value >= GetMinPrice2() or isCraftingReagent) then return value end
         return 0
     end,
+    ---@param isCraftingReagent boolean
+    ---@param itemLink string
     [3] = function(isCraftingReagent, itemLink, _)
         local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
         if value ~= nil and (value >= GetMinPrice3() or isCraftingReagent) then return value end
         return 0
     end,
+    ---@param isCraftingReagent boolean
+    ---@param itemLink string
     [4] = function(isCraftingReagent, itemLink, _)
         local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
         if value ~= nil and (value >= GetMinPrice4() or isCraftingReagent) then return value end
         return 0
     end,
+    ---@param sellPrice integer
     [-1] = function(_, _, sellPrice)
         return sellPrice or 0
     end
 }
 
-function CalculatePriceTSM(quality, sellPrice, itemLink, isCraftingReagent)
+---@param quality integer
+---@param sellPrice integer
+---@param itemLink string
+---@param isCraftingReagent boolean
+local function CalculatePriceTSM(quality, sellPrice, itemLink, isCraftingReagent)
     if TSM_API == nil then return 0 end
     local tsmItemString = TSM_API.ToItemString(itemLink)
     if tsmItemString == nil then return 0 end
@@ -87,7 +113,11 @@ function CalculatePriceTSM(quality, sellPrice, itemLink, isCraftingReagent)
     return price
 end
 
-function CalculatePriceAuc(quality, sellPrice, itemLink, isCraftingReagent)
+---@param quality integer
+---@param sellPrice integer
+---@param itemLink string
+---@param isCraftingReagent boolean
+local function CalculatePriceAuc(quality, sellPrice, itemLink, isCraftingReagent)
     if AUCTIONATOR_API == nil then return 0 end
 
     local price = 0
@@ -99,6 +129,7 @@ function CalculatePriceAuc(quality, sellPrice, itemLink, isCraftingReagent)
     return price
 end
 
+---@param itemLink string
 function CalculatePrice(itemLink)
     if itemLink == nil then return end
 
@@ -116,6 +147,7 @@ function CalculatePrice(itemLink)
     return price, itemName
 end
 
+---@param lootString string
 function GetLinkAndQuantityLoot(lootString)
     for _, pattern in ipairs(Constants.PATTERNS_SELF) do
         local itemLink, quantity = string.match(lootString, pattern)
@@ -124,6 +156,7 @@ function GetLinkAndQuantityLoot(lootString)
     return nil
 end
 
+---@param craftString string
 function GetLinkAndQuantityCraft(craftString)
     for _, pattern in ipairs(Constants.PATTERNS_CRAFT) do
         local itemLink, _ = string.match(craftString, pattern)
@@ -132,7 +165,8 @@ function GetLinkAndQuantityCraft(craftString)
     return nil
 end
 
-function LootEventHandler(self, event, ...)
+---@param event WowEvent
+function LootEventHandler(_, event, ...)
     if event == Constants.Events.ChatMsgLoot then
         if IsInteractionPaused() then return end
 
@@ -167,7 +201,7 @@ function LootEventHandler(self, event, ...)
         -- window opened, we want to register the money change
         local newMoney = GetMoney()
         local change = (newMoney - GetOldMoney())
-        AddRawGold(change)
+        AddRawMoney(change)
         AddTotalMoney(change)
         SetOldMoney(newMoney)
         UpdateRawGold()

@@ -16,13 +16,13 @@ local DefaultMoneyLooterDB = {
     ----------------------------------------------
     Running = false,
     ----------------------------------------------
-    RawGold = 0,
+    OldMoney = 0,
+    RawMoney = 0,
     ItemsMoney = 0,
     TotalMoney = 0,
     Priciest = 0,
     PriciestID = 0,
     ListLootedItems = CircularBuffer,
-    OldMoney = 0,
     ----------------------------------------------
     Timer = 0,
     ----------------------------------------------
@@ -65,10 +65,10 @@ function IsVisible()
     return MoneyLooterDB.Visible
 end
 
----@param val boolean
-function SetVisible(val)
-    if val ~= nil then
-        MoneyLooterDB.Visible = val
+---@param visible boolean
+function SetVisible(visible)
+    if visible ~= nil then
+        MoneyLooterDB.Visible = visible
     end
 end
 
@@ -77,22 +77,22 @@ function IsRunning()
     return MoneyLooterDB.Running
 end
 
----@param val boolean
-function SetRunning(val)
-    if val ~= nil then
-        MoneyLooterDB.Running = val
+---@param running boolean
+function SetRunning(running)
+    if running ~= nil then
+        MoneyLooterDB.Running = running
     end
 end
 
 ---@return integer
-function GetRawGold()
-    return MoneyLooterDB.RawGold or 0
+function GetRawMoney()
+    return MoneyLooterDB.RawMoney or 0
 end
 
----@param val integer
-function AddRawGold(val)
-    if val ~= nil then
-        MoneyLooterDB.RawGold = MoneyLooterDB.RawGold + val
+---@param money integer
+function AddRawMoney(money)
+    if money ~= nil then
+        MoneyLooterDB.RawMoney = MoneyLooterDB.RawMoney + money
     end
 end
 
@@ -101,17 +101,17 @@ function GetItemsMoney()
     return MoneyLooterDB.ItemsMoney or 0
 end
 
----@param val integer
-function AddItemsMoney(val)
-    if val ~= nil then
-        MoneyLooterDB.ItemsMoney = MoneyLooterDB.ItemsMoney + val
+---@param money integer
+function AddItemsMoney(money)
+    if money ~= nil then
+        MoneyLooterDB.ItemsMoney = MoneyLooterDB.ItemsMoney + money
     end
 end
 
----@param val integer
-function AddTotalMoney(val)
-    if val ~= nil then
-        MoneyLooterDB.TotalMoney = MoneyLooterDB.TotalMoney + val
+---@param money integer
+function AddTotalMoney(money)
+    if money ~= nil then
+        MoneyLooterDB.TotalMoney = MoneyLooterDB.TotalMoney + money
     end
 end
 
@@ -121,10 +121,10 @@ function GetPriciest()
 end
 
 ---@param id integer
----@param val integer
-function SetPriciest(val, id)
-    if val ~= nil and val > (MoneyLooterDB.Priciest or 0) then
-        MoneyLooterDB.Priciest = val
+---@param money integer
+function SetPriciest(money, id)
+    if money ~= nil and money > (MoneyLooterDB.Priciest or 0) then
+        MoneyLooterDB.Priciest = money
         MoneyLooterDB.PriciestID = id
     end
 end
@@ -154,12 +154,12 @@ function GetListLootedItems()
     return MoneyLooterDB.ListLootedItems
 end
 
----@param val ML_LootedItem
-function InsertLootedItem(val)
+---@param lootedItem ML_LootedItem
+function InsertLootedItem(lootedItem)
     if MoneyLooterTempData.LootedItems == nil then MoneyLooterTempData.LootedItems = {} end
-    if val ~= nil then
-        table.insert(MoneyLooterTempData.LootedItems, val)
-        CircularBuffer_Push(MoneyLooterDB.ListLootedItems, val)
+    if lootedItem ~= nil then
+        table.insert(MoneyLooterTempData.LootedItems, lootedItem)
+        CircularBuffer_Push(MoneyLooterDB.ListLootedItems, lootedItem)
     end
 end
 
@@ -173,10 +173,10 @@ function GetOldMoney()
     return MoneyLooterDB.OldMoney or 0
 end
 
----@param val integer
-function SetOldMoney(val)
-    if val ~= nil then
-        MoneyLooterDB.OldMoney = val
+---@param money integer
+function SetOldMoney(money)
+    if money ~= nil then
+        MoneyLooterDB.OldMoney = money
     end
 end
 
@@ -185,6 +185,7 @@ function GetTimer()
     return MoneyLooterDB.Timer or 0
 end
 
+---@return integer
 function AddOneToTimer()
     MoneyLooterDB.Timer = (MoneyLooterDB.Timer or 0) + 1
     return MoneyLooterDB.Timer
@@ -195,11 +196,11 @@ function GetCurrentStartText()
     return MoneyLooterDB.CurrentStartText or _G.MONEYLOOTER_L_START
 end
 
----@param val string
+---@param text string
 ---@return string
-function SetCurrentStartText(val)
-    if val ~= nil then
-        MoneyLooterDB.CurrentStartText = val
+function SetCurrentStartText(text)
+    if text ~= nil then
+        MoneyLooterDB.CurrentStartText = text
     end
     return MoneyLooterDB.CurrentStartText or _G.MONEYLOOTER_L_START
 end
@@ -209,9 +210,9 @@ function GetMinPrice1()
     return MoneyLooterXDB.MinPrice1 or 0
 end
 
----@param val integer
-function SetMinPrice1(val)
-    MoneyLooterXDB.MinPrice1 = val
+---@param money integer
+function SetMinPrice1(money)
+    MoneyLooterXDB.MinPrice1 = money
 end
 
 ---@return integer
@@ -219,9 +220,9 @@ function GetMinPrice2()
     return MoneyLooterXDB.MinPrice2 or 0
 end
 
----@param val integer
-function SetMinPrice2(val)
-    MoneyLooterXDB.MinPrice2 = val
+---@param money integer
+function SetMinPrice2(money)
+    MoneyLooterXDB.MinPrice2 = money
 end
 
 ---@return integer
@@ -229,9 +230,9 @@ function GetMinPrice3()
     return MoneyLooterXDB.MinPrice3 or 0
 end
 
----@param val integer
-function SetMinPrice3(val)
-    MoneyLooterXDB.MinPrice3 = val
+---@param money integer
+function SetMinPrice3(money)
+    MoneyLooterXDB.MinPrice3 = money
 end
 
 ---@return integer
@@ -239,17 +240,17 @@ function GetMinPrice4()
     return MoneyLooterXDB.MinPrice4 or 0
 end
 
----@param val integer
-function SetMinPrice4(val)
-    MoneyLooterXDB.MinPrice4 = val
+---@param money integer
+function SetMinPrice4(money)
+    MoneyLooterXDB.MinPrice4 = money
 end
 
----@param val integer
-function SetAllMinPrices(val)
-    MoneyLooterXDB.MinPrice1 = val
-    MoneyLooterXDB.MinPrice2 = val
-    MoneyLooterXDB.MinPrice3 = val
-    MoneyLooterXDB.MinPrice4 = val
+---@param money integer
+function SetAllMinPrices(money)
+    MoneyLooterXDB.MinPrice1 = money
+    MoneyLooterXDB.MinPrice2 = money
+    MoneyLooterXDB.MinPrice3 = money
+    MoneyLooterXDB.MinPrice4 = money
 end
 
 ---@return string
@@ -257,19 +258,19 @@ function GetCurrentTSMString()
     return MoneyLooterXDB.CurrentTSMString or Constants.Strings.TSM_STRING
 end
 
----@param val string
-function SetTSMString(val)
+---@param tsmString string
+function SetTSMString(tsmString)
     local TSM_API = TSM_API
     if TSM_API == nil then
         print(_G.MONEYLOOTER_L_TSM_NOT_AVAILABLE)
         return
     end
-    if not TSM_API.IsCustomPriceValid(val) then
-        print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING_NOT_VALID .. val)
+    if not TSM_API.IsCustomPriceValid(tsmString) then
+        print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING_NOT_VALID .. tsmString)
         return
     end
-    MoneyLooterXDB.CurrentTSMString = val
-    print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING_VALID .. val)
+    MoneyLooterXDB.CurrentTSMString = tsmString
+    print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING_VALID .. tsmString)
 end
 
 ---@return boolean
@@ -277,10 +278,10 @@ function IsScrollLootFrameVisible()
     return MoneyLooterDB.ScrollLootFrameVisible
 end
 
----@param val boolean
-function SetScrollLootFrameVisible(val)
-    if val ~= nil then
-        MoneyLooterDB.ScrollLootFrameVisible = val
+---@param visible boolean
+function SetScrollLootFrameVisible(visible)
+    if visible ~= nil then
+        MoneyLooterDB.ScrollLootFrameVisible = visible
     end
 end
 
@@ -322,9 +323,9 @@ function IsInteractionPaused()
     return MoneyLooterTempData.InteractionPaused
 end
 
----@param val boolean
-function SetInteractionPaused(val)
-    if val ~= nil then
-        MoneyLooterTempData.InteractionPaused = val
+---@param paused boolean
+function SetInteractionPaused(paused)
+    if paused ~= nil then
+        MoneyLooterTempData.InteractionPaused = paused
     end
 end
