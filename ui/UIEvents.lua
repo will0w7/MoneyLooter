@@ -6,7 +6,6 @@ local UI = MoneyLooter.UI
 local Utils = MoneyLooter.Utils
 
 ----------------------------------------------------------------------------------------
--- local GetCoinTextureString = C_CurrencyInfo.GetCoinTextureString or GetCoinTextureString
 local GetAddOnMetadata = C_AddOns.GetAddOnMetadata or GetAddOnMetadata
 local GetMoney, CreateFrame = GetMoney, CreateFrame
 ----------------------------------------------------------------------------------------
@@ -270,7 +269,6 @@ watcher:RegisterEvent(Constants.Events.AddonLoaded)
 
 function WatcherOnEvent(_, event, arg1)
     if event == Constants.Events.AddonLoaded and arg1 == Constants.Strings.ADDON_NAME then
-        -- print(_G.MONEYLOOTER_L_WELCOME)
         UpdateMLDB()
         UpdateMLXDB()
         PopulateData()

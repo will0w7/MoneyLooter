@@ -30,9 +30,6 @@ Constants.Events = {
     OnEnter = "OnEnter",
     OnLeave = "OnLeave",
     OnLoop = "OnLoop",
-    OnHyperLinkClick = "OnHyperlinkClick",
-    OnHyperLinkEnter = "OnHyperlinkEnter",
-    OnHyperLinkLeave = "OnHyperlinkLeave",
     OnClick = "OnClick",
     --------------------------------------
     ChatMsgMoney = "CHAT_MSG_MONEY",
@@ -58,12 +55,12 @@ Constants.PATTERNS_SELF = {
 
 -- Loot global patterns for others
 -- string.match returns playerName, itemLink, quantity || playerName, itemLink
-Constants.PATTERNS = {
-    LOOT_ITEM_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"),        -- 3
-    LOOT_ITEM_PUSHED_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"), -- 3
-    LOOT_ITEM:gsub("%%s", "(.+)"),                                       -- 2
-    LOOT_ITEM_PUSHED:gsub("%%s", "(.+)")                                 -- 2
-}
+-- Constants.PATTERNS = {
+--     LOOT_ITEM_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"),        -- 3
+--     LOOT_ITEM_PUSHED_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"), -- 3
+--     LOOT_ITEM:gsub("%%s", "(.+)"),                                       -- 2
+--     LOOT_ITEM_PUSHED:gsub("%%s", "(.+)")                                 -- 2
+-- }
 
 Constants.RelevantInteractions = {
     [Enum.PlayerInteractionType.MailInfo] = true,

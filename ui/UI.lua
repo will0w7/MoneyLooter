@@ -10,7 +10,6 @@ MoneyLooter.UI = UI
 local Utils = MoneyLooter.Utils
 
 ----------------------------------------------------------------------------------------
--- local GetCoinTextureString = C_CurrencyInfo.GetCoinTextureString or GetCoinTextureString
 local CreateFrame = CreateFrame
 local tostring, date = tostring, date
 ----------------------------------------------------------------------------------------
