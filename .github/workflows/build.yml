@@ -21,10 +21,6 @@ jobs:
             pkgmeta: .pkgmeta_classic
           - type: cata
             pkgmeta: .pkgmeta_cata
-          # - type: wrath
-          #   pkgmeta: .pkgmeta_wrath
-          # - type: bcc
-          #   pkgmeta: .pkgmeta_bcc
 
     runs-on: ubuntu-latest
 
