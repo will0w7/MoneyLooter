@@ -42,8 +42,6 @@ Download the latest release from [Wago](https://addons.wago.io/addons/moneyloote
 | Classic Era                    |   ✅   |
 | Classic Hardcore               |   ✅   |
 | Season of Discovery            |   ✅   |
-| Wrath of the Lich King Classic |   ❔   |
-| The Burning Crusade Classic    |   ❔   |
 
 ✅ = Compatible
 
