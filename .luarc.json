@@ -23,7 +23,9 @@
     "ScrollUtil",
     "CreateDataProvider",
     "CreateScrollBoxListLinearView",
-    "CreateAnchor"
+    "CreateAnchor",
+    "LOOT_ITEM_CREATED_SELF_MULTIPLE",
+    "LOOT_ITEM_CREATED_SELF"
   ],
   "runtime.version": "Lua 5.1",
   "workspace.ignoreDir": [
