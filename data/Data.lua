@@ -27,7 +27,6 @@ local DefaultMoneyLooterDB = {
     Timer = 0,
     ----------------------------------------------
     CurrentStartText = _G.MONEYLOOTER_L_START,
-    CurrentTimeText = tostring(date("!%X", 0)),
     ----------------------------------------------
     DBVersion = 1725972263906
 }
@@ -282,15 +281,6 @@ function SetScrollLootFrameVisible(val)
     if val ~= nil then
         MoneyLooterDB.ScrollLootFrameVisible = val
     end
-end
-
----@param val string
----@return string
-function SetCurrentTimeText(val)
-    if val ~= nil then
-        MoneyLooterDB.CurrentTimeText = val
-    end
-    return MoneyLooterDB.CurrentTimeText or tostring(date("!%X", 0))
 end
 
 ---@return integer
