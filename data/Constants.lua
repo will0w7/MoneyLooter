@@ -63,3 +63,16 @@ Constants.PATTERNS = {
     LOOT_ITEM:gsub("%%s", "(.+)"),                                       -- 2
     LOOT_ITEM_PUSHED:gsub("%%s", "(.+)")                                 -- 2
 }
+
+Constants.RelevantInteractions = {
+    [Enum.PlayerInteractionType.MailInfo] = true,
+    [Enum.PlayerInteractionType.Merchant] = true,
+    [Enum.PlayerInteractionType.Banker] = true,
+    [Enum.PlayerInteractionType.AccountBanker] = true,
+    [Enum.PlayerInteractionType.CharacterBanker] = true,
+    [Enum.PlayerInteractionType.GuildBanker] = true,
+    [Enum.PlayerInteractionType.BlackMarketAuctioneer] = true,
+    [Enum.PlayerInteractionType.VoidStorageBanker] = true,
+    [Enum.PlayerInteractionType.Auctioneer] = true,
+    [Enum.PlayerInteractionType.Transmogrifier] = true
+}

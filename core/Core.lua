@@ -127,12 +127,12 @@ end
 function LootEventHandler(self, event, ...)
     if event == Constants.Events.PInteractionManagerShow then
         local interaction = ...
-        if interaction == Enum.PlayerInteractionType.MailInfo then
+        if Constants.RelevantInteractions[interaction] then
             SetInteractionPaused(true)
         end
     elseif event == Constants.Events.PInteractionManagerHide then
         local interaction = ...
-        if interaction == Enum.PlayerInteractionType.MailInfo then
+        if Constants.RelevantInteractions[interaction] then
             SetInteractionPaused(false)
             SetOldMoney(GetMoney())
         end
