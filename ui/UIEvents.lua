@@ -42,8 +42,10 @@ local function PopulateData()
     UI.MLMainFrame.PriciestFS:SetText(Utils.GetCoinTextString(GetPriciest()))
 
     SetScrollVisible(IsScrollLootFrameVisible())
-
     SetMainVisible(IsVisible())
+
+    SetRawGold(GetMoney())
+
     if IsRunning() then RegisterStartEvents() end
 end
 
