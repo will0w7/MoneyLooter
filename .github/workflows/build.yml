@@ -7,31 +7,20 @@ on:
     paths-ignore:
       - '.github/**'
 
-
 jobs:
-  package:
-    strategy:
-      matrix:
-        type: [retail, classic, cata]
-        
-        include:
-          - type: retail
-            pkgmeta: .pkgmeta
-          - type: classic
-            pkgmeta: .pkgmeta_classic
-          - type: cata
-            pkgmeta: .pkgmeta_cata
-
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout MoneyLooter
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: BigWigsMods/packager@master
+      - name: Package and upload MoneyLooter
+        uses: BigWigsMods/packager@master
         with:
-          args: -p 1098459 -a qKQxDo6x -w 26844 -g ${{matrix.type}} -m ${{matrix.pkgmeta}}
+          args: -p 1098459 -a qKQxDo6x -w 26844
         env:
           GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
