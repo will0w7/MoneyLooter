@@ -160,23 +160,6 @@ function LootEventHandler(self, event, ...)
         AddTotalMoney(change)
         SetOldMoney(newMoney)
         UpdateRawGold()
-    elseif event == Constants.Events.QuestLootReceived then
-        -- same here, we want to register loot from completed quests
-        local _, itemLink, quantity = ...
-        if itemLink == nil then return end
-
-        local price = CalculatePrice(itemLink)
-        if price == nil then return end
-
-        local totalPrice = price * quantity
-        local itemID = GetItemInfoFromHyperlink(itemLink)
-        local i = LootedItem.new(itemID, itemLink, totalPrice, quantity)
-        InsertLootedItem(i)
-        AddItemsMoney(totalPrice)
-        AddTotalMoney(totalPrice)
-        -- only price of individual items, not groups (1xBismuth not 5xBismuth)
-        SetPriciest(price, itemID)
-        MoneyLooterUpdateLoot()
     elseif event == Constants.Events.PInteractionManagerShow then
         local interaction = ...
         if Constants.RelevantInteractions[interaction] then
