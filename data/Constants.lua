@@ -37,7 +37,6 @@ Constants.Events = {
     --------------------------------------
     ChatMsgMoney = "CHAT_MSG_MONEY",
     ChatMsgLoot = "CHAT_MSG_LOOT",
-    MerchantUpdate = "MERCHANT_UPDATE",
     QuestTurnedIn = "QUEST_TURNED_IN",
     QuestLootReceived = "QUEST_LOOT_RECEIVED",
     AddonLoaded = "ADDON_LOADED",
