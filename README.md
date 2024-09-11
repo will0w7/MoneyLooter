@@ -13,22 +13,23 @@ A lightweight and blazingly-fast 🦀 World of Warcraft addon designed to track 
 * **Intuitive Interface:** A user-friendly display that presents your gold farm in a clear and organized manner.
 * **Minimal Configuration:** Designed for a seamless experience with minimal setup. All configuration is done through simple chat commands, without the need for complex interfaces. Customize the TSM custom price string and set minimum price thresholds for different item qualities.
 
-## New UI!
+## New UI and MoneyLooter 1.0
+
 ![New UI](https://github.com/will0w7/MoneyLooter/blob/main/images/MoneyLooterNewUI.png?raw=true)
 
-I've been working for a few days on a new UI to get rid of the old look of the previous one but keep it simple and performant, and here it is!
+I've been working for a few days on a new UI to get rid of the old look of the previous one but keep it simple and performant, and with the release of the 1.0 here it is!
+
+This new version comes with this flawless UI and a lot of bug fixes!
 
 I might still change a few things, but for now I'm happy with the result 🙂
 
-**_Note_:** I'm still in the testing phase to make sure it works well in all versions of the game, but it will be available in a couple of days at most.
-
 ## Installation
 
-Download the latest release from [Wago](https://addons.wago.io/addons/moneylooter), [CurseForge](https://www.curseforge.com/wow/addons/moneylooter) using your favourite addon manager.
+Download the latest release from [Wago](https://addons.wago.io/addons/moneylooter), [CurseForge](https://www.curseforge.com/wow/addons/moneylooter), [WoWInterface](https://www.wowinterface.com/downloads/info26844-MoneyLooter-LootandGoldFarmTrackerAddon.html) or [GitHub](https://github.com/will0w7/MoneyLooter/releases/latest) using your favourite addon manager.
 
 ## Manual Installation
 
-1. Download the latest release from the [Releases](https://github.com/will0w7/MoneyLooter/releases) page.
+1. Download the latest release from the [releases](https://github.com/will0w7/MoneyLooter/releases) page.
 2. Extract the contents of the zip file into your `World of Warcraft\VERSION\Interface\AddOns` directory.
 3. Launch World of Warcraft and enable the addon in the AddOns list.
 
@@ -52,9 +53,9 @@ Download the latest release from [Wago](https://addons.wago.io/addons/moneyloote
 
 ## Usage
 
-Once installed login in to the game or /reload your interface and you will see MoneyLooter ready to be used.
+Once installed login in to the game or **/reload** your interface and you will see MoneyLooter ready to be used.
 
-You can alternate between /ml or /moneylooter for chat commands. In the following examples I will use /ml.
+You can alternate between **/ml** or **/moneylooter** for chat commands. In the following examples I will use **/ml**.
 
         /ml: Toggle show/hide addon window
         /ml show: Show MoneyLooter
@@ -80,10 +81,12 @@ The price format for mpricex is a number followed by g(old), s(ilver) or c(opper
 
 ## Configuration
 
+**Important**: MoneyLooter values items using the TradeSkillMaster and Auctionator addons. If both are available, it will always use TSM. It's a cascading system, first it will check TSM, if it's not available then Auctionator and finally, if neither is available, it will use the vendor value. I've done it this way because, in my opinion, TSM offers the most accurate and up-to-date prices (if you use the TSM custom string correctly, although for the current expansion, 'dbmarket' is a reliable source of information, it's not so true for old content, transmogs, etc).
+
 MoneyLooter by default sets the minimum prices to 0 for all item qualities. Also, the TSM string it uses is 'dbmarket'.
 If you want to change this setting you can do the following:
 
-* **TSM Custom String:** Type /ml custom 'tsmCustomString'
+* **TSM Custom String:** Type /ml custom 'TSMCustomString'
 
         For example:
         /ml custom check(dbmarket - 1000g, 95% dbmarket, 50% dbmarket)

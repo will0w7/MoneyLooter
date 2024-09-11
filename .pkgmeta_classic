@@ -5,9 +5,18 @@ ignore:
   - *TBC*
   - *Wrath*
   - *Cata*
+  - images
 plain-copy:
   - core
   - data
   - locales
   - ui
+  - media
   - utils
+optional-dependencies:
+  - tradeskill-master
+  - auctionator
+tools-used:
+  - devtool
+  - addon-usage
+  - wowlua

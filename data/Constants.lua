@@ -14,8 +14,8 @@ MoneyLooter.Constants = Constants
 Constants.Strings = {
     ADDON_NAME = addonName,
     ADDON_VERSION = "",
-    TITLE = "|cFFd8de35MoneyLooter!|r",
-    FONT = "Fonts\\FRIZQT__.TTF",
+    TITLE = "MoneyLooter",
+    FONT = "GameFontHighlight",
     TSM_STRING = "dbmarket"
 }
 
@@ -30,18 +30,18 @@ Constants.Events = {
     OnEnter = "OnEnter",
     OnLeave = "OnLeave",
     OnLoop = "OnLoop",
-    OnHyperLinkClick = "OnHyperlinkClick",
-    OnHyperLinkEnter = "OnHyperlinkEnter",
-    OnHyperLinkLeave = "OnHyperlinkLeave",
     OnClick = "OnClick",
     --------------------------------------
     ChatMsgMoney = "CHAT_MSG_MONEY",
     ChatMsgLoot = "CHAT_MSG_LOOT",
-    MerchantUpdate = "MERCHANT_UPDATE",
     QuestTurnedIn = "QUEST_TURNED_IN",
-    QuestLootReceived = "QUEST_LOOT_RECEIVED",
     AddonLoaded = "ADDON_LOADED",
-    PlayerEnteringWorld = "PLAYER_ENTERING_WORLD"
+    --------------------------------------
+    TradeSkillShow = "TRADE_SKILL_SHOW",
+    TradeSkillClose = "TRADE_SKILL_CLOSE",
+    --------------------------------------
+    PInteractionManagerShow = "PLAYER_INTERACTION_MANAGER_FRAME_SHOW",
+    PInteractionManagerHide = "PLAYER_INTERACTION_MANAGER_FRAME_HIDE"
 }
 
 -- Loot global patterns for self
@@ -55,9 +55,25 @@ Constants.PATTERNS_SELF = {
 
 -- Loot global patterns for others
 -- string.match returns playerName, itemLink, quantity || playerName, itemLink
-Constants.PATTERNS = {
-    LOOT_ITEM_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"),        -- 3
-    LOOT_ITEM_PUSHED_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"), -- 3
-    LOOT_ITEM:gsub("%%s", "(.+)"),                                       -- 2
-    LOOT_ITEM_PUSHED:gsub("%%s", "(.+)")                                 -- 2
+-- Constants.PATTERNS = {
+--     LOOT_ITEM_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"),        -- 3
+--     LOOT_ITEM_PUSHED_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"), -- 3
+--     LOOT_ITEM:gsub("%%s", "(.+)"),                                       -- 2
+--     LOOT_ITEM_PUSHED:gsub("%%s", "(.+)")                                 -- 2
+-- }
+
+Constants.RelevantInteractions = {
+    [Enum.PlayerInteractionType.MailInfo] = true,
+    [Enum.PlayerInteractionType.Merchant] = true,
+    [Enum.PlayerInteractionType.Banker] = true,
+    [Enum.PlayerInteractionType.GuildBanker] = true,
+    [Enum.PlayerInteractionType.BlackMarketAuctioneer] = true,
+    [Enum.PlayerInteractionType.VoidStorageBanker] = true,
+    [Enum.PlayerInteractionType.Auctioneer] = true,
+    [Enum.PlayerInteractionType.Transmogrifier] = true
 }
+
+if MoneyLooter.isRetail then
+    Constants.RelevantInteractions[Enum.PlayerInteractionType.AccountBanker] = true
+    Constants.RelevantInteractions[Enum.PlayerInteractionType.CharacterBanker] = true
+end

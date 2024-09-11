@@ -1,0 +1,34 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.blizzard.com/wow/ui/ https://raw.githubusercontent.com/Gethe/wow-ui-source/live/Interface/AddOns/Blizzard_SharedXML/UI.xsd">
+    <Button name="ML_ItemScroll" mixin="ML_ItemScrollMixin"
+        registerForClicks="AnyUp" virtual="true">
+        <Size y="20" />
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture parentKey="Alternate" hidden="true" alphaMode="ADD">
+                    <Color r=".04" g=".04" b=".04" a="1" />
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY">
+                <FontString parentKey="RightLabel" inherits="GameFontHighlight" justifyH="RIGHT">
+                    <Size y="20" />
+                    <Anchors>
+                        <Anchor point="RIGHT" x="-5" />
+                    </Anchors>
+                </FontString>
+                <FontString parentKey="LeftLabel" inherits="GameFontHighlight" wordwrap="false"
+                    justifyH="LEFT">
+                    <Size y="20" />
+                    <Anchors>
+                        <Anchor point="LEFT" x="5" />
+                        <Anchor point="RIGHT" relativeKey="$parent.RightLabel" relativePoint="LEFT"
+                            x="-5" />
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnClick method="OnClick" />
+        </Scripts>
+    </Button>
+</Ui>

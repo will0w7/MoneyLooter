@@ -1,0 +1,10 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Include file="TitleBar.xml" />
+    <Include file="MainFrame.xml" />
+    <Include file="CloseButton.xml" />
+    <Include file="CheckButton.xml" />
+    <Include file="Button.xml" />
+    <Include file="Scroll.xml" />
+    <Include file="ItemScroll.xml" />
+</Ui>
+  

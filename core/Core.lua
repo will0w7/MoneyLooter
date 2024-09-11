@@ -100,6 +100,8 @@ function CalculatePriceAuc(quality, sellPrice, itemLink, isCraftingReagent)
 end
 
 function CalculatePrice(itemLink)
+    if itemLink == nil then return end
+
     local itemString = string.match(itemLink, "item[%-?%d:]+")
     local itemName, _, quality, _, _, _, _, _, _, _, sellPrice, _, _, _, _, _, isCraftingReagent =
         GetItemInfo(itemString)
@@ -123,16 +125,8 @@ function GetLinkAndQuantity(lootString)
 end
 
 function LootEventHandler(self, event, ...)
-    if event == Constants.Events.MerchantUpdate then
-        SetOldMoney(GetMoney())
-    elseif event == Constants.Events.ChatMsgMoney or event == Constants.Events.QuestTurnedIn then
-        local newMoney = GetMoney()
-        local change = (newMoney - GetOldMoney())
-        AddRawGold(change)
-        AddTotalMoney(change)
-        SetOldMoney(newMoney)
-        UpdateRawGold()
-    elseif event == Constants.Events.ChatMsgLoot then
+    if event == Constants.Events.ChatMsgLoot then
+        if IsInteractionPaused() then return end
         local lootString, _, _, _, playerName2 = ...
         if lootString == nil then return end
 
@@ -144,6 +138,7 @@ function LootEventHandler(self, event, ...)
         if itemLink == nil then return end
 
         local price, itemName = CalculatePrice(itemLink)
+        if price == nil then return end
 
         if (string.len(itemName) > 30) then itemName = string.sub(itemName, 1, 30) .. "..." end
 
@@ -153,23 +148,33 @@ function LootEventHandler(self, event, ...)
         InsertLootedItem(i)
         AddItemsMoney(totalPrice)
         AddTotalMoney(totalPrice)
-        -- only individual items, not groups (1xBismuth not 5xBismuth)
+        -- only price of individual items, not groups (1xBismuth not 5xBismuth)
         SetPriciest(price, itemID)
         MoneyLooterUpdateLoot()
-    elseif event == Constants.Events.QuestLootReceived then
-        local _, itemLink, quantity = ...
-        if itemLink == nil then return end
-
-        local price = CalculatePrice(itemLink)
-
-        local totalPrice = price * quantity
-        local itemID = GetItemInfoFromHyperlink(itemLink)
-        local i = LootedItem.new(itemID, itemLink, totalPrice, quantity)
-        InsertLootedItem(i)
-        AddItemsMoney(totalPrice)
-        AddTotalMoney(totalPrice)
-        -- only individual items, not groups (1xBismuth not 5xBismuth)
-        SetPriciest(price, itemID)
-        MoneyLooterUpdateLoot()
+    elseif event == Constants.Events.ChatMsgMoney or event == Constants.Events.QuestTurnedIn then
+        -- here we dont stop interaction, if we turn in a quest with a profession
+        -- window opened, we want to register the money change
+        local newMoney = GetMoney()
+        local change = (newMoney - GetOldMoney())
+        AddRawGold(change)
+        AddTotalMoney(change)
+        SetOldMoney(newMoney)
+        UpdateRawGold()
+    elseif event == Constants.Events.PInteractionManagerShow then
+        local interaction = ...
+        if Constants.RelevantInteractions[interaction] then
+            SetInteractionPaused(true)
+        end
+    elseif event == Constants.Events.PInteractionManagerHide then
+        local interaction = ...
+        if Constants.RelevantInteractions[interaction] then
+            SetInteractionPaused(false)
+            SetOldMoney(GetMoney())
+        end
+    elseif event == Constants.Events.TradeSkillShow then
+        SetInteractionPaused(true)
+    elseif event == Constants.Events.TradeSkillClose then
+        SetInteractionPaused(false)
+        SetOldMoney(GetMoney())
     end
 end

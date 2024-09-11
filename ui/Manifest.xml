@@ -1,4 +1,5 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
-  <Script file="UI.lua"/>
-  <Script file="UIEvents.lua"/>
+  <Include file="templates/Manifest.xml" />
+  <Script file="UI.lua" />
+  <Script file="UIEvents.lua" />
 </Ui>

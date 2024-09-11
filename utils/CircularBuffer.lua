@@ -10,17 +10,6 @@ local MoneyLooter = select(2, ...)
 local CircularBuffer = {}
 MoneyLooter.CircularBuffer = CircularBuffer
 
--- local LootedItem = MoneyLooter.LootedItem
-
--- local function _pre_allocate_buffer(capacity)
---     local buffer = {}
---     for i = 1, capacity do
---         local item = LootedItem.new(0, "", 0, 0)
---         table.insert(buffer, item)
---     end
---     return buffer
--- end
-
 ---@param capacity integer
 ---@return ML_CircularBuffer
 function CircularBuffer_New(self, capacity)
@@ -28,7 +17,6 @@ function CircularBuffer_New(self, capacity)
         self = {}
     end
     table.wipe(self)
-    -- self.buffer = _pre_allocate_buffer(capacity)
     self.buffer = {}
     self.capacity = capacity
     self.head = 1
