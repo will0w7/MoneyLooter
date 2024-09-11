@@ -44,7 +44,7 @@ local function PopulateData()
     SetScrollVisible(IsScrollLootFrameVisible())
     SetMainVisible(IsVisible())
 
-    SetRawGold(GetMoney())
+    SetOldMoney(GetMoney())
 
     if IsRunning() then RegisterStartEvents() end
 end

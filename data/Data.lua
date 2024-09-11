@@ -91,13 +91,6 @@ function GetRawGold()
 end
 
 ---@param val integer
-function SetRawGold(val)
-    if val ~= nil then
-        MoneyLooterDB.RawGold = val
-    end
-end
-
----@param val integer
 function AddRawGold(val)
     if val ~= nil then
         MoneyLooterDB.RawGold = MoneyLooterDB.RawGold + val
