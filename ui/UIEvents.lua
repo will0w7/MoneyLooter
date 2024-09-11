@@ -33,6 +33,8 @@ local function SetScrollVisible(val)
 end
 
 local function PopulateData()
+    SetOldMoney(GetMoney())
+    
     Constants.Strings.ADDON_VERSION = GetAddOnMetadata(Constants.Strings.ADDON_NAME, "Version")
     UI.MLMainFrame.StartButton:SetText(GetCurrentStartText())
     UI.MLMainFrame.TimeFS:SetText(tostring(date("!%X", GetTimer())))
@@ -43,8 +45,6 @@ local function PopulateData()
 
     SetScrollVisible(IsScrollLootFrameVisible())
     SetMainVisible(IsVisible())
-
-    SetOldMoney(GetMoney())
 
     if IsRunning() then RegisterStartEvents() end
 end
