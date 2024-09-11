@@ -11,6 +11,7 @@ plain-copy:
   - data
   - locales
   - ui
+  - media
   - utils
 optional-dependencies:
   - tradeskill-master
