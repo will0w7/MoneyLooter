@@ -171,10 +171,5 @@ function LootEventHandler(self, event, ...)
             SetInteractionPaused(false)
             SetOldMoney(GetMoney())
         end
-    elseif event == Constants.Events.TradeSkillShow then
-        SetInteractionPaused(true)
-    elseif event == Constants.Events.TradeSkillClose then
-        SetInteractionPaused(false)
-        SetOldMoney(GetMoney())
     end
 end
