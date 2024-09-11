@@ -49,7 +49,7 @@ Download the latest release from [Wago](https://addons.wago.io/addons/moneyloote
 
 ❌ = Not compatible
 
-**Note:** Since Wrath and TBC no longer have official servers and are causing some issues with CurseForge, I will no longer be supporting these versions.
+**Note:** Since Wrath and TBC no longer have official servers and are causing some issues with CurseForge, I will no longer be supporting these versions but I will continue packaging the TOC files in the addon.
 
 ## Usage
 
