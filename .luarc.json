@@ -19,7 +19,11 @@
     "LOOT_ITEM",
     "LOOT_ITEM_MULTIPLE",
     "LOOT_ITEM_PUSHED",
-    "LOOT_ITEM_PUSHED_MULTIPLE"
+    "LOOT_ITEM_PUSHED_MULTIPLE",
+    "ScrollUtil",
+    "CreateDataProvider",
+    "CreateScrollBoxListLinearView",
+    "CreateAnchor"
   ],
   "runtime.version": "Lua 5.1",
   "workspace.ignoreDir": [
