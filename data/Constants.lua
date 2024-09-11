@@ -44,10 +44,10 @@ Constants.Events = {
 -- Loot global patterns for self
 -- string.match returns itemLink, quantity || itemLink
 Constants.PATTERNS_SELF = {
-    LOOT_ITEM_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"),        -- 2
-    LOOT_ITEM_PUSHED_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"), -- 2
-    LOOT_ITEM_SELF:gsub("%%s", "(.+)"),                                       -- 1
-    LOOT_ITEM_PUSHED_SELF:gsub("%%s", "(.+)")                                 -- 1
+    [1] = LOOT_ITEM_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"),        -- 2
+    [2] = LOOT_ITEM_PUSHED_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"), -- 2
+    [3] = LOOT_ITEM_SELF:gsub("%%s", "(.+)"),                                       -- 1
+    [4] = LOOT_ITEM_PUSHED_SELF:gsub("%%s", "(.+)")                                 -- 1
 }
 
 -- Crafted global patterns for self
