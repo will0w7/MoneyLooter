@@ -116,25 +116,36 @@ function CalculatePrice(itemLink)
     return price, itemName
 end
 
-function GetLinkAndQuantity(lootString)
+function GetLinkAndQuantityLoot(lootString)
     for _, pattern in ipairs(Constants.PATTERNS_SELF) do
         local itemLink, quantity = string.match(lootString, pattern)
         if itemLink then return itemLink, tonumber(quantity) or 1 end
     end
-    return nil, nil
+    return nil
+end
+
+function GetLinkAndQuantityCraft(craftString)
+    for _, pattern in ipairs(Constants.PATTERNS_CRAFT) do
+        local itemLink, _ = string.match(craftString, pattern)
+        if itemLink then return itemLink end --, tonumber(quantity) or 1 end
+    end
+    return nil
 end
 
 function LootEventHandler(self, event, ...)
     if event == Constants.Events.ChatMsgLoot then
         if IsInteractionPaused() then return end
+
         local lootString, _, _, _, playerName2 = ...
         if lootString == nil then return end
+
+        if GetLinkAndQuantityCraft(lootString) then return end
 
         local playerName, _ = GetUnitName("player")
         local playerNameFromPN2, _ = strsplit('-', playerName2, 2)
         if playerName ~= playerNameFromPN2 then return end
 
-        local itemLink, quantity = GetLinkAndQuantity(lootString)
+        local itemLink, quantity = GetLinkAndQuantityLoot(lootString)
         if itemLink == nil then return end
 
         local price, itemName = CalculatePrice(itemLink)

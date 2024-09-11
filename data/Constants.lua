@@ -50,14 +50,12 @@ Constants.PATTERNS_SELF = {
     LOOT_ITEM_PUSHED_SELF:gsub("%%s", "(.+)")                                 -- 1
 }
 
--- Loot global patterns for others
--- string.match returns playerName, itemLink, quantity || playerName, itemLink
--- Constants.PATTERNS = {
---     LOOT_ITEM_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"),        -- 3
---     LOOT_ITEM_PUSHED_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"), -- 3
---     LOOT_ITEM:gsub("%%s", "(.+)"),                                       -- 2
---     LOOT_ITEM_PUSHED:gsub("%%s", "(.+)")                                 -- 2
--- }
+-- Crafted global patterns for self
+-- string.match returns itemLink, quantity || itemLink
+Constants.PATTERNS_CRAFT = {
+    [1] = LOOT_ITEM_CREATED_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"), -- 2
+    [2] = LOOT_ITEM_CREATED_SELF:gsub("%%s", "(.+)")                                 -- 1
+}
 
 Constants.RelevantInteractions = {
     [Enum.PlayerInteractionType.MailInfo] = true,
