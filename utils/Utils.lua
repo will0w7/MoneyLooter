@@ -23,8 +23,8 @@ function Utils.GetCoinTextString(val)
     local copper = math.floor(val % 100)
 
     local fString = ""
-    if gold ~= 0 then fString = fString .. gold .. "|cFFD9BE4Cg|r" end
-    if silver ~= 0 then fString = fString .. string.format("%02u|cFFB3B4BAs|r", silver) end
+    if gold > 0 then fString = fString .. gold .. "|cFFD9BE4Cg|r" end
+    if silver > 0 then fString = fString .. string.format("%02u|cFFB3B4BAs|r", silver) end
     fString = fString .. string.format("%02u|cFFC07A50c|r", copper)
     return fString
 end
