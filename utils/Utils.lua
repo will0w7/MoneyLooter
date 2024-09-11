@@ -26,7 +26,7 @@ local Utils = {}
 function Utils.deep_copy_meta(obj)
     if type(obj) ~= 'table' then return obj end
     local res = setmetatable({}, getmetatable(obj))
-    for k, v in pairs(obj) do res[table.deep_copy_meta(k)] = table.deep_copy_meta(v) end
+    for k, v in pairs(obj) do res[Utils.deep_copy_meta(k)] = Utils.deep_copy_meta(v) end
     return res
 end
 
