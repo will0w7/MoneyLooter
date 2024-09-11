@@ -1,0 +1,13 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.blizzard.com/wow/ui/ https://raw.githubusercontent.com/Gethe/wow-ui-source/live/Interface/AddOns/Blizzard_SharedXML/UI.xsd">
+    <Frame name="ML_MainFrame" virtual="true">
+        <Size x="200" y="180" />
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture>
+                    <Color r=".03" g=".03" b=".03" a=".7" />
+                </Texture>
+            </Layer>
+        </Layers>
+    </Frame>
+</Ui>
