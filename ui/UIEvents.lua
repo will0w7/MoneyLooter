@@ -138,6 +138,8 @@ function RegisterStartEvents()
     MoneyLooterLootEvents:RegisterEvent(Constants.Events.QuestTurnedIn)
     MoneyLooterLootEvents:RegisterEvent(Constants.Events.TradeSkillShow)
     MoneyLooterLootEvents:RegisterEvent(Constants.Events.TradeSkillClose)
+    MoneyLooterLootEvents:RegisterEvent(Constants.Events.PInteractionManagerShow)
+    MoneyLooterLootEvents:RegisterEvent(Constants.Events.PInteractionManagerHide)
     if MoneyLooter.isRetail then
         MoneyLooterLootEvents:RegisterEvent(Constants.Events.QuestLootReceived)
     end
@@ -153,6 +155,8 @@ function UnregisterStartEvents()
     MoneyLooterLootEvents:UnregisterEvent(Constants.Events.QuestTurnedIn)
     MoneyLooterLootEvents:UnregisterEvent(Constants.Events.TradeSkillShow)
     MoneyLooterLootEvents:UnregisterEvent(Constants.Events.TradeSkillClose)
+    MoneyLooterLootEvents:UnregisterEvent(Constants.Events.PInteractionManagerShow)
+    MoneyLooterLootEvents:UnregisterEvent(Constants.Events.PInteractionManagerHide)
     if MoneyLooter.isRetail then
         MoneyLooterLootEvents:UnregisterEvent(Constants.Events.QuestLootReceived)
     end
