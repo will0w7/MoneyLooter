@@ -45,7 +45,15 @@ local DefaultMoneyLooterXDB = {
     MinPrice4 = 0,
 }
 
----@class ML_XDB
+---@class ML_TempData
+---@field LootedItems table
+---@field InteractionPaused boolean
+local MoneyLooterTempData = {
+    LootedItems = {},
+    InteractionPaused = false
+}
+
+---@class ML_CrossDB
 ---@field CurrentTSMString string
 ---@field MinPrice1 integer
 ---@field MinPrice2 integer
@@ -308,6 +316,18 @@ end
 
 function UpdateMLXDB()
     if MoneyLooterXDB == nil then
-        MoneyLooterXDB = table.deep_copy_meta(DefaultMoneyLooterXDB)
+        MoneyLooterXDB = Utils.deep_copy_meta(DefaultMoneyLooterXDB)
+    end
+end
+
+---@return boolean
+function IsInteractionPaused()
+    return MoneyLooterTempData.InteractionPaused
+end
+
+---@param val boolean
+function SetInteractionPaused(val)
+    if val ~= nil then
+        MoneyLooterTempData.InteractionPaused = val
     end
 end

@@ -123,7 +123,18 @@ function GetLinkAndQuantity(lootString)
 end
 
 function LootEventHandler(self, event, ...)
-    if event == Constants.Events.MerchantUpdate then
+    if event == Constants.Events.PInteractionManagerShow then
+        local interaction = ...
+        if interaction == Enum.PlayerInteractionType.MailInfo then
+            SetInteractionPaused(true)
+        end
+    elseif event == Constants.Events.PInteractionManagerHide then
+        local interaction = ...
+        if interaction == Enum.PlayerInteractionType.MailInfo then
+            SetInteractionPaused(false)
+            SetOldMoney(GetMoney())
+        end
+    elseif event == Constants.Events.MerchantUpdate then
         SetOldMoney(GetMoney())
     elseif event == Constants.Events.ChatMsgMoney or event == Constants.Events.QuestTurnedIn then
         local newMoney = GetMoney()
@@ -133,6 +144,7 @@ function LootEventHandler(self, event, ...)
         SetOldMoney(newMoney)
         UpdateRawGold()
     elseif event == Constants.Events.ChatMsgLoot then
+        if IsInteractionPaused() then return end
         local lootString, _, _, _, playerName2 = ...
         if lootString == nil then return end
 

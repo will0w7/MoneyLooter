@@ -41,7 +41,9 @@ Constants.Events = {
     QuestTurnedIn = "QUEST_TURNED_IN",
     QuestLootReceived = "QUEST_LOOT_RECEIVED",
     AddonLoaded = "ADDON_LOADED",
-    PlayerEnteringWorld = "PLAYER_ENTERING_WORLD"
+    --------------------------------------
+    PInteractionManagerShow = "PLAYER_INTERACTION_MANAGER_FRAME_SHOW",
+    PInteractionManagerHide = "PLAYER_INTERACTION_MANAGER_FRAME_HIDE"
 }
 
 -- Loot global patterns for self
