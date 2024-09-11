@@ -161,7 +161,7 @@ function LootEventHandler(self, event, ...)
         AddTotalMoney(totalPrice)
         -- only price of individual items, not groups (1xBismuth not 5xBismuth)
         SetPriciest(price, itemID)
-        MoneyLooterUpdateLoot()
+        UpdateLoot()
     elseif event == Constants.Events.ChatMsgMoney or event == Constants.Events.QuestTurnedIn then
         -- here we dont stop interaction, if we turn in a quest with a profession
         -- window opened, we want to register the money change

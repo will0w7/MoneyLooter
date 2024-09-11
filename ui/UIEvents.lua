@@ -33,15 +33,9 @@ local function SetScrollVisible(val)
 end
 
 local function PopulateData()
-    SetOldMoney(GetMoney())
-
     Constants.Strings.ADDON_VERSION = GetAddOnMetadata(Constants.Strings.ADDON_NAME, "Version")
-    UI.MLMainFrame.StartButton:SetText(GetCurrentStartText())
-    UI.MLMainFrame.TimeFS:SetText(tostring(date("!%X", GetTimer())))
-    UI.MLMainFrame.RawGoldFS:SetText(Utils.GetCoinTextString(GetRawGold()))
-    UI.MLMainFrame.ItemsGoldFS:SetText(Utils.GetCoinTextString(GetItemsMoney()))
-    UI.MLMainFrame.GPHFS:SetText(Utils.GetCoinTextString(CalcGPH()))
-    UI.MLMainFrame.PriciestFS:SetText(Utils.GetCoinTextString(GetPriciest()))
+
+    UpdateAllTexts(GetTimer(), GetRawGold(), GetItemsMoney(), CalcGPH(), GetPriciest())
 
     SetScrollVisible(IsScrollLootFrameVisible())
     SetMainVisible(IsVisible())
@@ -65,13 +59,27 @@ function UpdateRawGold()
     UI.MLMainFrame.RawGoldFS:SetText(Utils.GetCoinTextString(GetRawGold()))
 end
 
-local function MoneyLooterUpdateTexts()
-    AddOneToTimer()
-    UI.MLMainFrame.TimeFS:SetText(SetCurrentTimeText(tostring(date("!%X", GetTimer()))))
+---@param time integer
+---@param rawGold integer
+---@param itemsGold integer
+---@param gph integer
+---@param priciest integer
+function UpdateAllTexts(time, rawGold, itemsGold, gph, priciest)
+    SetOldMoney(GetMoney())
+    UI.MLMainFrame.StartButton:SetText(GetCurrentStartText())
+    UI.MLMainFrame.TimeFS:SetText(tostring(date("!%X", time)))
+    UI.MLMainFrame.RawGoldFS:SetText(Utils.GetCoinTextString(rawGold))
+    UI.MLMainFrame.ItemsGoldFS:SetText(Utils.GetCoinTextString(itemsGold))
+    UI.MLMainFrame.GPHFS:SetText(Utils.GetCoinTextString(gph))
+    UI.MLMainFrame.PriciestFS:SetText(Utils.GetCoinTextString(priciest))
+end
+
+local function UpdateTexts()
+    UI.MLMainFrame.TimeFS:SetText(tostring(date("!%X", AddOneToTimer())))
     UI.MLMainFrame.GPHFS:SetText(Utils.GetCoinTextString(CalcGPH()))
 end
 
-function MoneyLooterUpdateLoot()
+function UpdateLoot()
     for _, lootedItem in ipairs(GetLootedItems()) do
         UI.MLMainFrame.ScrollBoxLoot.DataProvider:Insert(lootedItem)
     end
@@ -126,10 +134,8 @@ end)
 -----------------------------------------------------------------------------------------------
 local MoneyLooterLootEvents = CreateFrame("Frame")
 
-MoneyLooterLootEvents.AnimGroup = MoneyLooterLootEvents:CreateAnimationGroup()
-MoneyLooterLootEvents.Timer = MoneyLooterLootEvents.AnimGroup:CreateAnimation()
-MoneyLooterLootEvents.Timer:SetDuration(1)
-MoneyLooterLootEvents.AnimGroup:SetLooping("REPEAT")
+---@type FunctionContainer
+local timer
 
 function RegisterStartEvents()
     MoneyLooterLootEvents:RegisterEvent(Constants.Events.ChatMsgMoney)
@@ -139,8 +145,7 @@ function RegisterStartEvents()
     MoneyLooterLootEvents:RegisterEvent(Constants.Events.PInteractionManagerHide)
     MoneyLooterLootEvents:SetScript(Constants.Events.OnEvent, LootEventHandler)
 
-    MoneyLooterLootEvents.AnimGroup:Play()
-    MoneyLooterLootEvents.AnimGroup:SetScript(Constants.Events.OnLoop, MoneyLooterUpdateTexts)
+    timer = C_Timer.NewTicker(1, UpdateTexts)
 end
 
 function UnregisterStartEvents()
@@ -151,8 +156,7 @@ function UnregisterStartEvents()
     MoneyLooterLootEvents:UnregisterEvent(Constants.Events.PInteractionManagerHide)
     MoneyLooterLootEvents:SetScript(Constants.Events.OnEvent, nil)
 
-    MoneyLooterLootEvents.AnimGroup:Stop()
-    MoneyLooterLootEvents.AnimGroup:SetScript(Constants.Events.OnLoop, nil)
+    if not timer:IsCancelled() then timer:Cancel() end
 end
 
 UI.MLMainFrame:SetScript(Constants.Events.OnDragStart, UI.MLMainFrame.StartMoving)
@@ -160,22 +164,12 @@ UI.MLMainFrame:SetScript(Constants.Events.OnDragStop, UI.MLMainFrame.StopMovingO
 UI.MLMainFrame:SetScript(Constants.Events.OnHide, UI.MLMainFrame.StopMovingOrSizing)
 
 UI.MLMainFrame.ResetButton:SetScript(Constants.Events.OnClick, function()
-    if IsRunning() then
-        UnregisterStartEvents()
-        MoneyLooterLootEvents:SetScript(Constants.Events.OnEvent, nil)
-        MoneyLooterLootEvents.AnimGroup:SetScript(Constants.Events.OnLoop, nil)
-    end
-    local minimizeButtonState = IsScrollLootFrameVisible()
+    if IsRunning() then UnregisterStartEvents() end
+
     ResetMoneyLooterDB()
-    UI.MLMainFrame.StartButton:SetText(GetCurrentStartText())
-    UI.MLMainFrame.TimeFS:SetText(SetCurrentTimeText(tostring(date("!%X", 0))))
-    UI.MLMainFrame.RawGoldFS:SetText(Utils.GetCoinTextString(0))
-    UI.MLMainFrame.ItemsGoldFS:SetText(Utils.GetCoinTextString(0))
-    UI.MLMainFrame.GPHFS:SetText(Utils.GetCoinTextString(0))
-    UI.MLMainFrame.PriciestFS:SetText(Utils.GetCoinTextString(0))
-    SetOldMoney(GetMoney())
+    UpdateAllTexts(0, 0, 0, 0, 0)
     UI.MLMainFrame.ScrollBoxLoot.DataProvider:Flush()
-    SetScrollLootFrameVisible(minimizeButtonState)
+    SetScrollLootFrameVisible(IsScrollLootFrameVisible())
 end)
 -----------------------------------------------------------------------------------------------
 

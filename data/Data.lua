@@ -187,6 +187,7 @@ end
 
 function AddOneToTimer()
     MoneyLooterDB.Timer = (MoneyLooterDB.Timer or 0) + 1
+    return MoneyLooterDB.Timer
 end
 
 ---@return string
