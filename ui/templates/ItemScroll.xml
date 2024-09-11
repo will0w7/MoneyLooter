@@ -6,8 +6,8 @@
         <Layers>
             <Layer level="BACKGROUND">
                 <Texture parentKey="Alternate" hidden="true" alphaMode="ADD">
-					<Color r=".04" g=".04" b=".04" a="1"/>
-				</Texture>
+                    <Color r=".04" g=".04" b=".04" a="1" />
+                </Texture>
             </Layer>
             <Layer level="OVERLAY">
                 <FontString parentKey="RightLabel" inherits="GameFontHighlight" justifyH="RIGHT">

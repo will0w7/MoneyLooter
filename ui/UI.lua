@@ -35,12 +35,12 @@ function ML_ItemScrollMixin:Init()
 end
 
 function ML_ItemScrollMixin:SetAlternateOverlayShown(alternate)
-	self.Alternate:SetShown(alternate);
+    self.Alternate:SetShown(alternate);
 end
 
 function ML_ItemScrollMixin:SetLeftText(id, quantity, itemLink)
     self.LeftLabel:SetText(DARKYELLOW_FONT_COLOR:WrapTextInColorCode(quantity ..
-    "x " .. CreateTextureFromItemID(id) .. itemLink))
+        "x " .. CreateTextureFromItemID(id) .. itemLink))
 end
 
 function ML_ItemScrollMixin:SetRightText(value)
@@ -164,7 +164,8 @@ local function ApplyAlternateState(frame, alternate)
     frame:SetAlternateOverlayShown(alternate)
 end
 
-ScrollUtil.InitScrollBoxListWithScrollBar(UI.MLMainFrame.ScrollBoxLoot, UI.MLMainFrame.ScrollLootBar, UI.MLMainFrame.ScrollBoxLoot.ScrollView)
+ScrollUtil.InitScrollBoxListWithScrollBar(UI.MLMainFrame.ScrollBoxLoot, UI.MLMainFrame.ScrollLootBar,
+    UI.MLMainFrame.ScrollBoxLoot.ScrollView)
 ScrollUtil.RegisterAlternateRowBehavior(UI.MLMainFrame.ScrollBoxLoot, ApplyAlternateState)
 
 local function Initializer(button)

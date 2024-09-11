@@ -1,4 +1,4 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
-  <Script file="Utils.lua"/>
-  <Script file="CircularBuffer.lua"/>
+  <Script file="Utils.lua" />
+  <Script file="CircularBuffer.lua" />
 </Ui>
