@@ -10,7 +10,7 @@ local GetAddOnMetadata = C_AddOns.GetAddOnMetadata or GetAddOnMetadata
 local GetMoney, CreateFrame = GetMoney, CreateFrame
 ----------------------------------------------------------------------------------------
 local date, tostring, strsplit, strsub = date, tostring, strsplit, strsub
-local strlenutf8, print, tonumber = strlenutf8, print, tonumber
+local strlenutf8, print, tonumber, ipairs = strlenutf8, print, tonumber, ipairs
 ----------------------------------------------------------------------------------------
 
 local function SetMainVisible(val)
@@ -34,7 +34,7 @@ end
 
 local function PopulateData()
     SetOldMoney(GetMoney())
-    
+
     Constants.Strings.ADDON_VERSION = GetAddOnMetadata(Constants.Strings.ADDON_NAME, "Version")
     UI.MLMainFrame.StartButton:SetText(GetCurrentStartText())
     UI.MLMainFrame.TimeFS:SetText(tostring(date("!%X", GetTimer())))
@@ -72,9 +72,7 @@ local function MoneyLooterUpdateTexts()
 end
 
 function MoneyLooterUpdateLoot()
-    local lootedItems = GetLootedItems()
-    for i = 1, #lootedItems do
-        local lootedItem = lootedItems[i]
+    for lootedItem in ipairs(GetLootedItems()) do
         UI.MLMainFrame.ScrollBoxLoot.DataProvider:Insert(lootedItem)
     end
     UI.MLMainFrame.ScrollBoxLoot:ScrollToEnd()
