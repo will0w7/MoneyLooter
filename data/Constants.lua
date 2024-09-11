@@ -41,6 +41,9 @@ Constants.Events = {
     QuestLootReceived = "QUEST_LOOT_RECEIVED",
     AddonLoaded = "ADDON_LOADED",
     --------------------------------------
+    TradeSkillShow = "TRADE_SKILL_SHOW",
+    TradeSkillClose = "TRADE_SKILL_CLOSE",
+    --------------------------------------
     PInteractionManagerShow = "PLAYER_INTERACTION_MANAGER_FRAME_SHOW",
     PInteractionManagerHide = "PLAYER_INTERACTION_MANAGER_FRAME_HIDE"
 }

@@ -136,6 +136,8 @@ function RegisterStartEvents()
     MoneyLooterLootEvents:RegisterEvent(Constants.Events.ChatMsgMoney)
     MoneyLooterLootEvents:RegisterEvent(Constants.Events.ChatMsgLoot)
     MoneyLooterLootEvents:RegisterEvent(Constants.Events.QuestTurnedIn)
+    MoneyLooterLootEvents:RegisterEvent(Constants.Events.TradeSkillShow)
+    MoneyLooterLootEvents:RegisterEvent(Constants.Events.TradeSkillClose)
     if MoneyLooter.isRetail then
         MoneyLooterLootEvents:RegisterEvent(Constants.Events.QuestLootReceived)
     end
@@ -149,6 +151,8 @@ function UnregisterStartEvents()
     MoneyLooterLootEvents:UnregisterEvent(Constants.Events.ChatMsgMoney)
     MoneyLooterLootEvents:UnregisterEvent(Constants.Events.ChatMsgLoot)
     MoneyLooterLootEvents:UnregisterEvent(Constants.Events.QuestTurnedIn)
+    MoneyLooterLootEvents:UnregisterEvent(Constants.Events.TradeSkillShow)
+    MoneyLooterLootEvents:UnregisterEvent(Constants.Events.TradeSkillClose)
     if MoneyLooter.isRetail then
         MoneyLooterLootEvents:UnregisterEvent(Constants.Events.QuestLootReceived)
     end

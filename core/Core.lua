@@ -136,6 +136,11 @@ function LootEventHandler(self, event, ...)
             SetInteractionPaused(false)
             SetOldMoney(GetMoney())
         end
+    elseif event == Constants.Events.TradeSkillClose then
+        SetInteractionPaused(false)
+        SetOldMoney(GetMoney())
+    elseif event == Constants.Events.TradeSkillShow then
+        SetInteractionPaused(true)
     elseif event == Constants.Events.ChatMsgMoney or event == Constants.Events.QuestTurnedIn then
         local newMoney = GetMoney()
         local change = (newMoney - GetOldMoney())
