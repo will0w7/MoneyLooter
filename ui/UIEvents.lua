@@ -72,7 +72,7 @@ local function MoneyLooterUpdateTexts()
 end
 
 function MoneyLooterUpdateLoot()
-    for lootedItem in ipairs(GetLootedItems()) do
+    for _, lootedItem in ipairs(GetLootedItems()) do
         UI.MLMainFrame.ScrollBoxLoot.DataProvider:Insert(lootedItem)
     end
     UI.MLMainFrame.ScrollBoxLoot:ScrollToEnd()
