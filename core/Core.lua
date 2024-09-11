@@ -100,6 +100,8 @@ function CalculatePriceAuc(quality, sellPrice, itemLink, isCraftingReagent)
 end
 
 function CalculatePrice(itemLink)
+    if itemLink == nil then return end
+
     local itemString = string.match(itemLink, "item[%-?%d:]+")
     local itemName, _, quality, _, _, _, _, _, _, _, sellPrice, _, _, _, _, _, isCraftingReagent =
         GetItemInfo(itemString)
@@ -156,6 +158,7 @@ function LootEventHandler(self, event, ...)
         if itemLink == nil then return end
 
         local price, itemName = CalculatePrice(itemLink)
+        if price == nil then return end
 
         if (string.len(itemName) > 30) then itemName = string.sub(itemName, 1, 30) .. "..." end
 
@@ -173,6 +176,7 @@ function LootEventHandler(self, event, ...)
         if itemLink == nil then return end
 
         local price = CalculatePrice(itemLink)
+        if price == nil then return end
 
         local totalPrice = price * quantity
         local itemID = GetItemInfoFromHyperlink(itemLink)
