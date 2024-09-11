@@ -14,8 +14,8 @@ MoneyLooter.Constants = Constants
 Constants.Strings = {
     ADDON_NAME = addonName,
     ADDON_VERSION = "",
-    TITLE = "|cFFd8de35MoneyLooter!|r",
-    FONT = "Fonts\\FRIZQT__.TTF",
+    TITLE = "MoneyLooter",
+    FONT = "GameFontHighlight",
     TSM_STRING = "dbmarket"
 }
 

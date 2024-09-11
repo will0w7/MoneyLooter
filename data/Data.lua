@@ -1,12 +1,14 @@
 ---@class MoneyLooter
 local MoneyLooter = select(2, ...)
 
+local Utils = MoneyLooter.Utils
 local Constants = MoneyLooter.Constants
 local CircularBuffer = MoneyLooter.CircularBuffer
 
-local BufferCapacity = 20
+local BufferCapacity = 100
+MoneyLooter.BufferCapacity = BufferCapacity
 
----@class ML_DefaultDB
+---@class ML_DB
 ---@field CurrentStartText string
 local DefaultMoneyLooterDB = {
     Visible = true,
@@ -19,7 +21,6 @@ local DefaultMoneyLooterDB = {
     TotalMoney = 0,
     Priciest = 0,
     PriciestID = 0,
-    LootedItems = {},
     ListLootedItems = CircularBuffer,
     OldMoney = 0,
     ----------------------------------------------
@@ -28,11 +29,10 @@ local DefaultMoneyLooterDB = {
     CurrentStartText = _G.MONEYLOOTER_L_START,
     CurrentTimeText = tostring(date("!%X", 0)),
     ----------------------------------------------
-    DBVersion = 1725868670195
+    DBVersion = 1725972263906
 }
 
 ---@class ML_DB
----@field ListLootedItems ML_CircularBuffer
 MoneyLooterDB = MoneyLooterDB
 
 ---@class ML_DefaultXDB
@@ -61,76 +61,68 @@ local MoneyLooterTempData = {
 ---@field MinPrice4 integer
 MoneyLooterXDB = MoneyLooterXDB
 
+---@return boolean
 function IsVisible()
     return MoneyLooterDB.Visible
 end
 
+---@param val boolean
 function SetVisible(val)
     if val ~= nil then
         MoneyLooterDB.Visible = val
     end
 end
 
+---@return boolean
 function IsRunning()
     return MoneyLooterDB.Running
 end
 
+---@param val boolean
 function SetRunning(val)
     if val ~= nil then
         MoneyLooterDB.Running = val
     end
 end
 
+---@return integer
 function GetRawGold()
     return MoneyLooterDB.RawGold or 0
 end
 
-function SetRawGold(val)
-    MoneyLooterDB.RawGold = 0
-    if val ~= nil then
-        MoneyLooterDB.RawGold = val
-    end
-end
-
+---@param val integer
 function AddRawGold(val)
     if val ~= nil then
         MoneyLooterDB.RawGold = MoneyLooterDB.RawGold + val
-    else
-        return false
     end
 end
 
+---@return integer
 function GetItemsMoney()
     return MoneyLooterDB.ItemsMoney or 0
 end
 
-function SetItemsMoney(val)
-    MoneyLooterDB.ItemsMoney = 0
-    if val ~= nil then
-        MoneyLooterDB.ItemsMoney = val
-    end
-end
-
+---@param val integer
 function AddItemsMoney(val)
     if val ~= nil then
         MoneyLooterDB.ItemsMoney = MoneyLooterDB.ItemsMoney + val
     end
 end
 
-function GetTotalMoney()
-    return MoneyLooterDB.TotalMoney or 0
-end
-
+---@param val integer
 function AddTotalMoney(val)
     if val ~= nil then
         MoneyLooterDB.TotalMoney = MoneyLooterDB.TotalMoney + val
     end
 end
 
+---@return integer
 function GetPriciest()
     return MoneyLooterDB.Priciest or 0
 end
 
+---@param id integer
+---@param val integer
 function SetPriciest(val, id)
     if val ~= nil and val > (MoneyLooterDB.Priciest or 0) then
         MoneyLooterDB.Priciest = val
@@ -138,18 +130,18 @@ function SetPriciest(val, id)
     end
 end
 
+---@return integer
 function GetPriciestID()
     return MoneyLooterDB.PriciestID or 0
 end
 
+---@return table
 function GetLootedItems()
-    return MoneyLooterDB.LootedItems or {}
+    return MoneyLooterTempData.LootedItems or {}
 end
 
-function SetLootedItems(val)
-    if val ~= nil then
-        MoneyLooterDB.LootedItems = val
-    end
+function ResetLootedItems()
+    MoneyLooterTempData.LootedItems = {}
 end
 
 function InitListLootedItems()
@@ -158,36 +150,38 @@ function InitListLootedItems()
     end
 end
 
+---@return ML_CircularBuffer
 function GetListLootedItems()
     return MoneyLooterDB.ListLootedItems
 end
 
-function AddListLootedItems(val)
-    CircularBuffer_Push(MoneyLooterDB.ListLootedItems, val)
-end
-
+---@param val ML_LootedItem
 function InsertLootedItem(val)
-    if MoneyLooterDB.LootedItems == nil then MoneyLooterDB.LootedItems = {} end
+    if MoneyLooterTempData.LootedItems == nil then MoneyLooterTempData.LootedItems = {} end
     if val ~= nil then
-        table.insert(MoneyLooterDB.LootedItems, val)
-        AddListLootedItems(val)
+        table.insert(MoneyLooterTempData.LootedItems, val)
+        CircularBuffer_Push(MoneyLooterDB.ListLootedItems, val)
     end
 end
 
+---@return integer
 function GetListLootedItemsCount()
     return CircularBuffer_GetSize(MoneyLooterDB.ListLootedItems)
 end
 
+---@return integer
 function GetOldMoney()
     return MoneyLooterDB.OldMoney or 0
 end
 
+---@param val integer
 function SetOldMoney(val)
     if val ~= nil then
         MoneyLooterDB.OldMoney = val
     end
 end
 
+---@return integer
 function GetTimer()
     return MoneyLooterDB.Timer or 0
 end
@@ -196,59 +190,61 @@ function AddOneToTimer()
     MoneyLooterDB.Timer = (MoneyLooterDB.Timer or 0) + 1
 end
 
-function SetTimer(val)
+---@return string
+function GetCurrentStartText()
+    return MoneyLooterDB.CurrentStartText or _G.MONEYLOOTER_L_START
+end
+
+---@param val string
+---@return string
+function SetCurrentStartText(val)
     if val ~= nil then
-        MoneyLooterDB.Timer = val
+        MoneyLooterDB.CurrentStartText = val
     end
+    return MoneyLooterDB.CurrentStartText or _G.MONEYLOOTER_L_START
 end
 
-function GetCurrentStartStopText()
-    return MoneyLooterDB.CurrentStartStopText or _G.MONEYLOOTER_L_START
-end
-
-function SetCurrentStartStopText(val)
-    if val ~= nil then
-        MoneyLooterDB.CurrentStartStopText = val
-    end
-    return MoneyLooterDB.CurrentStartStopText or _G.MONEYLOOTER_L_START
-end
-
-function GetCurrentTimeText()
-    return MoneyLooterDB.CurrentTimeText or tostring(date("!%X", 0))
-end
-
+---@return integer
 function GetMinPrice1()
     return MoneyLooterXDB.MinPrice1 or 0
 end
 
+---@param val integer
 function SetMinPrice1(val)
     MoneyLooterXDB.MinPrice1 = val
 end
 
+---@return integer
 function GetMinPrice2()
     return MoneyLooterXDB.MinPrice2 or 0
 end
 
+---@param val integer
 function SetMinPrice2(val)
     MoneyLooterXDB.MinPrice2 = val
 end
 
+---@return integer
 function GetMinPrice3()
     return MoneyLooterXDB.MinPrice3 or 0
 end
 
+---@param val integer
 function SetMinPrice3(val)
     MoneyLooterXDB.MinPrice3 = val
 end
 
+---@return integer
 function GetMinPrice4()
     return MoneyLooterXDB.MinPrice4 or 0
 end
 
+---@param val integer
 function SetMinPrice4(val)
     MoneyLooterXDB.MinPrice4 = val
 end
 
+---@param val integer
 function SetAllMinPrices(val)
     MoneyLooterXDB.MinPrice1 = val
     MoneyLooterXDB.MinPrice2 = val
@@ -256,10 +252,12 @@ function SetAllMinPrices(val)
     MoneyLooterXDB.MinPrice4 = val
 end
 
+---@return string
 function GetCurrentTSMString()
     return MoneyLooterXDB.CurrentTSMString or Constants.Strings.TSM_STRING
 end
 
+---@param val string
 function SetTSMString(val)
     local TSM_API = TSM_API
     if TSM_API == nil then
@@ -274,16 +272,20 @@ function SetTSMString(val)
     print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING_VALID .. val)
 end
 
+---@return boolean
 function IsScrollLootFrameVisible()
     return MoneyLooterDB.ScrollLootFrameVisible
 end
 
+---@param val boolean
 function SetScrollLootFrameVisible(val)
     if val ~= nil then
         MoneyLooterDB.ScrollLootFrameVisible = val
     end
 end
 
+---@param val string
+---@return string
 function SetCurrentTimeText(val)
     if val ~= nil then
         MoneyLooterDB.CurrentTimeText = val
@@ -291,18 +293,22 @@ function SetCurrentTimeText(val)
     return MoneyLooterDB.CurrentTimeText or tostring(date("!%X", 0))
 end
 
+---@return integer
 function CalcGPH()
     local perhour = 0
-    local total = GetTotalMoney()
+    local total = MoneyLooterDB.TotalMoney
     if total > 0 and GetTimer() > 0 then
         perhour = (total / MoneyLooterDB.Timer) * 3600
     end
-    return perhour
+    return math.floor(perhour)
 end
 
 function ResetMoneyLooterDB()
+    if MoneyLooterDB == nil then
+        MoneyLooterDB = {}
+    end
     MoneyLooterDB = table.wipe(MoneyLooterDB)
-    MoneyLooterDB = table.deep_copy_meta(DefaultMoneyLooterDB)
+    MoneyLooterDB = Utils.deep_copy_meta(DefaultMoneyLooterDB)
     MoneyLooterDB.ListLootedItems = CircularBuffer_New(MoneyLooterDB.ListLootedItems, BufferCapacity)
 end
 

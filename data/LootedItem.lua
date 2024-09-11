@@ -8,9 +8,9 @@ MoneyLooter.LootedItem = LootedItem
 function LootedItem.new(id, itemLink, value, quantity)
     local self = {}
     self.id = id
-    self.name = itemLink
+    self.itemLink = itemLink
     self.value = value
-    self.amount = quantity
+    self.quantity = quantity
 
     return self
 end
