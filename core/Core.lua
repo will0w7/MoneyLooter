@@ -125,30 +125,7 @@ function GetLinkAndQuantity(lootString)
 end
 
 function LootEventHandler(self, event, ...)
-    if event == Constants.Events.PInteractionManagerShow then
-        local interaction = ...
-        if Constants.RelevantInteractions[interaction] then
-            SetInteractionPaused(true)
-        end
-    elseif event == Constants.Events.PInteractionManagerHide then
-        local interaction = ...
-        if Constants.RelevantInteractions[interaction] then
-            SetInteractionPaused(false)
-            SetOldMoney(GetMoney())
-        end
-    elseif event == Constants.Events.TradeSkillClose then
-        SetInteractionPaused(false)
-        SetOldMoney(GetMoney())
-    elseif event == Constants.Events.TradeSkillShow then
-        SetInteractionPaused(true)
-    elseif event == Constants.Events.ChatMsgMoney or event == Constants.Events.QuestTurnedIn then
-        local newMoney = GetMoney()
-        local change = (newMoney - GetOldMoney())
-        AddRawGold(change)
-        AddTotalMoney(change)
-        SetOldMoney(newMoney)
-        UpdateRawGold()
-    elseif event == Constants.Events.ChatMsgLoot then
+    if event == Constants.Events.ChatMsgLoot then
         if IsInteractionPaused() then return end
         local lootString, _, _, _, playerName2 = ...
         if lootString == nil then return end
@@ -171,10 +148,20 @@ function LootEventHandler(self, event, ...)
         InsertLootedItem(i)
         AddItemsMoney(totalPrice)
         AddTotalMoney(totalPrice)
-        -- only individual items, not groups (1xBismuth not 5xBismuth)
+        -- only price of individual items, not groups (1xBismuth not 5xBismuth)
         SetPriciest(price, itemID)
         MoneyLooterUpdateLoot()
+    elseif event == Constants.Events.ChatMsgMoney or event == Constants.Events.QuestTurnedIn then
+        -- here we dont stop interaction, if we turn in a quest with a profession
+        -- window opened, we want to register the money change
+        local newMoney = GetMoney()
+        local change = (newMoney - GetOldMoney())
+        AddRawGold(change)
+        AddTotalMoney(change)
+        SetOldMoney(newMoney)
+        UpdateRawGold()
     elseif event == Constants.Events.QuestLootReceived then
+        -- same here, we want to register loot from completed quests
         local _, itemLink, quantity = ...
         if itemLink == nil then return end
 
@@ -187,8 +174,24 @@ function LootEventHandler(self, event, ...)
         InsertLootedItem(i)
         AddItemsMoney(totalPrice)
         AddTotalMoney(totalPrice)
-        -- only individual items, not groups (1xBismuth not 5xBismuth)
+        -- only price of individual items, not groups (1xBismuth not 5xBismuth)
         SetPriciest(price, itemID)
         MoneyLooterUpdateLoot()
+    elseif event == Constants.Events.PInteractionManagerShow then
+        local interaction = ...
+        if Constants.RelevantInteractions[interaction] then
+            SetInteractionPaused(true)
+        end
+    elseif event == Constants.Events.PInteractionManagerHide then
+        local interaction = ...
+        if Constants.RelevantInteractions[interaction] then
+            SetInteractionPaused(false)
+            SetOldMoney(GetMoney())
+        end
+    elseif event == Constants.Events.TradeSkillShow then
+        SetInteractionPaused(true)
+    elseif event == Constants.Events.TradeSkillClose then
+        SetInteractionPaused(false)
+        SetOldMoney(GetMoney())
     end
 end
