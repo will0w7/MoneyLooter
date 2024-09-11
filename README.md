@@ -51,6 +51,8 @@ Download the latest release from [Wago](https://addons.wago.io/addons/moneyloote
 
 ❌ = Not compatible
 
+**Note:** Since Wrath and TBC no longer have official servers and are causing some issues with CurseForge, I will no longer be supporting these versions.
+
 ## Usage
 
 Once installed login in to the game or **/reload** your interface and you will see MoneyLooter ready to be used.
