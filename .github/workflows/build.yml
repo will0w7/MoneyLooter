@@ -12,11 +12,9 @@ jobs:
   package:
     strategy:
       matrix:
-        type: [retail, classic, cata]
+        type: [retail, classic, cata, wrath, bcc]
         
         include:
-          - type: retail
-            pkgmeta: .pkgmeta
           - type: classic
             pkgmeta: .pkgmeta_classic
           - type: cata
@@ -25,6 +23,8 @@ jobs:
             pkgmeta: .pkgmeta_wrath
           - type: bcc
             pkgmeta: .pkgmeta_bcc
+          - type: retail
+            pkgmeta: .pkgmeta
 
     runs-on: ubuntu-latest
 
