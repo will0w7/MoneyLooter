@@ -42,14 +42,14 @@ Download the latest release from [Wago](https://addons.wago.io/addons/moneyloote
 | Classic Era                    |   ✅   |
 | Classic Hardcore               |   ✅   |
 | Season of Discovery            |   ✅   |
-| Wrath of the Lich King Classic |   ❔   |
-| The Burning Crusade Classic    |   ❔   |
 
 ✅ = Compatible
 
 ❔ = Untested
 
 ❌ = Not compatible
+
+**Note:** Since Wrath and TBC no longer have official servers and are causing some issues with CurseForge, I will no longer be supporting these versions.
 
 ## Usage
 
