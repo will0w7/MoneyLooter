@@ -1,10 +1,11 @@
 ---@class MoneyLooter
 local MoneyLooter = select(2, ...)
 
+---@class ML_Locales
 local Locales = MoneyLooter.Locales
 
 Locales.esES = function()
-  L = {}
+  local L = {}
   L["START"] = "Comenzar"
   L["CONTINUE"] = "Continuar"
   L["PAUSE"] = "Pausar"

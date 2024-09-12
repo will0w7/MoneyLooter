@@ -10,47 +10,51 @@ local MoneyLooter = select(2, ...)
 local CircularBuffer = {}
 MoneyLooter.CircularBuffer = CircularBuffer
 
+---@class ML_CBFunctions
+local CBFunctions = {}
+MoneyLooter.CBFunctions = CBFunctions
+
 ---@param capacity integer
 ---@return ML_CircularBuffer
-function CircularBuffer_New(self, capacity)
-    if self == nil or not self.buffer then
-        self = {}
+function CBFunctions.New(buffer, capacity)
+    if buffer == nil or not buffer.buffer then
+        buffer = {}
     else
-        table.wipe(self)
+        table.wipe(buffer)
     end
-    self.buffer = {}
-    self.capacity = capacity
-    self.head = 1
-    self.tail = 1
-    self.size = 0
+    buffer.buffer = {}
+    buffer.capacity = capacity
+    buffer.head = 1
+    buffer.tail = 1
+    buffer.size = 0
 
-    return self
+    return buffer
 end
 
----@param self ML_CircularBuffer
+---@param buffer ML_CircularBuffer
 ---@return integer
-function CircularBuffer_GetSize(self)
-    return self.size
+function CBFunctions.GetSize(buffer)
+    return buffer.size
 end
 
----@param self ML_CircularBuffer
+---@param buffer ML_CircularBuffer
 ---@param value ML_LootedItem
-function CircularBuffer_Push(self, value)
-    self.buffer[self.head] = value
-    self.head = (self.head % self.capacity) + 1
-    if self.size < self.capacity then
-        self.size = self.size + 1
+function CBFunctions.Push(buffer, value)
+    buffer.buffer[buffer.head] = value
+    buffer.head = (buffer.head % buffer.capacity) + 1
+    if buffer.size < buffer.capacity then
+        buffer.size = buffer.size + 1
     else
-        self.tail = (self.tail % self.capacity) + 1
+        buffer.tail = (buffer.tail % buffer.capacity) + 1
     end
 end
 
----@param self ML_CircularBuffer
+---@param buffer ML_CircularBuffer
 ---@param func function
-function CircularBuffer_Iterate(self, func)
-    local i = self.tail
-    for _ = 1, self.size do
-        func(self.buffer[i])
-        i = (i % self.capacity) + 1
+function CBFunctions.Iterate(buffer, func)
+    local i = buffer.tail
+    for _ = 1, buffer.size do
+        func(buffer.buffer[i])
+        i = (i % buffer.capacity) + 1
     end
 end

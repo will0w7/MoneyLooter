@@ -5,6 +5,8 @@ local MoneyLooter = select(2, ...)
 local Constants = MoneyLooter.Constants
 ---@class ML_LootedItem
 local LootedItem = MoneyLooter.LootedItem
+---@class ML_Data
+local Data = MoneyLooter.Data
 
 ------------------------------------------------------------------------------
 local TSM_API = TSM_API
@@ -24,29 +26,29 @@ local GetTSMPrice = {
     ---@param isCraftingReagent boolean
     ---@param tsmItemString string
     [1] = function(isCraftingReagent, tsmItemString, _)
-        local value = TSM_API.GetCustomPriceValue(GetCurrentTSMString(), tsmItemString)
-        if value ~= nil and (value >= GetMinPrice1() or isCraftingReagent) then return value end
+        local value = TSM_API.GetCustomPriceValue(Data.GetCurrentTSMString(), tsmItemString)
+        if value ~= nil and (value >= Data.GetMinPrice1() or isCraftingReagent) then return value end
         return 0
     end,
     ---@param isCraftingReagent boolean
     ---@param tsmItemString string
     [2] = function(isCraftingReagent, tsmItemString, _)
-        local value = TSM_API.GetCustomPriceValue(GetCurrentTSMString(), tsmItemString)
-        if value ~= nil and (value >= GetMinPrice2() or isCraftingReagent) then return value end
+        local value = TSM_API.GetCustomPriceValue(Data.GetCurrentTSMString(), tsmItemString)
+        if value ~= nil and (value >= Data.GetMinPrice2() or isCraftingReagent) then return value end
         return 0
     end,
     ---@param isCraftingReagent boolean
     ---@param tsmItemString string
     [3] = function(isCraftingReagent, tsmItemString, _)
-        local value = TSM_API.GetCustomPriceValue(GetCurrentTSMString(), tsmItemString)
-        if value ~= nil and (value >= GetMinPrice3() or isCraftingReagent) then return value end
+        local value = TSM_API.GetCustomPriceValue(Data.GetCurrentTSMString(), tsmItemString)
+        if value ~= nil and (value >= Data.GetMinPrice3() or isCraftingReagent) then return value end
         return 0
     end,
     ---@param isCraftingReagent boolean
     ---@param tsmItemString string
     [4] = function(isCraftingReagent, tsmItemString, _)
-        local value = TSM_API.GetCustomPriceValue(GetCurrentTSMString(), tsmItemString)
-        if value ~= nil and (value >= GetMinPrice4() or isCraftingReagent) then return value end
+        local value = TSM_API.GetCustomPriceValue(Data.GetCurrentTSMString(), tsmItemString)
+        if value ~= nil and (value >= Data.GetMinPrice4() or isCraftingReagent) then return value end
         return 0
     end,
     ---@param sellPrice integer
@@ -65,28 +67,28 @@ local GetAucPrice = {
     ---@param itemLink string
     [1] = function(isCraftingReagent, itemLink, _)
         local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
-        if value ~= nil and (value >= GetMinPrice1() or isCraftingReagent) then return value end
+        if value ~= nil and (value >= Data.GetMinPrice1() or isCraftingReagent) then return value end
         return 0
     end,
     ---@param isCraftingReagent boolean
     ---@param itemLink string
     [2] = function(isCraftingReagent, itemLink, _)
         local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
-        if value ~= nil and (value >= GetMinPrice2() or isCraftingReagent) then return value end
+        if value ~= nil and (value >= Data.GetMinPrice2() or isCraftingReagent) then return value end
         return 0
     end,
     ---@param isCraftingReagent boolean
     ---@param itemLink string
     [3] = function(isCraftingReagent, itemLink, _)
         local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
-        if value ~= nil and (value >= GetMinPrice3() or isCraftingReagent) then return value end
+        if value ~= nil and (value >= Data.GetMinPrice3() or isCraftingReagent) then return value end
         return 0
     end,
     ---@param isCraftingReagent boolean
     ---@param itemLink string
     [4] = function(isCraftingReagent, itemLink, _)
         local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
-        if value ~= nil and (value >= GetMinPrice4() or isCraftingReagent) then return value end
+        if value ~= nil and (value >= Data.GetMinPrice4() or isCraftingReagent) then return value end
         return 0
     end,
     ---@param sellPrice integer
@@ -168,7 +170,7 @@ end
 ---@param event WowEvent
 function LootEventHandler(_, event, ...)
     if event == Constants.Events.ChatMsgLoot then
-        if IsInteractionPaused() then return end
+        if Data.IsInteractionPaused() then return end
 
         local lootString, _, _, _, playerName2 = ...
         if lootString == nil then return end
@@ -190,31 +192,31 @@ function LootEventHandler(_, event, ...)
         local totalPrice = price * quantity
         local itemID = GetItemInfoFromHyperlink(itemLink)
         local i = LootedItem.new(itemID, itemLink, totalPrice, quantity)
-        InsertLootedItem(i)
-        AddItemsMoney(totalPrice)
-        AddTotalMoney(totalPrice)
+        Data.InsertLootedItem(i)
+        Data.AddItemsMoney(totalPrice)
+        Data.AddTotalMoney(totalPrice)
         -- only price of individual items, not groups (1xBismuth not 5xBismuth)
-        SetPriciest(price, itemID)
+        Data.SetPriciest(price, itemID)
         UpdateLoot()
     elseif event == Constants.Events.ChatMsgMoney or event == Constants.Events.QuestTurnedIn then
         -- here we dont stop interaction, if we turn in a quest with a profession
         -- window opened, we want to register the money change
         local newMoney = GetMoney()
-        local change = (newMoney - GetOldMoney())
-        AddRawMoney(change)
-        AddTotalMoney(change)
-        SetOldMoney(newMoney)
+        local change = (newMoney - Data.GetOldMoney())
+        Data.AddRawMoney(change)
+        Data.AddTotalMoney(change)
+        Data.SetOldMoney(newMoney)
         UpdateRawMoney()
     elseif event == Constants.Events.PInteractionManagerShow then
         local interaction = ...
         if Constants.RelevantInteractions[interaction] then
-            SetInteractionPaused(true)
+            Data.SetInteractionPaused(true)
         end
     elseif event == Constants.Events.PInteractionManagerHide then
         local interaction = ...
         if Constants.RelevantInteractions[interaction] then
-            SetInteractionPaused(false)
-            SetOldMoney(GetMoney())
+            Data.SetInteractionPaused(false)
+            Data.SetOldMoney(GetMoney())
         end
     end
 end
