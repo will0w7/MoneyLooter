@@ -50,7 +50,7 @@ function ML_ItemScrollMixin:TrimDataProvider(dataProvider)
     local maxCapacity = MoneyLooter.BufferCapacity
     local dataProviderSize = dataProvider:GetSize()
     if dataProviderSize > maxCapacity then
-        local extra = math.floor(maxCapacity * .5)
+        local extra = math.floor(maxCapacity * .25)
         local overflow = dataProviderSize - maxCapacity
         dataProvider:RemoveIndexRange(1, overflow + extra)
     end
