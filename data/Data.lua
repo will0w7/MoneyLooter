@@ -140,7 +140,11 @@ function GetLootedItems()
 end
 
 function ResetLootedItems()
-    MoneyLooterTempData.LootedItems = {}
+    if MoneyLooterTempData.LootedItems == nil then
+        MoneyLooterTempData.LootedItems = {}
+    else
+        table.wipe(MoneyLooterTempData.LootedItems)
+    end
 end
 
 function InitListLootedItems()
@@ -298,8 +302,9 @@ end
 function ResetMoneyLooterDB()
     if MoneyLooterDB == nil then
         MoneyLooterDB = {}
+    else
+        table.wipe(MoneyLooterDB)
     end
-    MoneyLooterDB = table.wipe(MoneyLooterDB)
     MoneyLooterDB = Utils.deep_copy_meta(DefaultMoneyLooterDB)
     MoneyLooterDB.ListLootedItems = CircularBuffer_New(MoneyLooterDB.ListLootedItems, BufferCapacity)
 end
