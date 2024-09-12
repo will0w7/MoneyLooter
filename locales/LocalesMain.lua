@@ -1,6 +1,7 @@
 ---@class MoneyLooter
 local MoneyLooter = select(2, ...)
 
+---@class ML_Locales
 local Locales = MoneyLooter.Locales
 
 -- Based on Auctionator implementation, thanks <3
