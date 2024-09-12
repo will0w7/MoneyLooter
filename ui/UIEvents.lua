@@ -13,22 +13,25 @@ local date, tostring, strsplit, strsub = date, tostring, strsplit, strsub
 local strlenutf8, print, tonumber, ipairs = strlenutf8, print, tonumber, ipairs
 ----------------------------------------------------------------------------------------
 
-local function SetMainVisible(val)
-    SetVisible(val)
-    if val then
+---@param visible boolean
+local function SetMainVisible(visible)
+    SetVisible(visible)
+    if visible then
         UI.MLMainFrame:Show()
     else
         UI.MLMainFrame:Hide()
     end
 end
 
-local function SetScrollVisible(val)
-    SetScrollLootFrameVisible(val)
-    UI.MLMainFrame.MinimizeCheck:SetChecked(val)
-    if val then
+---@param visible boolean
+local function SetScrollVisible(visible)
+    SetScrollLootFrameVisible(visible)
+    UI.MLMainFrame.MinimizeCheck:SetChecked(visible)
+    if visible then
         UI.MLMainFrame.ScrollBoxLoot:Show()
     else
         UI.MLMainFrame.ScrollBoxLoot:Hide()
+        print(_G.MONEYLOOTER_L_CLOSE)
     end
 end
 
@@ -104,9 +107,8 @@ UI.MLMainFrame.StartButton:SetScript(Constants.Events.OnClick, function()
 end)
 
 UI.MLMainFrame.CloseButton:SetScript(Constants.Events.OnClick, function()
-    SetVisible(false)
+    SetMainVisible(false)
     print(_G.MONEYLOOTER_L_CLOSE)
-    UI.MLMainFrame:Hide()
 end)
 
 UI.MLMainFrame.MinimizeCheck:SetScript(Constants.Events.OnClick, function()
@@ -177,10 +179,11 @@ SLASH_MONEYLOOTER1 = "/ml"
 SLASH_MONEYLOOTER2 = "/moneylooter"
 
 local function slash(msg, _)
-    if msg == "show" or (msg == "" and not IsVisible()) then
-        SetVisible(true)
-    elseif msg == "hide" or (msg == "" and IsVisible()) then
-        SetVisible(false)
+    local mainVisible = IsVisible()
+    if msg == "show" or (msg == "" and not mainVisible) then
+        SetMainVisible(true)
+    elseif msg == "hide" or (msg == "" and mainVisible) then
+        SetMainVisible(false)
     elseif msg == "info" then
         print(_G.MONEYLOOTER_L_INFO)
     elseif strsub(msg, 1, 6) == "custom" then
