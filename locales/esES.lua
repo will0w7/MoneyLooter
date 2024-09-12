@@ -13,7 +13,7 @@ Locales.esES = function()
   L["GOLD_LABEL"] = "Oro:"
   L["ITEMS_LABEL"] = "Objetos:"
   L["GPH_LABEL"] = "OPH:"
-  L["PRICIEST_LABEL"] = "Más valor:"
+  L["PRICIEST_LABEL"] = "Más valioso:"
   L["USAGE"] = [[====== |cFFd8de35Información de uso de MoneyLooter|r ======
   |cFF36e8e6/ml|r: Alterna entre mostrar y ocultar
   |cFF36e8e6/ml|r |cFFf1f488help|r: Muestra la ayuda
