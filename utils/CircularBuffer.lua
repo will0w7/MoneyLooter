@@ -15,8 +15,9 @@ MoneyLooter.CircularBuffer = CircularBuffer
 function CircularBuffer_New(self, capacity)
     if self == nil or not self.buffer then
         self = {}
+    else
+        table.wipe(self)
     end
-    table.wipe(self)
     self.buffer = {}
     self.capacity = capacity
     self.head = 1
