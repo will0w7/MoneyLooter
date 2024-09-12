@@ -204,7 +204,7 @@ function LootEventHandler(_, event, ...)
         AddRawMoney(change)
         AddTotalMoney(change)
         SetOldMoney(newMoney)
-        UpdateRawGold()
+        UpdateRawMoney()
     elseif event == Constants.Events.PInteractionManagerShow then
         local interaction = ...
         if Constants.RelevantInteractions[interaction] then

@@ -58,7 +58,7 @@ local function PopulateLoot()
 end
 
 -----------------------------------------------------------------------------------------------
-function UpdateRawGold()
+function UpdateRawMoney()
     UI.MLMainFrame.RawGoldFS:SetText(Utils.GetCoinTextString(GetRawMoney()))
 end
 
