@@ -120,6 +120,15 @@ UI.MLMainFrame.CloseButton:SetScript(Constants.Events.OnClick, function()
     print(_G.MONEYLOOTER_L_CLOSE)
 end)
 
+UI.MLMainFrame.ResetButton:SetScript(Constants.Events.OnClick, function()
+    if Data.IsRunning() then UnregisterStartEvents() end
+
+    Data.ResetMoneyLooterDB()
+    UpdateAllTexts(0, 0, 0, 0, 0)
+    UI.MLMainFrame.ScrollBoxLoot.DataProvider:Flush()
+    Data.SetScrollLootFrameVisible(Data.IsScrollLootFrameVisible())
+end)
+
 UI.MLMainFrame.MinimizeCheck:SetScript(Constants.Events.OnClick, function()
     if Data.IsScrollLootFrameVisible() then
         Data.SetScrollLootFrameVisible(false)
@@ -173,15 +182,6 @@ end
 UI.MLMainFrame:SetScript(Constants.Events.OnDragStart, UI.MLMainFrame.StartMoving)
 UI.MLMainFrame:SetScript(Constants.Events.OnDragStop, UI.MLMainFrame.StopMovingOrSizing)
 UI.MLMainFrame:SetScript(Constants.Events.OnHide, UI.MLMainFrame.StopMovingOrSizing)
-
-UI.MLMainFrame.ResetButton:SetScript(Constants.Events.OnClick, function()
-    if Data.IsRunning() then UnregisterStartEvents() end
-
-    Data.ResetMoneyLooterDB()
-    UpdateAllTexts(0, 0, 0, 0, 0)
-    UI.MLMainFrame.ScrollBoxLoot.DataProvider:Flush()
-    Data.SetScrollLootFrameVisible(Data.IsScrollLootFrameVisible())
-end)
 -----------------------------------------------------------------------------------------------
 
 SLASH_MONEYLOOTER1 = "/ml"
