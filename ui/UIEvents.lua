@@ -13,6 +13,8 @@ local Data = MoneyLooter.Data
 local CBFunctions = MoneyLooter.CBFunctions
 ---@class ML_Core
 local Core = MoneyLooter.Core
+---@class ML_Options
+local Options = MoneyLooter.Options
 
 ----------------------------------------------------------------------------------------
 local GetAddOnMetadata = C_AddOns.GetAddOnMetadata or GetAddOnMetadata
@@ -137,6 +139,10 @@ UI.MLMainFrame.MinimizeCheck:SetScript(Constants.Events.OnClick, function()
         Data.SetScrollLootFrameVisible(true)
         UI.MLMainFrame.ScrollBoxLoot:Show()
     end
+end)
+
+UI.MLMainFrame.OptionButton:SetScript(Constants.Events.OnClick, function ()
+    Options.MLOptionsFrame:Show()
 end)
 
 UI.MLMainFrame.PriciestFS:SetScript(Constants.Events.OnEnter, function()

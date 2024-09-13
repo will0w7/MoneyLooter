@@ -1,13 +1,14 @@
 ---@class MoneyLooter
 local MoneyLooter = select(2, ...)
 
+---@class ML_Constants
 local Constants = MoneyLooter.Constants
+---@class ML_Utils
+local Utils = MoneyLooter.Utils
 
 ---@class ML_UI
 local UI = {}
 MoneyLooter.UI = UI
-
-local Utils = MoneyLooter.Utils
 
 ----------------------------------------------------------------------------------------
 local CreateFrame = CreateFrame
@@ -57,13 +58,6 @@ function ML_ItemScrollMixin:TrimDataProvider(dataProvider)
 end
 
 -------------------------------------------------------------------------------------
-ML_ButtonMixin = {}
-
-function ML_ButtonMixin:SetText(val)
-    self.Label:SetText(val)
-end
-
--------------------------------------------------------------------------------------
 UI.MLMainFrame = CreateFrame("Frame", "MONEYLOOTER_MAIN_FRAME", UIParent, "ML_MainFrame")
 UI.MLMainFrame:SetPoint("CENTER")
 UI.MLMainFrame:EnableMouse(true)
@@ -76,6 +70,8 @@ UI.MLMainFrame.TitleBar:SetPoint("TOPRIGHT", UI.MLMainFrame, "TOPRIGHT")
 UI.MLMainFrame.TitleBar.Label:SetText(Constants.Strings.TITLE)
 
 UI.MLMainFrame.CloseButton = CreateFrame("Button", nil, UI.MLMainFrame, "ML_CloseButton")
+
+UI.MLMainFrame.OptionButton = CreateFrame("Button", nil, UI.MLMainFrame, "ML_OptionsButton")
 
 UI.MLMainFrame.MinimizeCheck = CreateFrame("CheckButton", nil, UI.MLMainFrame, "ML_CheckButton")
 UI.MLMainFrame.MinimizeCheck:SetChecked(true)

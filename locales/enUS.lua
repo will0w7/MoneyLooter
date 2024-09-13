@@ -58,5 +58,6 @@ Locales.enUS = function()
   L["MPRICE_COIN_G"] = "Gold"
   L["MPRICE_COIN_S"] = "Silver"
   L["MPRICE_COIN_C"] = "Copper"
+  L["OPTIONS_TITLE"] = "Options"
   return L
 end

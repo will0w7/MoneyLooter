@@ -6,5 +6,6 @@
     <Include file="Button.xml" />
     <Include file="Scroll.xml" />
     <Include file="ItemScroll.xml" />
+    <Include file="OptionsButton.xml" />
 </Ui>
   

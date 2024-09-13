@@ -1,5 +1,8 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
+  <Include file="mixins/Manifest.xml" />
   <Include file="templates/Manifest.xml" />
+  <Script file="Options.lua" />
   <Script file="UI.lua" />
+  <Script file="OptionsEvents.lua" />
   <Script file="UIEvents.lua" />
 </Ui>
