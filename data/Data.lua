@@ -48,14 +48,16 @@ Data.DB.mt.__index = function(_, key)
     return Data.DB.prototype[key]
 end
 
-if not MoneyLooterDB then
-    ---@class ML_DB
-    MoneyLooterDB = {}
+local function initialize_db()
+    if not MoneyLooterDB then
+        ---@class ML_DB
+        MoneyLooterDB = {}
+    end
+    if getmetatable(MoneyLooterDB) then
+        setmetatable(MoneyLooterDB, nil)
+    end
+    setmetatable(MoneyLooterDB, Data.DB.mt)
 end
-if getmetatable(MoneyLooterDB) then
-    setmetatable(MoneyLooterDB, nil)
-end
-setmetatable(MoneyLooterDB, Data.DB.mt)
 
 Data.XDB = {}
 
@@ -75,13 +77,15 @@ Data.XDB.mt.__index = function(_, key)
     return Data.XDB.prototype[key]
 end
 
-if not MoneyLooterXDB then
-    MoneyLooterXDB = {}
+local function initialize_xdb()
+    if not MoneyLooterXDB then
+        MoneyLooterXDB = {}
+    end
+    if getmetatable(MoneyLooterXDB) then
+        setmetatable(MoneyLooterXDB, nil)
+    end
+    setmetatable(MoneyLooterXDB, Data.XDB.mt)
 end
-if getmetatable(MoneyLooterXDB) then
-    setmetatable(MoneyLooterXDB, nil)
-end
-setmetatable(MoneyLooterXDB, Data.XDB.mt)
 
 ---@class ML_TempData
 ---@field LootedItems table
@@ -117,7 +121,7 @@ end
 
 ---@return integer
 function Data.GetRawMoney()
-    return MoneyLooterDB.RawMoney or 0
+    return MoneyLooterDB.RawMoney
 end
 
 ---@param money integer
@@ -129,7 +133,7 @@ end
 
 ---@return integer
 function Data.GetItemsMoney()
-    return MoneyLooterDB.ItemsMoney or 0
+    return MoneyLooterDB.ItemsMoney
 end
 
 ---@param money integer
@@ -148,13 +152,13 @@ end
 
 ---@return integer
 function Data.GetPriciest()
-    return MoneyLooterDB.Priciest or 0
+    return MoneyLooterDB.Priciest
 end
 
 ---@param id integer
 ---@param money integer
 function Data.SetPriciest(money, id)
-    if money ~= nil and money > (MoneyLooterDB.Priciest or 0) then
+    if money ~= nil and money > MoneyLooterDB.Priciest then
         MoneyLooterDB.Priciest = money
         MoneyLooterDB.PriciestID = id
     end
@@ -162,12 +166,12 @@ end
 
 ---@return integer
 function Data.GetPriciestID()
-    return MoneyLooterDB.PriciestID or 0
+    return MoneyLooterDB.PriciestID
 end
 
 ---@return table
 function Data.GetLootedItems()
-    return MoneyLooterTempData.LootedItems or {}
+    return MoneyLooterTempData.LootedItems
 end
 
 function Data.ResetLootedItems()
@@ -205,7 +209,7 @@ end
 
 ---@return integer
 function Data.GetOldMoney()
-    return MoneyLooterDB.OldMoney or 0
+    return MoneyLooterDB.OldMoney
 end
 
 ---@param money integer
@@ -217,18 +221,18 @@ end
 
 ---@return integer
 function Data.GetTimer()
-    return MoneyLooterDB.Timer or 0
+    return MoneyLooterDB.Timer
 end
 
 ---@return integer
 function Data.AddOneToTimer()
-    MoneyLooterDB.Timer = (MoneyLooterDB.Timer or 0) + 1
+    MoneyLooterDB.Timer = MoneyLooterDB.Timer + 1
     return MoneyLooterDB.Timer
 end
 
 ---@return string
 function Data.GetCurrentStartText()
-    return MoneyLooterDB.CurrentStartText or _G.MONEYLOOTER_L_START
+    return MoneyLooterDB.CurrentStartText
 end
 
 ---@param text string
@@ -237,12 +241,12 @@ function Data.SetCurrentStartText(text)
     if text ~= nil then
         MoneyLooterDB.CurrentStartText = text
     end
-    return MoneyLooterDB.CurrentStartText or _G.MONEYLOOTER_L_START
+    return MoneyLooterDB.CurrentStartText
 end
 
 ---@return integer
 function Data.GetMinPrice1()
-    return MoneyLooterXDB.MinPrice1 or 0
+    return MoneyLooterXDB.MinPrice1
 end
 
 ---@param money integer
@@ -252,7 +256,7 @@ end
 
 ---@return integer
 function Data.GetMinPrice2()
-    return MoneyLooterXDB.MinPrice2 or 0
+    return MoneyLooterXDB.MinPrice2
 end
 
 ---@param money integer
@@ -262,7 +266,7 @@ end
 
 ---@return integer
 function Data.GetMinPrice3()
-    return MoneyLooterXDB.MinPrice3 or 0
+    return MoneyLooterXDB.MinPrice3
 end
 
 ---@param money integer
@@ -272,7 +276,7 @@ end
 
 ---@return integer
 function Data.GetMinPrice4()
-    return MoneyLooterXDB.MinPrice4 or 0
+    return MoneyLooterXDB.MinPrice4
 end
 
 ---@param money integer
@@ -290,7 +294,7 @@ end
 
 ---@return string
 function Data.GetCurrentTSMString()
-    return MoneyLooterXDB.CurrentTSMString or Constants.Strings.TSM_STRING
+    return MoneyLooterXDB.CurrentTSMString
 end
 
 ---@param tsmString string
@@ -324,8 +328,9 @@ end
 function Data.CalcGPH()
     local perhour = 0
     local total = MoneyLooterDB.TotalMoney
-    if total > 0 and Data.GetTimer() > 0 then
-        perhour = (total / MoneyLooterDB.Timer) * 3600
+    local timer = MoneyLooterDB.Timer
+    if total > 0 and timer > 0 then
+        perhour = (total / timer) * 3600
     end
     return math.floor(perhour)
 end
@@ -336,22 +341,16 @@ function Data.ResetMoneyLooterDB()
     else
         table.wipe(MoneyLooterDB)
     end
-    MoneyLooterDB = Utils.deep_copy_meta(Data.DB.prototype)
+    initialize_db()
     MoneyLooterDB.ListLootedItems = CBFunctions.New(MoneyLooterDB.ListLootedItems, Data.CBCapacity)
 end
 
 function Data.UpdateMLDB()
-    if MoneyLooterDB == nil or MoneyLooterDB.DBVersion == nil or MoneyLooterDB.DBVersion < Data.DB.prototype.DBVersion then
-        print(_G.MONEYLOOTER_L_NEW_DB_VERSION)
-        Data.ResetMoneyLooterDB()
-        print(_G.MONEYLOOTER_L_DB_UPDATED)
-    end
+    initialize_db()
 end
 
 function Data.UpdateMLXDB()
-    if MoneyLooterXDB == nil then
-        MoneyLooterXDB = Utils.deep_copy_meta(Data.XDB.prototype)
-    end
+    initialize_xdb()
 end
 
 ---@return boolean
