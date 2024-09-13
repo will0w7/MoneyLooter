@@ -47,7 +47,7 @@ function ML_ItemScrollMixin:SetRightText(value)
 end
 
 function ML_ItemScrollMixin:TrimDataProvider(dataProvider)
-    local maxCapacity = MoneyLooter.BufferCapacity
+    local maxCapacity = MoneyLooter.Data.CBCapacity
     local dataProviderSize = dataProvider:GetSize()
     if dataProviderSize > maxCapacity then
         local extra = math.floor(maxCapacity * .25)

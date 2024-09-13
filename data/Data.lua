@@ -14,12 +14,14 @@ local CBFunctions = MoneyLooter.CBFunctions
 local Data = {}
 MoneyLooter.Data = Data
 
-local BufferCapacity = 100
-MoneyLooter.BufferCapacity = BufferCapacity
+local CBCapacity = 100
+Data.CBCapacity = CBCapacity
+
+Data.DB = {}
 
 ---@class ML_DB
 ---@field CurrentStartText string
-local DefaultMoneyLooterDB = {
+Data.DB.prototype = {
     Visible = true,
     ScrollLootFrameVisible = true,
     ----------------------------------------------
@@ -40,12 +42,25 @@ local DefaultMoneyLooterDB = {
     DBVersion = 1725972263906
 }
 
----@class ML_DB
-MoneyLooterDB = MoneyLooterDB
+Data.DB.mt = {}
 
+Data.DB.mt.__index = function(_, key)
+    return Data.DB.prototype[key]
+end
+
+if not MoneyLooterDB then
+    ---@class ML_DB
+    MoneyLooterDB = {}
+end
+if getmetatable(MoneyLooterDB) then
+    setmetatable(MoneyLooterDB, nil)
+end
+setmetatable(MoneyLooterDB, Data.DB.mt)
+
+Data.XDB = {}
 
 ---@class ML_CrossDB
-local DefaultMoneyLooterXDB = {
+Data.XDB.prototype = {
     CurrentTSMString = "dbmarket",
     ------------------------------
     MinPrice1 = 0,
@@ -54,6 +69,20 @@ local DefaultMoneyLooterXDB = {
     MinPrice4 = 0,
 }
 
+Data.XDB.mt = {}
+
+Data.XDB.mt.__index = function(_, key)
+    return Data.XDB.prototype[key]
+end
+
+if not MoneyLooterXDB then
+    MoneyLooterXDB = {}
+end
+if getmetatable(MoneyLooterXDB) then
+    setmetatable(MoneyLooterXDB, nil)
+end
+setmetatable(MoneyLooterXDB, Data.XDB.mt)
+
 ---@class ML_TempData
 ---@field LootedItems table
 ---@field InteractionPaused boolean
@@ -61,9 +90,6 @@ local MoneyLooterTempData = {
     LootedItems = {},
     InteractionPaused = false
 }
-
----@class ML_CrossDB
-MoneyLooterXDB = MoneyLooterXDB
 
 ---@return boolean
 function Data.IsVisible()
@@ -154,7 +180,7 @@ end
 
 function Data.InitListLootedItems()
     if MoneyLooterDB.ListLootedItems == nil or MoneyLooterDB.ListLootedItems.buffer == nil then
-        MoneyLooterDB.ListLootedItems = CBFunctions.New(MoneyLooterDB.ListLootedItems, BufferCapacity)
+        MoneyLooterDB.ListLootedItems = CBFunctions.New(MoneyLooterDB.ListLootedItems, Data.CBCapacity)
     end
 end
 
@@ -304,27 +330,27 @@ function Data.CalcGPH()
     return math.floor(perhour)
 end
 
-function ResetMoneyLooterDB()
+function Data.ResetMoneyLooterDB()
     if MoneyLooterDB == nil then
         MoneyLooterDB = {}
     else
         table.wipe(MoneyLooterDB)
     end
-    MoneyLooterDB = Utils.deep_copy_meta(DefaultMoneyLooterDB)
-    MoneyLooterDB.ListLootedItems = CBFunctions.New(MoneyLooterDB.ListLootedItems, BufferCapacity)
+    MoneyLooterDB = Utils.deep_copy_meta(Data.DB.prototype)
+    MoneyLooterDB.ListLootedItems = CBFunctions.New(MoneyLooterDB.ListLootedItems, Data.CBCapacity)
 end
 
 function Data.UpdateMLDB()
-    if MoneyLooterDB == nil or MoneyLooterDB.DBVersion == nil or MoneyLooterDB.DBVersion < DefaultMoneyLooterDB.DBVersion then
+    if MoneyLooterDB == nil or MoneyLooterDB.DBVersion == nil or MoneyLooterDB.DBVersion < Data.DB.prototype.DBVersion then
         print(_G.MONEYLOOTER_L_NEW_DB_VERSION)
-        ResetMoneyLooterDB()
+        Data.ResetMoneyLooterDB()
         print(_G.MONEYLOOTER_L_DB_UPDATED)
     end
 end
 
 function Data.UpdateMLXDB()
     if MoneyLooterXDB == nil then
-        MoneyLooterXDB = Utils.deep_copy_meta(DefaultMoneyLooterXDB)
+        MoneyLooterXDB = Utils.deep_copy_meta(Data.XDB.prototype)
     end
 end
 

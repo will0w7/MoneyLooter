@@ -8,6 +8,10 @@ local LootedItem = MoneyLooter.LootedItem
 ---@class ML_Data
 local Data = MoneyLooter.Data
 
+---@class ML_Core
+local Core = {}
+MoneyLooter.Core = Core
+
 ------------------------------------------------------------------------------
 local TSM_API = TSM_API
 local AUCTIONATOR_API = Auctionator and Auctionator.API and Auctionator.API.v1
@@ -15,7 +19,7 @@ local AUCTIONATOR_API = Auctionator and Auctionator.API and Auctionator.API.v1
 local GetItemInfo = C_Item.GetItemInfo or GetItemInfo
 local GetItemInfoFromHyperlink = GetItemInfoFromHyperlink
 local GetMoney, GetUnitName = GetMoney, GetUnitName
-local strsplit, tonumber, ipairs = strsplit, tonumber, ipairs
+local tonumber, ipairs = tonumber, ipairs
 ------------------------------------------------------------------------------
 
 local GetTSMPrice = {
@@ -106,7 +110,7 @@ local function CalculatePriceTSM(quality, sellPrice, itemLink, isCraftingReagent
     local tsmItemString = TSM_API.ToItemString(itemLink)
     if tsmItemString == nil then return 0 end
 
-    local price = 0
+    local price
     if GetTSMPrice[quality] then
         price = GetTSMPrice[quality](isCraftingReagent, tsmItemString, sellPrice)
     else
@@ -122,7 +126,7 @@ end
 local function CalculatePriceAuc(quality, sellPrice, itemLink, isCraftingReagent)
     if AUCTIONATOR_API == nil then return 0 end
 
-    local price = 0
+    local price
     if GetAucPrice[quality] then
         price = GetAucPrice[quality](isCraftingReagent, itemLink, sellPrice)
     else
@@ -132,13 +136,13 @@ local function CalculatePriceAuc(quality, sellPrice, itemLink, isCraftingReagent
 end
 
 ---@param itemLink string
-function CalculatePrice(itemLink)
+local function CalculatePrice(itemLink)
     if itemLink == nil then return end
 
     local itemString = string.match(itemLink, "item[%-?%d:]+")
-    local itemName, _, quality, _, _, _, _, _, _, _, sellPrice, _, _, _, _, _, isCraftingReagent =
+    local _, _, quality, _, _, _, _, _, _, _, sellPrice, _, _, _, _, _, isCraftingReagent =
         GetItemInfo(itemString)
-    local price = 0
+    local price
     price = CalculatePriceTSM(quality, sellPrice, itemLink, isCraftingReagent)
     if not TSM_API and price == 0 then
         price = CalculatePriceAuc(quality, sellPrice, itemLink, isCraftingReagent)
@@ -146,11 +150,11 @@ function CalculatePrice(itemLink)
     if price == 0 then
         price = sellPrice or 0
     end
-    return price, itemName
+    return price
 end
 
 ---@param lootString string
-function GetLinkAndQuantityLoot(lootString)
+local function GetLinkAndQuantityLoot(lootString)
     for _, pattern in ipairs(Constants.PATTERNS_SELF) do
         local itemLink, quantity = string.match(lootString, pattern)
         if itemLink then return itemLink, tonumber(quantity) or 1 end
@@ -159,7 +163,7 @@ function GetLinkAndQuantityLoot(lootString)
 end
 
 ---@param craftString string
-function GetLinkAndQuantityCraft(craftString)
+local function GetLinkAndQuantityCraft(craftString)
     for _, pattern in ipairs(Constants.PATTERNS_CRAFT) do
         local itemLink, _ = string.match(craftString, pattern)
         if itemLink then return itemLink end --, tonumber(quantity) or 1 end
@@ -168,7 +172,7 @@ function GetLinkAndQuantityCraft(craftString)
 end
 
 ---@param event WowEvent
-function LootEventHandler(_, event, ...)
+function Core.LootEventHandler(_, event, ...)
     if event == Constants.Events.ChatMsgLoot then
         if Data.IsInteractionPaused() then return end
 
@@ -178,16 +182,14 @@ function LootEventHandler(_, event, ...)
         if GetLinkAndQuantityCraft(lootString) then return end
 
         local playerName, _ = GetUnitName("player")
-        local playerNameFromPN2, _ = strsplit('-', playerName2, 2)
+        local playerNameFromPN2, _ = string.split('-', playerName2, 2)
         if playerName ~= playerNameFromPN2 then return end
 
         local itemLink, quantity = GetLinkAndQuantityLoot(lootString)
         if itemLink == nil then return end
 
-        local price, itemName = CalculatePrice(itemLink)
+        local price = CalculatePrice(itemLink)
         if price == nil then return end
-
-        if (string.len(itemName) > 30) then itemName = string.sub(itemName, 1, 30) .. "..." end
 
         local totalPrice = price * quantity
         local itemID = GetItemInfoFromHyperlink(itemLink)

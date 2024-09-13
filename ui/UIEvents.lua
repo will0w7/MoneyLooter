@@ -11,12 +11,14 @@ local Utils = MoneyLooter.Utils
 local Data = MoneyLooter.Data
 ---@class ML_CBFunctions
 local CBFunctions = MoneyLooter.CBFunctions
+---@class ML_Core
+local Core = MoneyLooter.Core
 
 ----------------------------------------------------------------------------------------
 local GetAddOnMetadata = C_AddOns.GetAddOnMetadata or GetAddOnMetadata
 local GetMoney, CreateFrame = GetMoney, CreateFrame
 ----------------------------------------------------------------------------------------
-local date, tostring, strsplit, strsub = date, tostring, strsplit, strsub
+local date, tostring = date, tostring
 local strlenutf8, print, tonumber, ipairs = strlenutf8, print, tonumber, ipairs
 ----------------------------------------------------------------------------------------
 
@@ -152,7 +154,7 @@ function RegisterStartEvents()
     MoneyLooterLootEvents:RegisterEvent(Constants.Events.QuestTurnedIn)
     MoneyLooterLootEvents:RegisterEvent(Constants.Events.PInteractionManagerShow)
     MoneyLooterLootEvents:RegisterEvent(Constants.Events.PInteractionManagerHide)
-    MoneyLooterLootEvents:SetScript(Constants.Events.OnEvent, LootEventHandler)
+    MoneyLooterLootEvents:SetScript(Constants.Events.OnEvent, Core.LootEventHandler)
 
     timer = C_Timer.NewTicker(1, UpdateTexts)
 end
@@ -175,7 +177,7 @@ UI.MLMainFrame:SetScript(Constants.Events.OnHide, UI.MLMainFrame.StopMovingOrSiz
 UI.MLMainFrame.ResetButton:SetScript(Constants.Events.OnClick, function()
     if Data.IsRunning() then UnregisterStartEvents() end
 
-    ResetMoneyLooterDB()
+    Data.ResetMoneyLooterDB()
     UpdateAllTexts(0, 0, 0, 0, 0)
     UI.MLMainFrame.ScrollBoxLoot.DataProvider:Flush()
     Data.SetScrollLootFrameVisible(Data.IsScrollLootFrameVisible())
@@ -185,26 +187,8 @@ end)
 SLASH_MONEYLOOTER1 = "/ml"
 SLASH_MONEYLOOTER2 = "/moneylooter"
 
-local function slash(msg, _)
-    local mainVisible = Data.IsVisible()
-    if msg == "show" or (msg == "" and not mainVisible) then
-        SetMainVisible(true)
-    elseif msg == "hide" or (msg == "" and mainVisible) then
-        SetMainVisible(false)
-    elseif msg == "info" then
-        print(_G.MONEYLOOTER_L_INFO)
-    elseif strsub(msg, 1, 6) == "custom" then
-        ParseCustomString(msg)
-    elseif strsub(msg, 1, 6) == "mprice" then
-        ParseMinPrice(msg)
-    else
-        print(_G.MONEYLOOTER_L_USAGE .. Constants.Strings.ADDON_VERSION)
-    end
-end
-SlashCmdList["MONEYLOOTER"] = slash
-
-function ParseCustomString(msg)
-    local _, tsmString = strsplit(" ", msg, 2)
+local function ParseCustomString(msg)
+    local _, tsmString = string.split(" ", msg, 2)
     if tsmString == nil or tsmString == "" then
         print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING .. "|cFF36e8e6" .. Data.GetCurrentTSMString() .. "|r")
         return
@@ -212,8 +196,8 @@ function ParseCustomString(msg)
     Data.SetTSMString(tsmString)
 end
 
-function ParseMinPrice(msg)
-    local mprice, value, coin = strsplit(" ", msg, 3)
+local function ParseMinPrice(msg)
+    local mprice, value, coin = string.split(" ", msg, 3)
     if strlenutf8(mprice) < 7 then
         print(_G.MONEYLOOTER_L_MPRICE_ERROR)
         return
@@ -249,7 +233,7 @@ function ParseMinPrice(msg)
         print(_G.MONEYLOOTER_L_MPRICE_UNRECOGNIZED_COIN)
         return
     end
-    local type = strsub(mprice, 7, 8)
+    local type = string.sub(mprice, 7, 8)
     local qual
     if type == "x" then
         qual = 99
@@ -261,6 +245,24 @@ function ParseMinPrice(msg)
         _G["MONEYLOOTER_L_MPRICE_COIN_" .. coin], _G["MONEYLOOTER_L_MPRICE_QUALITY_" .. tostring(qual)],
         tostring(qual)))
 end
+
+local function slash(msg, _)
+    local mainVisible = Data.IsVisible()
+    if msg == "show" or (msg == "" and not mainVisible) then
+        SetMainVisible(true)
+    elseif msg == "hide" or (msg == "" and mainVisible) then
+        SetMainVisible(false)
+    elseif msg == "info" then
+        print(_G.MONEYLOOTER_L_INFO)
+    elseif string.sub(msg, 1, 6) == "custom" then
+        ParseCustomString(msg)
+    elseif string.sub(msg, 1, 6) == "mprice" then
+        ParseMinPrice(msg)
+    else
+        print(_G.MONEYLOOTER_L_USAGE .. Constants.Strings.ADDON_VERSION)
+    end
+end
+SlashCmdList["MONEYLOOTER"] = slash
 
 -----------------------------------------------------------------------------------------------
 
