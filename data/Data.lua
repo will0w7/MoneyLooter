@@ -37,9 +37,7 @@ Data.DB.prototype = {
     ----------------------------------------------
     Timer = 0,
     ----------------------------------------------
-    CurrentStartText = _G.MONEYLOOTER_L_START,
-    ----------------------------------------------
-    DBVersion = 1725972263906
+    CurrentStartText = _G.MONEYLOOTER_L_START
 }
 
 Data.DB.mt = {}
