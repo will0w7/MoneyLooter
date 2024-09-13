@@ -3,9 +3,9 @@ name: Package MoneyLooter
 on:
   push:
     tags:
-      - '*'
+      - "*"
     paths-ignore:
-      - '.github/**'
+      - ".github/**"
 
 jobs:
   build:

@@ -5,7 +5,7 @@ local MoneyLooter = select(2, ...)
 local Locales = MoneyLooter.Locales
 
 -- Based on Auctionator implementation, thanks <3
-local currentLocale = {}
+local currentLocale
 if Locales[GetLocale()] then
     currentLocale = Locales[GetLocale()]()
 else
