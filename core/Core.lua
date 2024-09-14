@@ -171,6 +171,15 @@ local function GetLinkAndQuantityCraft(craftString)
     return nil
 end
 
+---@param receivedString string
+local function ReceivedMoney(receivedString)
+    for _, pattern in ipairs(Constants.PATTERNS_RECEIVED) do
+        local received = string.match(receivedString, pattern)
+        if received then return true end
+    end
+    return false
+end
+
 ---@param event WowEvent
 function Core.LootEventHandler(_, event, ...)
     if event == Constants.Events.ChatMsgLoot then
@@ -203,6 +212,15 @@ function Core.LootEventHandler(_, event, ...)
     elseif event == Constants.Events.ChatMsgMoney or event == Constants.Events.QuestTurnedIn then
         -- here we dont stop interaction, if we turn in a quest with a profession
         -- window opened, we want to register the money change
+        local newMoney = GetMoney()
+        local change = (newMoney - Data.GetOldMoney())
+        Data.AddRawMoney(change)
+        Data.AddTotalMoney(change)
+        Data.SetOldMoney(newMoney)
+        UpdateRawMoney()
+    elseif event == Constants.Events.ChatMsgSystem then
+        local receivedString = ...
+        if not ReceivedMoney(receivedString) then return end
         local newMoney = GetMoney()
         local change = (newMoney - Data.GetOldMoney())
         Data.AddRawMoney(change)

@@ -163,6 +163,7 @@ function RegisterStartEvents()
     MoneyLooterLootEvents:RegisterEvent(Constants.Events.QuestTurnedIn)
     MoneyLooterLootEvents:RegisterEvent(Constants.Events.PInteractionManagerShow)
     MoneyLooterLootEvents:RegisterEvent(Constants.Events.PInteractionManagerHide)
+    MoneyLooterLootEvents:RegisterEvent(Constants.Events.ChatMsgSystem)
     MoneyLooterLootEvents:SetScript(Constants.Events.OnEvent, Core.LootEventHandler)
 
     timer = C_Timer.NewTicker(1, UpdateTexts)
@@ -174,6 +175,7 @@ function UnregisterStartEvents()
     MoneyLooterLootEvents:UnregisterEvent(Constants.Events.QuestTurnedIn)
     MoneyLooterLootEvents:UnregisterEvent(Constants.Events.PInteractionManagerShow)
     MoneyLooterLootEvents:UnregisterEvent(Constants.Events.PInteractionManagerHide)
+    MoneyLooterLootEvents:UnregisterEvent(Constants.Events.ChatMsgSystem)
     MoneyLooterLootEvents:SetScript(Constants.Events.OnEvent, nil)
 
     if not timer:IsCancelled() then timer:Cancel() end

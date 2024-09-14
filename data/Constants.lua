@@ -39,7 +39,9 @@ Constants.Events = {
     AddonLoaded = "ADDON_LOADED",
     --------------------------------------
     PInteractionManagerShow = "PLAYER_INTERACTION_MANAGER_FRAME_SHOW",
-    PInteractionManagerHide = "PLAYER_INTERACTION_MANAGER_FRAME_HIDE"
+    PInteractionManagerHide = "PLAYER_INTERACTION_MANAGER_FRAME_HIDE",
+    --------------------------------------
+    ChatMsgSystem = "CHAT_MSG_SYSTEM"
 }
 
 -- Loot global patterns for self
@@ -56,6 +58,10 @@ Constants.PATTERNS_SELF = {
 Constants.PATTERNS_CRAFT = {
     [1] = LOOT_ITEM_CREATED_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"), -- 2
     [2] = LOOT_ITEM_CREATED_SELF:gsub("%%s", "(.+)")                                 -- 1
+}
+
+Constants.PATTERNS_RECEIVED = {
+    [1] = ERR_QUEST_REWARD_MONEY_S:gsub("%%s", "(.+)")
 }
 
 Constants.RelevantInteractions = {

@@ -25,7 +25,8 @@
     "CreateScrollBoxListLinearView",
     "CreateAnchor",
     "LOOT_ITEM_CREATED_SELF_MULTIPLE",
-    "LOOT_ITEM_CREATED_SELF"
+    "LOOT_ITEM_CREATED_SELF",
+    "ERR_QUEST_REWARD_MONEY_S"
   ],
   "runtime.version": "Lua 5.1",
   "workspace.ignoreDir": [

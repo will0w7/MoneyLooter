@@ -60,5 +60,6 @@ globals = {
     "CreateDataProvider",
     "CreateScrollBoxListLinearView",
     "ScrollUtil",
-    "UIParent"
+    "UIParent",
+    "ERR_QUEST_REWARD_MONEY_S"
 }
