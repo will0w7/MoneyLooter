@@ -303,11 +303,11 @@ function Data.SetTSMString(tsmString)
         return
     end
     if not TSM_API.IsCustomPriceValid(tsmString) then
-        print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING_NOT_VALID .. tsmString)
+        print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING_NOT_VALID .. "|cFF36e8e6" .. tsmString .. "|r")
         return
     end
     MoneyLooterXDB.CurrentTSMString = tsmString
-    print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING_VALID .. tsmString)
+    print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING_VALID .. "|cFF36e8e6" .. tsmString .. "|r")
 end
 
 ---@return boolean
