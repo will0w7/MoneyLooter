@@ -163,6 +163,7 @@ function RegisterStartEvents()
     MoneyLooterLootEvents:RegisterEvent(Constants.Events.QuestTurnedIn)
     MoneyLooterLootEvents:RegisterEvent(Constants.Events.PInteractionManagerShow)
     MoneyLooterLootEvents:RegisterEvent(Constants.Events.PInteractionManagerHide)
+    MoneyLooterLootEvents:RegisterEvent(Constants.Events.ChatMsgSystem)
     MoneyLooterLootEvents:SetScript(Constants.Events.OnEvent, Core.LootEventHandler)
 
     timer = C_Timer.NewTicker(1, UpdateTexts)
@@ -174,6 +175,7 @@ function UnregisterStartEvents()
     MoneyLooterLootEvents:UnregisterEvent(Constants.Events.QuestTurnedIn)
     MoneyLooterLootEvents:UnregisterEvent(Constants.Events.PInteractionManagerShow)
     MoneyLooterLootEvents:UnregisterEvent(Constants.Events.PInteractionManagerHide)
+    MoneyLooterLootEvents:UnregisterEvent(Constants.Events.ChatMsgSystem)
     MoneyLooterLootEvents:SetScript(Constants.Events.OnEvent, nil)
 
     if not timer:IsCancelled() then timer:Cancel() end
@@ -241,7 +243,7 @@ local function ParseMinPrice(msg)
         qual = tonumber(type)
     end
     mprices[qual](value * coinValue)
-    print(string.format("%s %s %s %s [%s]", _G.MONEYLOOTER_L_MPRICE_VALID, tostring(value),
+    print(string.format("%s |cFF36e8e6%s %s|r - %s [%s]", _G.MONEYLOOTER_L_MPRICE_VALID, tostring(value),
         _G["MONEYLOOTER_L_MPRICE_COIN_" .. coin], _G["MONEYLOOTER_L_MPRICE_QUALITY_" .. tostring(qual)],
         tostring(qual)))
 end
