@@ -150,8 +150,6 @@ UI.MLMainFrame.ScrollBoxLoot = CreateFrame("Frame", nil, UI.MLMainFrame,
 
 UI.MLMainFrame.ScrollBoxLoot:SetSize(340, 180)
 UI.MLMainFrame.ScrollBoxLoot:SetPoint("RIGHT", 340, 0)
-UI.MLMainFrame.ScrollBoxLoot.texture = UI.MLMainFrame.ScrollBoxLoot:CreateTexture(nil, "BACKGROUND")
-UI.MLMainFrame.ScrollBoxLoot.texture:SetColorTexture(.1, .1, .1, 1)
 
 UI.MLMainFrame.ScrollLootBar = CreateFrame("EventFrame", nil, UI.MLMainFrame.ScrollBoxLoot, "MinimalScrollBar")
 
