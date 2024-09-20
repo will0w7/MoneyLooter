@@ -37,6 +37,7 @@ Constants.Events = {
     ChatMsgLoot = "CHAT_MSG_LOOT",
     QuestTurnedIn = "QUEST_TURNED_IN",
     AddonLoaded = "ADDON_LOADED",
+    PlayerEnteringWorld = "PLAYER_ENTERING_WORLD",
     --------------------------------------
     PInteractionManagerShow = "PLAYER_INTERACTION_MANAGER_FRAME_SHOW",
     PInteractionManagerHide = "PLAYER_INTERACTION_MANAGER_FRAME_HIDE",

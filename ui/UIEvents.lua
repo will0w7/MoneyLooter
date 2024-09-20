@@ -269,16 +269,21 @@ SlashCmdList["MONEYLOOTER"] = slash
 -----------------------------------------------------------------------------------------------
 
 local watcher = CreateFrame("Frame")
-watcher:RegisterEvent(Constants.Events.AddonLoaded)
 
+MoneyLooter.addonLoaded = false
 function WatcherOnEvent(_, event, arg1)
     if event == Constants.Events.AddonLoaded and arg1 == Constants.Strings.ADDON_NAME then
+        MoneyLooter.addonLoaded = true
+        watcher:UnregisterEvent(Constants.Events.AddonLoaded)
+    elseif event == Constants.Events.PlayerEnteringWorld and MoneyLooter.addonLoaded then
         Data.UpdateMLDB()
         Data.UpdateMLXDB()
         PopulateData()
         PopulateLoot()
-        watcher:UnregisterEvent(Constants.Events.AddonLoaded)
+        watcher:UnregisterEvent(Constants.Events.PlayerEnteringWorld)
     end
 end
 
+watcher:RegisterEvent(Constants.Events.AddonLoaded)
+watcher:RegisterEvent(Constants.Events.PlayerEnteringWorld)
 watcher:SetScript(Constants.Events.OnEvent, WatcherOnEvent)
