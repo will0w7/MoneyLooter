@@ -40,7 +40,6 @@ local function SetScrollVisible(visible)
         UI.MLMainFrame.ScrollBoxLoot:Show()
     else
         UI.MLMainFrame.ScrollBoxLoot:Hide()
-        print(_G.MONEYLOOTER_L_CLOSE)
     end
 end
 
@@ -130,13 +129,7 @@ UI.MLMainFrame.ResetButton:SetScript(Constants.Events.OnClick, function()
 end)
 
 UI.MLMainFrame.MinimizeCheck:SetScript(Constants.Events.OnClick, function()
-    if Data.IsScrollLootFrameVisible() then
-        Data.SetScrollLootFrameVisible(false)
-        UI.MLMainFrame.ScrollBoxLoot:Hide()
-    else
-        Data.SetScrollLootFrameVisible(true)
-        UI.MLMainFrame.ScrollBoxLoot:Show()
-    end
+    SetScrollVisible(not Data.IsScrollLootFrameVisible())
 end)
 
 UI.MLMainFrame.PriciestFS:SetScript(Constants.Events.OnEnter, function()
