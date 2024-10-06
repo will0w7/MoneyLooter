@@ -13,6 +13,14 @@ A lightweight and blazingly-fast 🦀 World of Warcraft addon designed to track 
 * **Intuitive Interface:** A user-friendly display that presents your gold farm in a clear and organized manner.
 * **Minimal Configuration:** Designed for a seamless experience with minimal setup. All configuration is done through simple chat commands, without the need for complex interfaces. Customize the TSM custom price string and set minimum price thresholds for different item qualities.
 
+## New in 1.1: Summary Mode
+
+![Summary Mode](https://github.com/will0w7/MoneyLooter/blob/main/images/MoneyLooterSummaryMode.gif?raw=true)
+
+Now you can see your loot summary in a clear and organized manner. You can toggle between the loot summary and the loot list by right clicking the toggle button.
+
+Thanks to [loksinss](https://github.com/loksinss) for the idea :)
+
 ## New UI and MoneyLooter 1.0
 
 ![New UI](https://github.com/will0w7/MoneyLooter/blob/main/images/MoneyLooterNewUI.png?raw=true)
@@ -61,9 +69,9 @@ You can alternate between **/ml** or **/moneylooter** for chat commands. In the 
         /ml show: Show MoneyLooter
         /ml hide: Hide MoneyLooter
         /ml info: Shows information about the addon
-        
+
         /ml custom: Sets a custom TSM string to be used in the price calculation. If empty, returns the custom TSM string it's currently using.
-        
+
         /ml mprice: Sets the minimum price threshold for a given quality.
             mpricex: All available qualities.
             mprice1: Quality 1 - Common - White
