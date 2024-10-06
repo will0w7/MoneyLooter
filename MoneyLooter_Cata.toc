@@ -18,7 +18,6 @@
 Init.lua
 locales\Manifest.xml
 
-data\LootedItem.lua
 utils\Manifest.xml
 data\Manifest.xml
 
