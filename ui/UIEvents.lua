@@ -13,6 +13,8 @@ local Data = MoneyLooter.Data
 local CBFunctions = MoneyLooter.CBFunctions
 ---@class ML_Core
 local Core = MoneyLooter.Core
+---@class ML_SMFunctions
+local SMFunctions = MoneyLooter.SMFunctions
 
 ----------------------------------------------------------------------------------------
 local GetAddOnMetadata = C_AddOns.GetAddOnMetadata or GetAddOnMetadata
@@ -56,6 +58,7 @@ end
 
 local function PopulateLoot()
     Data.InitListLootedItems()
+    UI.MLMainFrame.ScrollBoxLoot.DataProvider:Flush()
     if Data.GetListLootedItemsCount() > 0 then
         local lootedItems = Data.GetListLootedItems()
         CBFunctions.Iterate(lootedItems, function(lootedItem)
@@ -63,6 +66,14 @@ local function PopulateLoot()
         end)
     end
     UI.MLMainFrame.ScrollBoxLoot:ScrollToEnd()
+end
+
+local function PopulateSummary()
+    UI.MLMainFrame.ScrollBoxLoot.DataProvider:Flush()
+    local topItems = SMFunctions.GetTopItems(Data.GetSummary())
+    for _, lootedItem in ipairs(topItems) do
+        UI.MLMainFrame.ScrollBoxLoot.DataProvider:Insert(lootedItem)
+    end
 end
 
 -----------------------------------------------------------------------------------------------
@@ -91,13 +102,17 @@ local function UpdateTexts()
 end
 
 function UpdateLoot()
-    for _, lootedItem in ipairs(Data.GetLootedItems()) do
-        UI.MLMainFrame.ScrollBoxLoot.DataProvider:Insert(lootedItem)
+    if not Data.IsSummaryMode() then
+        for _, lootedItem in ipairs(Data.GetLootedItems()) do
+            UI.MLMainFrame.ScrollBoxLoot.DataProvider:Insert(lootedItem)
+        end
+        UI.MLMainFrame.ScrollBoxLoot:ScrollToEnd()
+        UI.MLMainFrame.PriciestFS:SetText(Utils.GetCoinTextString(Data.GetPriciest()))
+        UI.MLMainFrame.ItemsGoldFS:SetText(Utils.GetCoinTextString(Data.GetItemsMoney()))
+        Data.ResetLootedItems()
+    else
+        PopulateSummary()
     end
-    UI.MLMainFrame.ScrollBoxLoot:ScrollToEnd()
-    UI.MLMainFrame.PriciestFS:SetText(Utils.GetCoinTextString(Data.GetPriciest()))
-    UI.MLMainFrame.ItemsGoldFS:SetText(Utils.GetCoinTextString(Data.GetItemsMoney()))
-    Data.ResetLootedItems()
 end
 
 -----------------------------------------------------------------------------------------------
@@ -128,8 +143,20 @@ UI.MLMainFrame.ResetButton:SetScript(Constants.Events.OnClick, function()
     Data.SetScrollLootFrameVisible(Data.IsScrollLootFrameVisible())
 end)
 
-UI.MLMainFrame.MinimizeCheck:SetScript(Constants.Events.OnClick, function()
-    SetScrollVisible(not Data.IsScrollLootFrameVisible())
+UI.MLMainFrame.MinimizeCheck:SetScript(Constants.Events.OnClick, function(_, button)
+    if button == "LeftButton" then
+        SetScrollVisible(not Data.IsScrollLootFrameVisible())
+    elseif button == "RightButton" then
+        local mode = not Data.IsSummaryMode()
+        Data.SetSummaryMode(mode)
+        if mode then
+            PopulateSummary()
+        else
+            UpdateLoot()
+            PopulateLoot()
+        end
+    end
+    UI.MLMainFrame.MinimizeCheck:SetChecked(Data.IsScrollLootFrameVisible())
 end)
 
 UI.MLMainFrame.PriciestFS:SetScript(Constants.Events.OnEnter, function()
