@@ -32,7 +32,7 @@ Data.DB.prototype = {
     ItemsMoney = 0,
     TotalMoney = 0,
     Priciest = 0,
-    PriciestID = 0,
+    PriciestLink = "",
     ListLootedItems = CircularBuffer,
     ----------------------------------------------
     Timer = 0,
@@ -153,18 +153,18 @@ function Data.GetPriciest()
     return MoneyLooterDB.Priciest
 end
 
----@param id integer
+---@param itemLink string
 ---@param money integer
-function Data.SetPriciest(money, id)
+function Data.SetPriciest(money, itemLink)
     if money ~= nil and money > MoneyLooterDB.Priciest then
         MoneyLooterDB.Priciest = money
-        MoneyLooterDB.PriciestID = id
+        MoneyLooterDB.PriciestLink = itemLink
     end
 end
 
----@return integer
-function Data.GetPriciestID()
-    return MoneyLooterDB.PriciestID
+---@return string
+function Data.GetPriciestLink()
+    return MoneyLooterDB.PriciestLink
 end
 
 ---@return table

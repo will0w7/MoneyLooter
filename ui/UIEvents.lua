@@ -133,10 +133,10 @@ UI.MLMainFrame.MinimizeCheck:SetScript(Constants.Events.OnClick, function()
 end)
 
 UI.MLMainFrame.PriciestFS:SetScript(Constants.Events.OnEnter, function()
-    local priciestID = Data.GetPriciestID()
-    if priciestID == nil or priciestID == 0 then return end
+    local priciestLink = Data.GetPriciestLink()
+    if priciestLink == nil or priciestLink == "" then return end
     GameTooltip:SetOwner(UI.MLMainFrame.PriciestFS, "ANCHOR_BOTTOMRIGHT")
-    GameTooltip:SetItemByID(Data.GetPriciestID())
+    GameTooltip:SetHyperlink(priciestLink)
     GameTooltip:Show()
 end)
 

@@ -207,7 +207,7 @@ function Core.LootEventHandler(_, event, ...)
         Data.AddItemsMoney(totalPrice)
         Data.AddTotalMoney(totalPrice)
         -- only price of individual items, not groups (1xBismuth not 5xBismuth)
-        Data.SetPriciest(price, itemID)
+        Data.SetPriciest(price, itemLink)
         UpdateLoot()
     elseif event == Constants.Events.ChatMsgMoney or event == Constants.Events.QuestTurnedIn then
         -- here we dont stop interaction, if we turn in a quest with a profession
