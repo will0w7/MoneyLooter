@@ -9,12 +9,14 @@ MoneyLooter.LootedItem = LootedItem
 ---@param itemLink string
 ---@param value integer
 ---@param quantity integer
-function LootedItem.new(id, itemLink, value, quantity)
+---@param isSummary boolean?
+function LootedItem.new(id, itemLink, value, quantity, isSummary)
     local self = {}
     self.id = id
     self.itemLink = itemLink
     self.value = value
     self.quantity = quantity
+    self.isSummary = isSummary or false
 
     return self
 end

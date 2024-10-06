@@ -9,6 +9,10 @@ local Constants = MoneyLooter.Constants
 local CircularBuffer = MoneyLooter.CircularBuffer
 ---@class ML_CBFunctions
 local CBFunctions = MoneyLooter.CBFunctions
+---@class ML_Summary
+local Summary = MoneyLooter.Summary
+---@class ML_SMFunctions
+local SMFunctions = MoneyLooter.SMFunctions
 
 ---@class ML_Data
 local Data = {}
@@ -34,6 +38,7 @@ Data.DB.prototype = {
     Priciest = 0,
     PriciestLink = "",
     ListLootedItems = CircularBuffer,
+    Summary = Summary,
     ----------------------------------------------
     Timer = 0,
     ----------------------------------------------
@@ -86,11 +91,10 @@ local function initialize_xdb()
 end
 
 ---@class ML_TempData
----@field LootedItems table
----@field InteractionPaused boolean
 local MoneyLooterTempData = {
     LootedItems = {},
-    InteractionPaused = false
+    InteractionPaused = false,
+    SummaryMode = false
 }
 
 ---@return boolean
@@ -361,4 +365,28 @@ function Data.SetInteractionPaused(paused)
     if paused ~= nil then
         MoneyLooterTempData.InteractionPaused = paused
     end
+end
+
+function Data.IsSummaryMode()
+    return MoneyLooterTempData.SummaryMode
+end
+
+function Data.SetSummaryMode(summaryMode)
+    if summaryMode ~= nil then
+        MoneyLooterTempData.SummaryMode = summaryMode
+    end
+end
+
+function Data.InsertSummaryItem(lootedItem)
+    if MoneyLooterDB.Summary == nil then MoneyLooterDB.Summary = {} end
+    if lootedItem ~= nil then
+        MoneyLooterDB.Summary = SMFunctions.InsertLootedItem(MoneyLooterDB.Summary, lootedItem)
+    end
+end
+
+function Data.GetSummary()
+    if MoneyLooterDB.Summary == nil then
+        MoneyLooterDB.Summary = {}
+    end
+    return MoneyLooterDB.Summary
 end

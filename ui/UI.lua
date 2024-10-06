@@ -28,8 +28,8 @@ end
 
 function ML_ItemScrollMixin:Init()
     local elementData = self:GetElementData()
+    self:SetRightText(elementData.value * elementData.quantity)
     self:SetLeftText(elementData.id, elementData.quantity, elementData.itemLink)
-    self:SetRightText(elementData.value)
     self:TrimDataProvider(UI.MLMainFrame.ScrollBoxLoot.DataProvider)
 end
 

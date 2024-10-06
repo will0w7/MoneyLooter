@@ -202,8 +202,9 @@ function Core.LootEventHandler(_, event, ...)
 
         local totalPrice = price * quantity
         local itemID = GetItemInfoFromHyperlink(itemLink)
-        local i = LootedItem.new(itemID, itemLink, totalPrice, quantity)
+        local i = LootedItem.new(itemID, itemLink, price, quantity)
         Data.InsertLootedItem(i)
+        Data.InsertSummaryItem(i)
         Data.AddItemsMoney(totalPrice)
         Data.AddTotalMoney(totalPrice)
         -- only price of individual items, not groups (1xBismuth not 5xBismuth)
