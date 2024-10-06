@@ -19,7 +19,7 @@ A lightweight and blazingly-fast 🦀 World of Warcraft addon designed to track 
 
 Now you can see your loot summary in a clear and organized manner. You can toggle between the loot summary and the loot list by right clicking the toggle button.
 
-Thanks to [loksinss](https://github.com/loksinss) for the idea :)
+Thanks to [loksinss](https://github.com/loksinss) ([Issue #12](https://github.com/will0w7/MoneyLooter/issues/12)) for the idea :)
 
 ## New UI and MoneyLooter 1.0
 
