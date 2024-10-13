@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Create a report to help MoneyLooter improve
 title: "[BUG]"
 labels: bug
 assignees: will0w7
