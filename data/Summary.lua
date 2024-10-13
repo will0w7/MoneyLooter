@@ -60,7 +60,7 @@ function SMFunctions.GetTopItems(summary)
         local itemID = GetItemInfoFromHyperlink(itemLink)
         local quantity = item[1]
         local value = item[2]
-        local lootedItem = LootedItem.new(itemID, itemLink, value, quantity, true)
+        local lootedItem = LootedItem.new(itemID, itemLink, value, quantity)
         table.insert(topItems, lootedItem)
     end
     table.sort(topItems, function(a, b)
