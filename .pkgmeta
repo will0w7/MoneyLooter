@@ -2,6 +2,8 @@ package-as: MoneyLooter
 ignore:
   - README.md
   - images
+  - MoneyLooter_TBC.toc
+  - MoneyLooter_Wrath.toc
 plain-copy:
   - core
   - data
