@@ -173,10 +173,8 @@ end
 
 ---@param receivedString string
 local function ReceivedMoney(receivedString)
-    for _, pattern in ipairs(Constants.PATTERNS_RECEIVED) do
-        local received = string.match(receivedString, pattern)
+    local received = string.match(receivedString, Constants.PATTERNS_RECEIVED[1])
         if received then return true end
-    end
     return false
 end
 
