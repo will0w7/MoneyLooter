@@ -13,7 +13,7 @@ MoneyLooter.SMFunctions = SMFunctions
 
 ---------------------------------------------------------
 local GetItemInfoFromHyperlink = GetItemInfoFromHyperlink
-local pairs, ipairs = pairs, ipairs
+local pairs = pairs
 ---------------------------------------------------------
 
 ---@param summary table
@@ -34,22 +34,6 @@ end
 ---@param lootedItem ML_LootedItem
 function SMFunctions.InsertLootedItem(summary, lootedItem)
     return SMFunctions.Insert(summary, lootedItem.itemLink, lootedItem.quantity, lootedItem.value)
-end
-
-local function sortLongKeys(topItems)
-    local newTopItems = {}
-    for key, item in pairs(topItems) do
-        table.insert(newTopItems, { key = key, value = item.value, quantity = item.quantity })
-    end
-
-    table.sort(newTopItems, function(a, b)
-        return a.value > b.value
-    end)
-
-    topItems = {}
-    for _, item in ipairs(newTopItems) do
-        topItems[item.key] = { value = item.value, quantity = item.quantity }
-    end
 end
 
 ---@param summary table

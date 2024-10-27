@@ -154,6 +154,7 @@ local function CalculatePrice(itemLink)
 end
 
 ---@param lootString string
+---@return string | nil, number | nil
 local function GetLinkAndQuantityLoot(lootString)
     for _, pattern in ipairs(Constants.PATTERNS_SELF) do
         local itemLink, quantity = string.match(lootString, pattern)
@@ -163,18 +164,20 @@ local function GetLinkAndQuantityLoot(lootString)
 end
 
 ---@param craftString string
+---@return string | nil
 local function GetLinkAndQuantityCraft(craftString)
     for _, pattern in ipairs(Constants.PATTERNS_CRAFT) do
         local itemLink, _ = string.match(craftString, pattern)
-        if itemLink then return itemLink end --, tonumber(quantity) or 1 end
+        if itemLink then return itemLink end
     end
     return nil
 end
 
 ---@param receivedString string
+---@return boolean
 local function ReceivedMoney(receivedString)
     local received = string.match(receivedString, Constants.PATTERNS_RECEIVED[1])
-        if received then return true end
+    if received then return true end
     return false
 end
 

@@ -7,6 +7,7 @@ local addonName = select(1, ...)
 ---@class ML_Constants
 ---@field PATTERNS_SELF table
 ---@field PATTERNS_CRAFT table
+---@field PATTERNS_RECEIVED table
 ---@field RelevantInteractions table
 local Constants = {}
 MoneyLooter.Constants = Constants
