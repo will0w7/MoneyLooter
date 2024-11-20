@@ -4,6 +4,7 @@ local MoneyLooter = select(2, ...)
 local Constants = MoneyLooter.Constants
 
 ---@class ML_UI
+---@field MLMainFrame table
 local UI = {}
 MoneyLooter.UI = UI
 
