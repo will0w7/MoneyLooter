@@ -72,6 +72,8 @@ You can alternate between **/ml** or **/moneylooter** for chat commands. In the 
 
         /ml custom: Sets a custom TSM string to be used in the price calculation. If empty, returns the custom TSM string it's currently using.
 
+        /ml forcevendorprice: This command forces the merchant's selling price to always be used, skipping addons.
+
         /ml mprice: Sets the minimum price threshold for a given quality.
             mpricex: All available qualities.
             mprice1: Quality 1 - Common - White
