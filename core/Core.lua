@@ -23,114 +23,107 @@ local tonumber, ipairs = tonumber, ipairs
 ------------------------------------------------------------------------------
 
 local GetTSMPrice = {
-    ---@param sellPrice integer
-    [0] = function(_, _, sellPrice)
-        return sellPrice or 0
+    [0] = function(_, _)
+        return 0
     end,
     ---@param isCraftingReagent boolean
     ---@param tsmItemString string
-    [1] = function(isCraftingReagent, tsmItemString, _)
+    [1] = function(isCraftingReagent, tsmItemString)
         local value = TSM_API.GetCustomPriceValue(Data.GetCurrentTSMString(), tsmItemString)
         if value ~= nil and (value >= Data.GetMinPrice1() or isCraftingReagent) then return value end
         return 0
     end,
     ---@param isCraftingReagent boolean
     ---@param tsmItemString string
-    [2] = function(isCraftingReagent, tsmItemString, _)
+    [2] = function(isCraftingReagent, tsmItemString)
         local value = TSM_API.GetCustomPriceValue(Data.GetCurrentTSMString(), tsmItemString)
         if value ~= nil and (value >= Data.GetMinPrice2() or isCraftingReagent) then return value end
         return 0
     end,
     ---@param isCraftingReagent boolean
     ---@param tsmItemString string
-    [3] = function(isCraftingReagent, tsmItemString, _)
+    [3] = function(isCraftingReagent, tsmItemString)
         local value = TSM_API.GetCustomPriceValue(Data.GetCurrentTSMString(), tsmItemString)
         if value ~= nil and (value >= Data.GetMinPrice3() or isCraftingReagent) then return value end
         return 0
     end,
     ---@param isCraftingReagent boolean
     ---@param tsmItemString string
-    [4] = function(isCraftingReagent, tsmItemString, _)
+    [4] = function(isCraftingReagent, tsmItemString)
         local value = TSM_API.GetCustomPriceValue(Data.GetCurrentTSMString(), tsmItemString)
         if value ~= nil and (value >= Data.GetMinPrice4() or isCraftingReagent) then return value end
         return 0
     end,
-    ---@param sellPrice integer
-    [-1] = function(_, _, sellPrice)
-        return sellPrice or 0
+    [-1] = function(_, _)
+        return 0
     end
 }
 
----@
 local GetAucPrice = {
-    ---@param sellPrice integer
-    [0] = function(_, _, sellPrice)
-        return sellPrice
+    [0] = function(_, _)
+        return 0
     end,
     ---@param isCraftingReagent boolean
     ---@param itemLink string
-    [1] = function(isCraftingReagent, itemLink, _)
+    [1] = function(isCraftingReagent, itemLink)
         local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
         if value ~= nil and (value >= Data.GetMinPrice1() or isCraftingReagent) then return value end
         return 0
     end,
     ---@param isCraftingReagent boolean
     ---@param itemLink string
-    [2] = function(isCraftingReagent, itemLink, _)
+    [2] = function(isCraftingReagent, itemLink)
         local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
         if value ~= nil and (value >= Data.GetMinPrice2() or isCraftingReagent) then return value end
         return 0
     end,
     ---@param isCraftingReagent boolean
     ---@param itemLink string
-    [3] = function(isCraftingReagent, itemLink, _)
+    [3] = function(isCraftingReagent, itemLink)
         local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
         if value ~= nil and (value >= Data.GetMinPrice3() or isCraftingReagent) then return value end
         return 0
     end,
     ---@param isCraftingReagent boolean
     ---@param itemLink string
-    [4] = function(isCraftingReagent, itemLink, _)
+    [4] = function(isCraftingReagent, itemLink)
         local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
         if value ~= nil and (value >= Data.GetMinPrice4() or isCraftingReagent) then return value end
         return 0
     end,
-    ---@param sellPrice integer
-    [-1] = function(_, _, sellPrice)
-        return sellPrice or 0
+    [-1] = function(_, _)
+        return 0
     end
 }
 
 ---@param quality integer
----@param sellPrice integer
 ---@param itemLink string
 ---@param isCraftingReagent boolean
-local function CalculatePriceTSM(quality, sellPrice, itemLink, isCraftingReagent)
+local function CalculatePriceTSM(quality, itemLink, isCraftingReagent)
     if TSM_API == nil then return 0 end
     local tsmItemString = TSM_API.ToItemString(itemLink)
     if tsmItemString == nil then return 0 end
 
     local price
     if GetTSMPrice[quality] then
-        price = GetTSMPrice[quality](isCraftingReagent, tsmItemString, sellPrice)
+        price = GetTSMPrice[quality](isCraftingReagent, tsmItemString)
     else
-        price = GetTSMPrice[-1](isCraftingReagent, tsmItemString, sellPrice)
+        price = GetTSMPrice[-1](isCraftingReagent, tsmItemString)
     end
     return price
 end
 
 ---@param quality integer
----@param sellPrice integer
 ---@param itemLink string
 ---@param isCraftingReagent boolean
-local function CalculatePriceAuc(quality, sellPrice, itemLink, isCraftingReagent)
+local function CalculatePriceAuc(quality, itemLink, isCraftingReagent)
     if AUCTIONATOR_API == nil then return 0 end
 
     local price
     if GetAucPrice[quality] then
-        price = GetAucPrice[quality](isCraftingReagent, itemLink, sellPrice)
+        price = GetAucPrice[quality](isCraftingReagent, itemLink)
     else
-        price = GetAucPrice[-1](isCraftingReagent, itemLink, sellPrice)
+        price = GetAucPrice[-1](isCraftingReagent, itemLink)
     end
     return price
 end
@@ -142,13 +135,14 @@ local function CalculatePrice(itemLink)
     local itemString = string.match(itemLink, "item[%-?%d:]+")
     local _, _, quality, _, _, _, _, _, _, _, sellPrice, _, _, _, _, _, isCraftingReagent =
         GetItemInfo(itemString)
-    local price
-    price = CalculatePriceTSM(quality, sellPrice, itemLink, isCraftingReagent)
-    if not TSM_API and price == 0 then
-        price = CalculatePriceAuc(quality, sellPrice, itemLink, isCraftingReagent)
+    local price = 0
+    if TSM_API then
+        price = CalculatePriceTSM(quality, itemLink, isCraftingReagent)
+    else
+        price = CalculatePriceAuc(quality, itemLink, isCraftingReagent)
     end
-    if price == 0 then
-        price = sellPrice or 0
+    if price == 0 and sellPrice ~= nil and sellPrice > 0 then
+        price = sellPrice
     end
     return price
 end
