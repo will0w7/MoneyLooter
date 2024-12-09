@@ -42,7 +42,9 @@ Data.DB.prototype = {
     ----------------------------------------------
     Timer = 0,
     ----------------------------------------------
-    CurrentStartText = _G.MONEYLOOTER_L_START
+    CurrentStartText = _G.MONEYLOOTER_L_START,
+    ----------------------------------------------
+    ForceVendorPrice = false
 }
 
 Data.DB.mt = {}
@@ -389,4 +391,15 @@ function Data.GetSummary()
         MoneyLooterDB.Summary = {}
     end
     return MoneyLooterDB.Summary
+end
+
+---@return boolean State_ForceVendorPrice
+function Data.ToggleForceVendorPrice()
+    MoneyLooterDB.ForceVendorPrice = not MoneyLooterDB.ForceVendorPrice
+    return MoneyLooterDB.ForceVendorPrice
+end
+
+---@return boolean ForceVendorPrice
+function Data.GetForceVendorPrice()
+    return MoneyLooterDB.ForceVendorPrice
 end
