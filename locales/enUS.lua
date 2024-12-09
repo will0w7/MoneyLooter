@@ -58,5 +58,7 @@ Locales.enUS = function()
   L["MPRICE_COIN_G"] = "Gold"
   L["MPRICE_COIN_S"] = "Silver"
   L["MPRICE_COIN_C"] = "Copper"
+  L["FORCE_VENDOR_PRICE_ENABLED"] = "|cFFd8de35Money Looter:|r Force vendor price enabled. Using only vendor sell price."
+  L["FORCE_VENDOR_PRICE_DISABLED"] = "|cFFd8de35Money Looter:|r Force vendor price disabled."
   return L
 end
