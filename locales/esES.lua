@@ -59,5 +59,7 @@ Locales.esES = function()
   L["MPRICE_COIN_G"] = "Oro"
   L["MPRICE_COIN_S"] = "Plata"
   L["MPRICE_COIN_C"] = "Cobre"
+  L["FORCE_VENDOR_PRICE_ENABLED"] = "|cFFd8de35Money Looter:|r Forzar precio de venta de mercader habilitado. Se usarán solo los precios de venta del mercader."
+  L["FORCE_VENDOR_PRICE_DISABLED"] = "|cFFd8de35Money Looter:|r Forzar precio de venta de mercader deshabilitado."
   return L
 end

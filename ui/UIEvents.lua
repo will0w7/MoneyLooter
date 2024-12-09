@@ -276,6 +276,13 @@ local function slash(msg, _)
         SetMainVisible(false)
     elseif msg == "info" then
         print(_G.MONEYLOOTER_L_INFO)
+    elseif msg == "forcevendorprice" then
+        local state = Data.ToggleForceVendorPrice()
+        if state then
+            print(_G.FORCE_VENDOR_PRICE_ENABLED)
+        else
+            print(_G.FORCE_VENDOR_PRICE_DISABLED)
+        end
     elseif string.sub(msg, 1, 6) == "custom" then
         ParseCustomString(msg)
     elseif string.sub(msg, 1, 6) == "mprice" then

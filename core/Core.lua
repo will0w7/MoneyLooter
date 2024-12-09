@@ -135,6 +135,11 @@ local function CalculatePrice(itemLink)
     local itemString = string.match(itemLink, "item[%-?%d:]+")
     local _, _, quality, _, _, _, _, _, _, _, sellPrice, _, _, _, _, _, isCraftingReagent =
         GetItemInfo(itemString)
+
+    if Data.GetForceVendorPrice() then
+        return sellPrice or 0
+    end
+
     local price = 0
     if TSM_API then
         price = CalculatePriceTSM(quality, itemLink, isCraftingReagent)
