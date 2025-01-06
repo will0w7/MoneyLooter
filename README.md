@@ -144,6 +144,8 @@ Contributions are welcome! If you have any suggestions, bug reports, or feature 
 
 Feel free to report issues or doubts 😊
 
+You can also help translate MoneyLooter! You can find the translations files inside the **locales** folder.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
