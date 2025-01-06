@@ -279,9 +279,9 @@ local function slash(msg, _)
     elseif msg == "forcevendorprice" then
         local state = Data.ToggleForceVendorPrice()
         if state then
-            print(_G.FORCE_VENDOR_PRICE_ENABLED)
+            print(_G.MONEYLOOTER_L_FORCE_VENDOR_PRICE_ENABLED)
         else
-            print(_G.FORCE_VENDOR_PRICE_DISABLED)
+            print(_G.MONEYLOOTER_L_FORCE_VENDOR_PRICE_DISABLED)
         end
     elseif string.sub(msg, 1, 6) == "custom" then
         ParseCustomString(msg)
