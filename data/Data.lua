@@ -403,3 +403,8 @@ end
 function Data.GetForceVendorPrice()
     return MoneyLooterDB.ForceVendorPrice
 end
+
+---@param force boolean
+function Data.SetForceVendorPrice(force)
+    MoneyLooterDB.ForceVendorPrice = force
+end
