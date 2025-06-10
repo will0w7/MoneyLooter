@@ -1,9 +1,10 @@
-## Interface: 110105
+## Interface: 110105, 110107
 ## Version: @project-version@
 ## Title: MoneyLooter
 ## Author: Will0w7
 ## Notes: A lightweight and fast addon to see how much gold you earn on your farms
 ## Notes-esES: Un addon ligero y rápido para ver cuanto oro ganas en tus farmeos
+## Notes-ruRU: Лёгкий и быстрый аддон, позволяющий узнать, сколько золота Вы зарабатываете
 ## IconTexture: Interface\Icons\inv_misc_coin_02
 
 ## X-Wago-ID: qKQxDo6x
