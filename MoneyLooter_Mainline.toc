@@ -10,7 +10,7 @@
 ## X-Wago-ID: qKQxDo6x
 ## X-Curse-Project-ID: 1098459
 ## X-Category: Auction/Economy
-## X-Localizations: enUS, esES
+## X-Localizations: enUS, esES, ruRU
 
 ## SavedVariables: MoneyLooterXDB
 ## SavedVariablesPerCharacter: MoneyLooterDB
