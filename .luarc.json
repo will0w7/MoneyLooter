@@ -26,7 +26,8 @@
     "CreateAnchor",
     "LOOT_ITEM_CREATED_SELF_MULTIPLE",
     "LOOT_ITEM_CREATED_SELF",
-    "ERR_QUEST_REWARD_MONEY_S"
+    "ERR_QUEST_REWARD_MONEY_S",
+    "OEMarketInfo"
   ],
   "runtime.version": "Lua 5.1",
   "workspace.ignoreDir": [

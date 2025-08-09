@@ -62,5 +62,6 @@ globals = {
     "CreateScrollBoxListLinearView",
     "ScrollUtil",
     "UIParent",
-    "ERR_QUEST_REWARD_MONEY_S"
+    "ERR_QUEST_REWARD_MONEY_S",
+    "OEMarketInfo"
 }
