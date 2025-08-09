@@ -145,7 +145,9 @@ local GetOEPrice = {
     [1] = function(isCraftingReagent, itemLink)
         local value = {}
         OEMarketInfo(itemLink, value)
-        if value ~= nil and (value.region >= Data.GetMinPrice1() or isCraftingReagent) then return value.region end
+        if value ~= nil and value.region ~= nil and (value.region >= Data.GetMinPrice1() or isCraftingReagent) then
+            return value.region
+        end
         return 0
     end,
     ---@param isCraftingReagent boolean
@@ -153,7 +155,9 @@ local GetOEPrice = {
     [2] = function(isCraftingReagent, itemLink)
         local value = {}
         OEMarketInfo(itemLink, value)
-        if value ~= nil and (value.region >= Data.GetMinPrice2() or isCraftingReagent) then return value.region end
+        if value ~= nil and value.region ~= nil and (value.region >= Data.GetMinPrice2() or isCraftingReagent) then
+            return value.region
+        end
         return 0
     end,
     ---@param isCraftingReagent boolean
@@ -161,7 +165,9 @@ local GetOEPrice = {
     [3] = function(isCraftingReagent, itemLink)
         local value = {}
         OEMarketInfo(itemLink, value)
-        if value ~= nil and (value.region >= Data.GetMinPrice3() or isCraftingReagent) then return value.region end
+        if value ~= nil and value.region ~= nil and (value.region >= Data.GetMinPrice3() or isCraftingReagent) then
+            return value.region
+        end
         return 0
     end,
     ---@param isCraftingReagent boolean
@@ -169,7 +175,9 @@ local GetOEPrice = {
     [4] = function(isCraftingReagent, itemLink)
         local value = {}
         OEMarketInfo(itemLink, value)
-        if value ~= nil and (value.region >= Data.GetMinPrice4() or isCraftingReagent) then return value.region end
+        if value ~= nil and value.region ~= nil and (value.region >= Data.GetMinPrice4() or isCraftingReagent) then
+            return value.region
+        end
         return 0
     end,
     [-1] = function(_, _)

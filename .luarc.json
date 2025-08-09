@@ -27,7 +27,12 @@
     "LOOT_ITEM_CREATED_SELF_MULTIPLE",
     "LOOT_ITEM_CREATED_SELF",
     "ERR_QUEST_REWARD_MONEY_S",
-    "OEMarketInfo"
+    "OEMarketInfo",
+    "GetAddOnMetadata",
+    "RECrystallize_PriceCheck",
+    "GetItemInfoFromHyperlink",
+    "GetUnitName",
+    "WOW_PROJECT_MISTS_CLASSIC"
   ],
   "runtime.version": "Lua 5.1",
   "workspace.ignoreDir": [
