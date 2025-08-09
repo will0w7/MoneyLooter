@@ -259,7 +259,7 @@ local function CalculatePrice(itemLink)
     -- if price == 0 and AUCTIONEER_API then
     --     price = CalculatePriceNeer(quality, itemLink, isCraftingReagent)
     -- end
-    if MoneyLooter.isRetail and price == 0 and OEMarketInfo then
+    if MoneyLooter.isRetail and price == 0 and OEMarketInfo ~= nil then
         price = CalculatePriceOE(quality, itemLink, isCraftingReagent)
     end
     if price == 0 and sellPrice ~= nil and sellPrice > 0 then
