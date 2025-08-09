@@ -105,7 +105,7 @@ The price format for mpricex is a number followed by g(old), s(ilver) or c(opper
 
 ## Configuration
 
-**Important**: MoneyLooter values items using the TradeSkillMaster and Auctionator addons. If both are available, it will always use TSM. It's a cascading system, first it will check TSM, if it's not available then Auctionator and finally, if neither is available, it will use the vendor value. I've done it this way because, in my opinion, TSM offers the most accurate and up-to-date prices (if you use the TSM custom string correctly, although for the current expansion, 'dbmarket' is a reliable source of information, it's not so true for old content, transmogs, etc).
+**Important**: MoneyLooter values items using the TradeSkillMaster, Auctionator, Auctioneer, OribosExchange and RECrystallized addons. If all are available, it will always use TSM. It's a cascading system, first it will check TSM, if it's not available then Auctionator, etc. and finally, if neither is available, it will use the vendor value. I've done it this way because, in my opinion, TSM offers the most accurate and up-to-date prices (if you use the TSM custom string correctly, although for the current expansion, 'dbmarket' is a reliable source of information, it's not so true for old content, transmogs, etc).
 
 MoneyLooter by default sets the minimum prices to 0 for all item qualities. Also, the TSM string it uses is 'dbmarket'.
 If you want to change this setting you can do the following:
@@ -150,7 +150,7 @@ With the release of TWW I decided to almost completely rewrite the addon code to
 
 So after several days of hard work (never look at that code you wrote all those years ago and thought it was fine), I've decided to make it public, because every time I come back to the game I look for addons to track my farms and I never find anything that I really like.
 
-Plus, I think even if I leave the game, it would cost me little to no effort to keep it updated (I hope - I can confirm after almost 2 years without playing that the addon needed 0 maintenance, aside from toc updates).
+Plus, I think even if I leave the game, it would cost me little to no effort to keep it updated (I hope - I can confirm after more than a year without playing that the addon needed 0 maintenance, aside from toc updates).
 
 ## Contributing, Translating and Issues
 
