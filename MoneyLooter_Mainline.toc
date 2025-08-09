@@ -14,7 +14,7 @@
 
 ## SavedVariables: MoneyLooterXDB
 ## SavedVariablesPerCharacter: MoneyLooterDB
-## OptionalDeps: TradeSkillMaster, Auctionator, Auctioneer, OribosExchange
+## OptionalDeps: TradeSkillMaster, Auctionator, Auctioneer, OribosExchange, RECrystallize
 
 Init.lua
 locales\Manifest.xml

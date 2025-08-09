@@ -63,5 +63,6 @@ globals = {
     "ScrollUtil",
     "UIParent",
     "ERR_QUEST_REWARD_MONEY_S",
-    "OEMarketInfo"
+    "OEMarketInfo",
+    "RECrystallize_PriceCheck"
 }
