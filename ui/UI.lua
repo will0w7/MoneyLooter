@@ -103,6 +103,7 @@ end
 local function CreateStartButton(parent)
     local button = CreateFrame("Button", nil, parent, "ML_Button")
     button:SetPoint("BOTTOMLEFT", 5, 5)
+    button:SetSize(65, 20)
     button:SetText(_G.MONEYLOOTER_L_START)
     return button
 end
@@ -111,7 +112,7 @@ end
 ---@return table|Button
 local function CreateResetButton(parent)
     local button = CreateFrame("Button", nil, parent, "ML_Button")
-    button:SetPoint("BOTTOMRIGHT", -5, 5)
+    button:SetPoint("BOTTOMRIGHT", -18, 5)
     button:SetSize(65, 20)
     button:SetText(_G.MONEYLOOTER_L_RESET)
     return button
@@ -154,8 +155,7 @@ end
 ---@return table|Frame
 local function CreateLootScrollBox(parent)
     local scrollBox = CreateFrame("Frame", nil, parent, "ML_WowScrollBoxList")
-    scrollBox:SetSize(340, 180)
-    scrollBox:SetPoint("RIGHT", 340, 0)
+    scrollBox:SetResizable(true)
 
     scrollBox.ScrollBar = CreateFrame("EventFrame", nil, scrollBox, "MinimalScrollBar")
     scrollBox.DataProvider = CreateDataProvider()
@@ -180,12 +180,33 @@ local function CreateLootScrollBox(parent)
     return scrollBox
 end
 
+---@param parent Frame
+---@return table|Button
+local function CreateResizeGrip(parent)
+    local grip = CreateFrame("Button", nil, parent)
+    grip:SetPoint("BOTTOMRIGHT", 0, 0)
+    grip:SetSize(16, 16)
+    grip:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
+    grip:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
+    grip:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
+
+    grip:SetScript("OnMouseDown", function(self)
+        self:GetParent():StartSizing("BOTTOMRIGHT")
+    end)
+    grip:SetScript("OnMouseUp", function(self)
+        self:GetParent():StopMovingOrSizing()
+    end)
+    return grip
+end
+
 function UI:CreateMainFrame()
     local mainFrame = CreateFrame("Frame", "MONEYLOOTER_MAIN_FRAME", UIParent, "ML_MainFrame")
     mainFrame:SetPoint("CENTER")
     mainFrame:EnableMouse(true)
     mainFrame:SetMovable(true)
     mainFrame:RegisterForDrag("LeftButton")
+
+    mainFrame:SetResizable(true)
 
     mainFrame.TitleBar = CreateTitleBar(mainFrame)
     mainFrame.CloseButton = CreateCloseButton(mainFrame)
@@ -207,6 +228,41 @@ function UI:CreateMainFrame()
 
     mainFrame.ScrollBoxLoot = CreateLootScrollBox(mainFrame)
     mainFrame.ScrollLootBar = mainFrame.ScrollBoxLoot.ScrollBar
+
+    mainFrame.ResizeGrip = CreateResizeGrip(mainFrame)
+
+    function mainFrame:UpdateLayout(width, height)
+        local MIN_WIDTH, MIN_HEIGHT = 170, 170
+        local MAX_WIDTH, MAX_HEIGHT = 300, 400
+
+        if width < MIN_WIDTH then
+            width = MIN_WIDTH
+        end
+        if width > MAX_WIDTH then
+            width = MAX_WIDTH
+        end
+        if height < MIN_HEIGHT then
+            height = MIN_HEIGHT
+        end
+        if height > MAX_HEIGHT then
+            height = MAX_HEIGHT
+        end
+
+        self.TitleBar:SetWidth(width)
+
+        self.ScrollBoxLoot:ClearAllPoints()
+        self.ScrollBoxLoot:SetPoint("TOPLEFT", width, 0)
+
+        self.ScrollBoxLoot:SetSize(width * 1.5, height)
+        self:SetSize(width, height)
+    end
+
+    mainFrame:SetScript("OnSizeChanged", function(frame, width, height)
+        frame:UpdateLayout(width, height)
+    end)
+
+    local initialWidth, initialHeight = mainFrame:GetSize()
+    mainFrame:UpdateLayout(initialWidth, initialHeight)
 
     UI.MLMainFrame = mainFrame
     return mainFrame
