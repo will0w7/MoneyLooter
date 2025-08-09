@@ -2,34 +2,13 @@
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-A lightweight and blazingly-fast 🦀 World of Warcraft addon designed to track your gold farms. Track both raw gold and the gold value of looted items thanks to amazing addons like Auctionator or TradeSkillMaster.
-
-## Key Features
-
-* **Lightweight & Efficient:** Minimal impact on your game's performance. Low memory footprint and minimal CPU usage.
-* **No dependencies on third-party party libraries:** Ensures maximum compatibility and reducing the risk of conflicts and instability with new game versions. Third-party libraries do a great job making it much easier to develop addons with complex interfaces, but they also introduce a lot of new vectors for potential errors, and for an addon as simple as this, they would only make things more complicated.
-* **Accurate Gold Tracking:** Monitors your gold gains from looted gold and items. Excludes vendor sales from the count, allowing you to clear your inventory without affecting your loot tracking. Item prices are determined using TradeSkillMaster (if available), Auctionator (if available), or vendor sell price as a fallback. Crafting reagents are always valued at their auction sell price (if TradeSkillMaster or Auctionator are available), regardless of minimum price thresholds.
-* **Reload protection:** If another of your addons crashes or you are forced to reload the interface or even logout, when you come back your gold numbers will still be there. It doesn't matter if you previously paused the gold tracking or the counter was running when you /reload'ed or disconnected, it will still be the same when you come back.
-* **Intuitive Interface:** A user-friendly display that presents your gold farm in a clear and organized manner.
-* **Minimal Configuration:** Designed for a seamless experience with minimal setup. All configuration is done through simple chat commands, without the need for complex interfaces. Customize the TSM custom price string and set minimum price thresholds for different item qualities.
-
-## Price source order
-
-1. TSM
-2. Auctionator
-3. Auctioneer (**_disabled_** the addon is broken and not updated)
-4. OribosExchange (only Retail)
-5. RECrystallize (only Retail, available in Wago)
-
-It's a cascading fallback system, if TSM doesn't find a price, it will look for it in Auctionator, then in Auctioneer, etc. When it finds a valid price, it doesn't continue searching in other addons.
-
-For example, if it finds a valid price in TSM, it won't search in Auctionator or other addons.
+A lightweight and blazingly-fast 🦀 World of Warcraft addon designed to track your gold farms. Track both raw gold and the gold value of looted items thanks to amazing addons like Auctionator or TradeSkillMaster, with reload protection so you don't need to worry about disconnections.
 
 ## New in 1.5: OribosExchange, RECrystallized and Auctioneer (broken, **_disabled_**)
 
 Added support for OribosExchange, RECrystallized and Auctioneer.
 
-Restored the fallback system: In the past I disabled this system because with certain items (mainly in Retail), when TSM didn't find a price or that price was below the filter, Auctionator could return unrealistically high prices due to lack of auction data.
+**Restored the fallback system**: In the past I disabled this system because with certain items (mainly in Retail), when TSM didn't find a price or that price was below the filter, Auctionator could return unrealistically high prices due to lack of auction data.
 
 I've received a few requests, mainly from players of the classic versions, to be able to use Auctionator while they have TSM active and since it is a "bug" that occurs very rarely, I'm reactivating this system and I'll see if I receive any complaints over time.
 
@@ -39,7 +18,7 @@ I've received a few requests, mainly from players of the classic versions, to be
 
 ![Summary Mode](https://github.com/will0w7/MoneyLooter/blob/main/images/MoneyLooterSummaryMode.gif?raw=true)
 
-Now you can see your loot summary in a clear and organized manner. You can toggle between the loot summary and the loot list by right clicking the toggle button.
+Now you can see your loot summary in a clear and organized manner. You can toggle between the loot summary and the loot list by right clicking the toggle button (right click again to come back).
 
 Thanks to [loksinss](https://github.com/loksinss) ([Issue #12](https://github.com/will0w7/MoneyLooter/issues/12)) for the idea :)
 
@@ -81,6 +60,18 @@ Download the latest release from [Wago](https://addons.wago.io/addons/moneyloote
 ❌ = Not compatible
 
 **Note:** Since Wrath and TBC no longer have official servers and are causing some issues with CurseForge, I will no longer be supporting these versions but I will continue packaging the TOC files in the addon.
+
+## Price source order
+
+1. TSM
+2. Auctionator
+3. Auctioneer (**_disabled_** the addon is broken and not updated)
+4. OribosExchange (only Retail)
+5. RECrystallize (only Retail, available in Wago)
+
+It's a cascading fallback system, if TSM doesn't find a price, it will look for it in Auctionator, then in Auctioneer, etc. When it finds a valid price, it doesn't continue searching in other addons.
+
+For example, if it finds a valid price in TSM, it won't search in Auctionator or other addons.
 
 ## Usage
 
@@ -159,9 +150,9 @@ With the release of TWW I decided to almost completely rewrite the addon code to
 
 So after several days of hard work (never look at that code you wrote all those years ago and thought it was fine), I've decided to make it public, because every time I come back to the game I look for addons to track my farms and I never find anything that I really like.
 
-Plus, I think even if I leave the game, it would cost me little to no effort to keep it updated (I hope).
+Plus, I think even if I leave the game, it would cost me little to no effort to keep it updated (I hope - I can confirm after almost 2 years without playing that the addon needed 0 maintenance, aside from toc updates).
 
-## Contributing and Issues
+## Contributing, Translating and Issues
 
 Contributions are welcome! If you have any suggestions, bug reports, or feature requests, please open an issue on the [Issues](https://github.com/will0w7/MoneyLooter/issues) page.
 
