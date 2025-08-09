@@ -143,7 +143,8 @@ local function CalculatePrice(itemLink)
     local price = 0
     if TSM_API then
         price = CalculatePriceTSM(quality, itemLink, isCraftingReagent)
-    else
+    end
+    if price == 0 and AUCTIONATOR_API then
         price = CalculatePriceAuc(quality, itemLink, isCraftingReagent)
     end
     if price == 0 and sellPrice ~= nil and sellPrice > 0 then
