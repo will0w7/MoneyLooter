@@ -13,6 +13,28 @@ A lightweight and blazingly-fast 🦀 World of Warcraft addon designed to track 
 * **Intuitive Interface:** A user-friendly display that presents your gold farm in a clear and organized manner.
 * **Minimal Configuration:** Designed for a seamless experience with minimal setup. All configuration is done through simple chat commands, without the need for complex interfaces. Customize the TSM custom price string and set minimum price thresholds for different item qualities.
 
+## Price source order
+
+1. TSM
+2. Auctionator
+3. Auctioneer (**_disabled_** the addon is broken and not updated)
+4. OribosExchange (only Retail)
+5. RECrystallize (only Retail, available in Wago)
+
+It's a cascading fallback system, if TSM doesn't find a price, it will look for it in Auctionator, then in Auctioneer, etc. When it finds a valid price, it doesn't continue searching in other addons.
+
+For example, if it finds a valid price in TSM, it won't search in Auctionator or other addons.
+
+## New in 1.5: OribosExchange, RECrystallized and Auctioneer (broken, **_disabled_**)
+
+Added support for OribosExchange, RECrystallized and Auctioneer.
+
+Restored the fallback system: In the past I disabled this system because with certain items (mainly in Retail), when TSM didn't find a price or that price was below the filter, Auctionator could return unrealistically high prices due to lack of auction data.
+
+I've received a few requests, mainly from players of the classic versions, to be able to use Auctionator while they have TSM active and since it is a "bug" that occurs very rarely, I'm reactivating this system and I'll see if I receive any complaints over time.
+
+**Note:** Auctioneer is disabled since the addon is broken and orphaned. I would like to enable it (and complete the implementation) in the future if the developers fix it.
+
 ## New in 1.1: Summary Mode
 
 ![Summary Mode](https://github.com/will0w7/MoneyLooter/blob/main/images/MoneyLooterSummaryMode.gif?raw=true)
