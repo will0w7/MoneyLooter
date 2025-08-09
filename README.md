@@ -72,7 +72,7 @@ Download the latest release from [Wago](https://addons.wago.io/addons/moneyloote
 | Classic Era                    |   ✅   |
 | Classic Hardcore               |   ✅   |
 | Season of Discovery            |   ✅   |
-| Mists of Pandaria              |   ❔   |
+| Mists of Pandaria              |   ✅   |
 
 ✅ = Compatible
 
