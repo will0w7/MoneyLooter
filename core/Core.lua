@@ -15,6 +15,7 @@ MoneyLooter.Core = Core
 ------------------------------------------------------------------------------
 local TSM_API = TSM_API
 local AUCTIONATOR_API = Auctionator and Auctionator.API and Auctionator.API.v1
+-- local AUCTIONEER_API = AucAdvanced or Auctioneer
 ------------------------------------------------------------------------------
 local GetItemInfo = C_Item.GetItemInfo or GetItemInfo
 local GetItemInfoFromHyperlink = GetItemInfoFromHyperlink
@@ -96,6 +97,43 @@ local GetAucPrice = {
     end
 }
 
+-- local GetNeerPrice = {
+--     [0] = function(_, _)
+--         return 0
+--     end,
+--     ---@param isCraftingReagent boolean
+--     ---@param itemLink string
+--     [1] = function(isCraftingReagent, itemLink)
+--         local value = AUCTIONEER_API.GetMarketValue(itemLink, nil);
+--         if value ~= nil and (value >= Data.GetMinPrice1() or isCraftingReagent) then return value end
+--         return 0
+--     end,
+--     ---@param isCraftingReagent boolean
+--     ---@param itemLink string
+--     [2] = function(isCraftingReagent, itemLink)
+--         local value = AUCTIONEER_API.GetMarketValue(itemLink, nil);
+--         if value ~= nil and (value >= Data.GetMinPrice2() or isCraftingReagent) then return value end
+--         return 0
+--     end,
+--     ---@param isCraftingReagent boolean
+--     ---@param itemLink string
+--     [3] = function(isCraftingReagent, itemLink)
+--         local value = AUCTIONEER_API.GetMarketValue(itemLink, nil);
+--         if value ~= nil and (value >= Data.GetMinPrice3() or isCraftingReagent) then return value end
+--         return 0
+--     end,
+--     ---@param isCraftingReagent boolean
+--     ---@param itemLink string
+--     [4] = function(isCraftingReagent, itemLink)
+--         local value = AUCTIONEER_API.GetMarketValue(itemLink, nil);
+--         if value ~= nil and (value >= Data.GetMinPrice4() or isCraftingReagent) then return value end
+--         return 0
+--     end,
+--     [-1] = function(_, _)
+--         return 0
+--     end
+-- }
+
 ---@param quality integer
 ---@param itemLink string
 ---@param isCraftingReagent boolean
@@ -128,6 +166,21 @@ local function CalculatePriceAuc(quality, itemLink, isCraftingReagent)
     return price
 end
 
+-- ---@param quality integer
+-- ---@param itemLink string
+-- ---@param isCraftingReagent boolean
+-- local function CalculatePriceNeer(quality, itemLink, isCraftingReagent)
+--     if AUCTIONEER_API == nil then return 0 end
+
+--     local price
+--     if GetNeerPrice[quality] then
+--         price = GetNeerPrice[quality](isCraftingReagent, itemLink)
+--     else
+--         price = GetNeerPrice[-1](isCraftingReagent, itemLink)
+--     end
+--     return price
+-- end
+
 ---@param itemLink string
 local function CalculatePrice(itemLink)
     if itemLink == nil then return end
@@ -147,6 +200,9 @@ local function CalculatePrice(itemLink)
     if price == 0 and AUCTIONATOR_API then
         price = CalculatePriceAuc(quality, itemLink, isCraftingReagent)
     end
+    -- if price == 0 and AUCTIONEER_API then
+    --     price = CalculatePriceNeer(quality, itemLink, isCraftingReagent)
+    -- end
     if price == 0 and sellPrice ~= nil and sellPrice > 0 then
         price = sellPrice
     end
