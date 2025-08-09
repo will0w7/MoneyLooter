@@ -105,28 +105,28 @@ local GetAucPrice = {
 --     ---@param isCraftingReagent boolean
 --     ---@param itemLink string
 --     [1] = function(isCraftingReagent, itemLink)
---         local value = AUCTIONEER_API.GetMarketValue(itemLink, nil);
+--         local value = AUCTIONEER_API.GetMarketValue(itemLink, nil)
 --         if value ~= nil and (value >= Data.GetMinPrice1() or isCraftingReagent) then return value end
 --         return 0
 --     end,
 --     ---@param isCraftingReagent boolean
 --     ---@param itemLink string
 --     [2] = function(isCraftingReagent, itemLink)
---         local value = AUCTIONEER_API.GetMarketValue(itemLink, nil);
+--         local value = AUCTIONEER_API.GetMarketValue(itemLink, nil)
 --         if value ~= nil and (value >= Data.GetMinPrice2() or isCraftingReagent) then return value end
 --         return 0
 --     end,
 --     ---@param isCraftingReagent boolean
 --     ---@param itemLink string
 --     [3] = function(isCraftingReagent, itemLink)
---         local value = AUCTIONEER_API.GetMarketValue(itemLink, nil);
+--         local value = AUCTIONEER_API.GetMarketValue(itemLink, nil)
 --         if value ~= nil and (value >= Data.GetMinPrice3() or isCraftingReagent) then return value end
 --         return 0
 --     end,
 --     ---@param isCraftingReagent boolean
 --     ---@param itemLink string
 --     [4] = function(isCraftingReagent, itemLink)
---         local value = AUCTIONEER_API.GetMarketValue(itemLink, nil);
+--         local value = AUCTIONEER_API.GetMarketValue(itemLink, nil)
 --         if value ~= nil and (value >= Data.GetMinPrice4() or isCraftingReagent) then return value end
 --         return 0
 --     end,
@@ -307,7 +307,7 @@ function Core.LootEventHandler(_, event, ...)
         if GetLinkAndQuantityCraft(lootString) then return end
 
         local playerName, _ = GetUnitName("player")
-        local playerNameFromPN2, _ = string.split('-', playerName2, 2)
+        local playerNameFromPN2, _ = string.split("-", playerName2, 2)
         if playerName ~= playerNameFromPN2 then return end
 
         local itemLink, quantity = GetLinkAndQuantityLoot(lootString)
