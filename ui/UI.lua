@@ -199,6 +199,7 @@ local function CreateResizeGrip(parent)
     return grip
 end
 
+---@return table|Frame
 function UI:CreateMainFrame()
     local mainFrame = CreateFrame("Frame", "MONEYLOOTER_MAIN_FRAME", UIParent, "ML_MainFrame")
     mainFrame:SetPoint("CENTER")
@@ -264,8 +265,7 @@ function UI:CreateMainFrame()
     local initialWidth, initialHeight = mainFrame:GetSize()
     mainFrame:UpdateLayout(initialWidth, initialHeight)
 
-    UI.MLMainFrame = mainFrame
     return mainFrame
 end
 
-UI:CreateMainFrame()
+UI.MLMainFrame = UI:CreateMainFrame()
