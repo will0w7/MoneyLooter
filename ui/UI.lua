@@ -4,7 +4,6 @@ local Constants = MoneyLooter.Constants
 local Utils = MoneyLooter.Utils
 
 ---@class ML_UI
----@field MLMainFrame table|Frame
 local UI = {}
 MoneyLooter.UI = UI
 
@@ -28,6 +27,7 @@ function ML_ItemScrollMixin:OnClick()
 end
 
 function ML_ItemScrollMixin:Init()
+    ---@class ML_Item
     local elementData = self:GetElementData()
     self:SetRightText(elementData.value * elementData.quantity)
     self:SetLeftText(elementData.id, elementData.quantity, elementData.itemLink)
@@ -74,7 +74,7 @@ function ML_ButtonMixin:SetText(val)
     self.Label:SetText(val)
 end
 
----@param parent Frame
+---@param parent ML_MainFrame
 ---@return table|Frame
 local function CreateTitleBar(parent)
     local titleBar = CreateFrame("Frame", nil, parent, "ML_TitleBar")
@@ -84,13 +84,13 @@ local function CreateTitleBar(parent)
     return titleBar
 end
 
----@param parent Frame
+---@param parent ML_MainFrame
 ---@return table|Button
 local function CreateCloseButton(parent)
     return CreateFrame("Button", nil, parent, "ML_CloseButton")
 end
 
----@param parent Frame
+---@param parent ML_MainFrame
 ---@return table|CheckButton
 local function CreateMinimizeCheckButton(parent)
     local checkButton = CreateFrame("CheckButton", nil, parent, "ML_CheckButton")
@@ -98,7 +98,7 @@ local function CreateMinimizeCheckButton(parent)
     return checkButton
 end
 
----@param parent Frame
+---@param parent ML_MainFrame
 ---@return table|Button
 local function CreateStartButton(parent)
     local button = CreateFrame("Button", nil, parent, "ML_Button")
@@ -108,7 +108,7 @@ local function CreateStartButton(parent)
     return button
 end
 
----@param parent Frame
+---@param parent ML_MainFrame
 ---@return table|Button
 local function CreateResetButton(parent)
     local button = CreateFrame("Button", nil, parent, "ML_Button")
@@ -118,40 +118,45 @@ local function CreateResetButton(parent)
     return button
 end
 
----@param parent Frame
----@return table|FontString
+---@param parent ML_MainFrame
+---@return table
 local function CreateStatisticLabels(parent)
-    local labels = {}
-    local yOffset = -40
-    local yStep = -20
-
-    local function createLabelPair(labelText, initialValue, y)
+    ---@param stat table
+    ---@return FontString, FontString
+    local function createLabelPair(stat)
         local label = parent:CreateFontString(nil, "OVERLAY", Constants.Strings.FONT)
-        label:SetPoint("TOPLEFT", 5, y)
-        label:SetText(labelText)
+        label:SetPoint("TOPLEFT", 5, stat[3])
+        label:SetText(stat[1])
 
         local value = parent:CreateFontString(nil, "OVERLAY", Constants.Strings.FONT)
-        value:SetPoint("TOPRIGHT", -8, y)
+        value:SetPoint("TOPRIGHT", -8, stat[3])
         value:SetJustifyH("RIGHT")
-        if initialValue then value:SetText(initialValue) end
+        if stat[2] then value:SetText(stat[2]) end
 
         return label, value
     end
 
-    labels.TimeLabel, labels.Time = createLabelPair(_G.MONEYLOOTER_L_TIME_LABEL, tostring(date("!%X", 0)), yOffset)
-    yOffset = yOffset + yStep
-    labels.RawGoldLabel, labels.RawGold = createLabelPair(_G.MONEYLOOTER_L_GOLD_LABEL, nil, yOffset)
-    yOffset = yOffset + yStep
-    labels.ItemsGoldLabel, labels.ItemsGold = createLabelPair(_G.MONEYLOOTER_L_ITEMS_LABEL, nil, yOffset)
-    yOffset = yOffset + yStep
-    labels.GPHLabel, labels.GPH = createLabelPair(_G.MONEYLOOTER_L_GPH_LABEL, nil, yOffset)
-    yOffset = yOffset + yStep
-    labels.PriciestLabel, labels.Priciest = createLabelPair(_G.MONEYLOOTER_L_PRICIEST_LABEL, nil, yOffset)
+    local yOffset = -40
+    local yStep = -20
+    local stats = {
+        { _G.MONEYLOOTER_L_TIME_LABEL,     tostring(date("!%X", 0)), yOffset },
+        { _G.MONEYLOOTER_L_GOLD_LABEL,     nil,                      yOffset + yStep },
+        { _G.MONEYLOOTER_L_ITEMS_LABEL,    nil,                      yOffset + yStep * 2 },
+        { _G.MONEYLOOTER_L_GPH_LABEL,      nil,                      yOffset + yStep * 3 },
+        { _G.MONEYLOOTER_L_PRICIEST_LABEL, nil,                      yOffset + yStep * 4 }
+    }
+
+    local labels = {}
+    labels.TimeLabel, labels.Time = createLabelPair(stats[1])
+    labels.RawGoldLabel, labels.RawGold = createLabelPair(stats[2])
+    labels.ItemsGoldLabel, labels.ItemsGold = createLabelPair(stats[3])
+    labels.GPHLabel, labels.GPH = createLabelPair(stats[4])
+    labels.PriciestLabel, labels.Priciest = createLabelPair(stats[5])
 
     return labels
 end
 
----@param parent Frame
+---@param parent ML_MainFrame
 ---@return table|Frame
 local function CreateLootScrollBox(parent)
     local scrollBox = CreateFrame("Frame", nil, parent, "ML_WowScrollBoxList")
@@ -180,7 +185,7 @@ local function CreateLootScrollBox(parent)
     return scrollBox
 end
 
----@param parent Frame
+---@param parent ML_MainFrame
 ---@return table|Button
 local function CreateResizeGrip(parent)
     local grip = CreateFrame("Button", nil, parent)
@@ -199,8 +204,8 @@ local function CreateResizeGrip(parent)
     return grip
 end
 
----@return table|Frame
-function UI:CreateMainFrame()
+---@return table|Frame|ML_MainFrame
+local function CreateMainFrame()
     local mainFrame = CreateFrame("Frame", "MONEYLOOTER_MAIN_FRAME", UIParent, "ML_MainFrame")
     mainFrame:SetPoint("CENTER")
     mainFrame:EnableMouse(true)
@@ -268,4 +273,5 @@ function UI:CreateMainFrame()
     return mainFrame
 end
 
-UI.MLMainFrame = UI:CreateMainFrame()
+---@class ML_MainFrame : Frame
+UI.MLMainFrame = CreateMainFrame()

@@ -37,7 +37,7 @@ function SMFunctions.InsertLootedItem(summary, lootedItem)
 end
 
 ---@param summary table
----@return ML_LootedItem[]
+---@return table
 function SMFunctions.GetTopItems(summary)
     local topItems = {}
     for itemLink, item in pairs(summary) do

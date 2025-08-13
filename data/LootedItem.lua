@@ -9,6 +9,7 @@ MoneyLooter.LootedItem = LootedItem
 ---@param itemLink string
 ---@param value integer
 ---@param quantity integer
+---@return ML_Item
 function LootedItem.new(id, itemLink, value, quantity)
     local self = {}
     self.id = id
@@ -18,3 +19,9 @@ function LootedItem.new(id, itemLink, value, quantity)
 
     return self
 end
+
+---@class ML_Item
+---@field id integer
+---@field itemLink string
+---@field value integer
+---@field quantity integer
