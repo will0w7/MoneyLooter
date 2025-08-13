@@ -32,7 +32,8 @@
     "RECrystallize_PriceCheck",
     "GetItemInfoFromHyperlink",
     "GetUnitName",
-    "WOW_PROJECT_MISTS_CLASSIC"
+    "WOW_PROJECT_MISTS_CLASSIC",
+    "Auctioneer"
   ],
   "runtime.version": "Lua 5.1",
   "workspace.ignoreDir": [

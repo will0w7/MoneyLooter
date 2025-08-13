@@ -64,5 +64,6 @@ globals = {
     "UIParent",
     "ERR_QUEST_REWARD_MONEY_S",
     "OEMarketInfo",
-    "RECrystallize_PriceCheck"
+    "RECrystallize_PriceCheck",
+    "Auctioneer"
 }
