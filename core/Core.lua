@@ -267,14 +267,12 @@ end
 ---@param isCraftingReagent boolean
 local function CalculatePriceNeer(quality, itemLink, isCraftingReagent)
     if AUCTIONEER_API == nil then return 0 end
-    print("using auctioneer")
     local price
     if GetNeerPrice[quality] then
         price = GetNeerPrice[quality](isCraftingReagent, itemLink)
     else
         price = GetNeerPrice[-1](isCraftingReagent, itemLink)
     end
-    print("auctioneer price: " .. price)
     return price
 end
 
