@@ -108,7 +108,9 @@ local GetNeerPrice = {
     [1] = function(isCraftingReagent, itemLink)
         local itemKey = AUCTIONEER_API:ItemKeyFromLink(itemLink)
         local stats = AUCTIONEER_API:Statistics(itemKey)
-        local value = stats["Stats:OverTime"]:Best()
+        local overTime = stats["Stats:OverTime"]
+        local value = 0
+        if overTime ~= nil then value = overTime:Best() end
         if value ~= nil and (value >= Data.GetMinPrice1() or isCraftingReagent) then return value end
         return 0
     end,
@@ -117,7 +119,9 @@ local GetNeerPrice = {
     [2] = function(isCraftingReagent, itemLink)
         local itemKey = AUCTIONEER_API:ItemKeyFromLink(itemLink)
         local stats = AUCTIONEER_API:Statistics(itemKey)
-        local value = stats["Stats:OverTime"]:Best()
+        local overTime = stats["Stats:OverTime"]
+        local value = 0
+        if overTime ~= nil then value = overTime:Best() end
         if value ~= nil and (value >= Data.GetMinPrice2() or isCraftingReagent) then return value end
         return 0
     end,
@@ -126,7 +130,9 @@ local GetNeerPrice = {
     [3] = function(isCraftingReagent, itemLink)
         local itemKey = AUCTIONEER_API:ItemKeyFromLink(itemLink)
         local stats = AUCTIONEER_API:Statistics(itemKey)
-        local value = stats["Stats:OverTime"]:Best()
+        local overTime = stats["Stats:OverTime"]
+        local value = 0
+        if overTime ~= nil then value = overTime:Best() end
         if value ~= nil and (value >= Data.GetMinPrice3() or isCraftingReagent) then return value end
         return 0
     end,
@@ -135,7 +141,9 @@ local GetNeerPrice = {
     [4] = function(isCraftingReagent, itemLink)
         local itemKey = AUCTIONEER_API:ItemKeyFromLink(itemLink)
         local stats = AUCTIONEER_API:Statistics(itemKey)
-        local value = stats["Stats:OverTime"]:Best()
+        local overTime = stats["Stats:OverTime"]
+        local value = 0
+        if overTime ~= nil then value = overTime:Best() end
         if value ~= nil and (value >= Data.GetMinPrice4() or isCraftingReagent) then return value end
         return 0
     end,
