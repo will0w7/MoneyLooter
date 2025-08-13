@@ -4,7 +4,7 @@
 
 A lightweight and blazingly-fast 🦀 World of Warcraft addon designed to track your gold farms. Track both raw gold and the gold value of looted items thanks to amazing addons like Auctionator or TradeSkillMaster, with reload protection so you don't need to worry about disconnections.
 
-## New in 1.5: OribosExchange, RECrystallized and Auctioneer (broken, **_disabled_**)
+## New in 1.5: OribosExchange, RECrystallized and Auctioneer
 
 Added support for OribosExchange, RECrystallized and Auctioneer.
 
@@ -12,7 +12,7 @@ Added support for OribosExchange, RECrystallized and Auctioneer.
 
 I've received a few requests, mainly from players of the classic versions, to be able to use Auctionator while they have TSM active and since it is a "bug" that occurs very rarely, I'm reactivating this system and I'll see if I receive any complaints over time.
 
-**Note:** Auctioneer is disabled since the addon is broken and orphaned. I would like to enable it (and complete the implementation) in the future if the developers fix it.
+**Note:** ~~Auctioneer is disabled since the addon is broken and orphaned. I would like to enable it (and complete the implementation) in the future if the developers fix it.~~ Auctioneer is now enabled and working (at least in Retail) using "Best" for the prices ("Median" by default).
 
 ## New in 1.1: Summary Mode
 
@@ -65,7 +65,7 @@ Download the latest release from [Wago](https://addons.wago.io/addons/moneyloote
 
 1. TSM
 2. Auctionator
-3. Auctioneer (**_disabled_** the addon is broken and not updated)
+3. Auctioneer
 4. OribosExchange (only Retail)
 5. RECrystallize (only Retail, available in Wago)
 
