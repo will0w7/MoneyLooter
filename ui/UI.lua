@@ -43,7 +43,7 @@ end
 ---@param quantity number
 ---@param itemLink string
 function ML_ItemScrollMixin:SetLeftText(id, quantity, itemLink)
-    self.LeftLabel:SetText(DARKYELLOW_FONT_COLOR:WrapTextInColorCode(("%d-x %s%s"):format(quantity,
+    self.LeftLabel:SetText(DARKYELLOW_FONT_COLOR:WrapTextInColorCode(("%dx %s%s"):format(quantity,
         CreateTextureFromItemID(id), itemLink)))
 end
 
