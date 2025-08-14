@@ -1,7 +1,11 @@
 ---@class MoneyLooter
 local MoneyLooter = select(2, ...)
+---@class ML_Constants
 local Constants = MoneyLooter.Constants
+---@class ML_Utils
 local Utils = MoneyLooter.Utils
+---@class ML_DataProvider
+local DataProvider = MoneyLooter.DataProvider
 
 ---@class ML_UI
 local UI = {}
@@ -53,7 +57,7 @@ function ML_ItemScrollMixin:SetRightText(value)
 end
 
 function ML_ItemScrollMixin:TrimDataProvider()
-    local dataProvider = self:GetParent():GetParent().DataProvider
+    local dataProvider = self:GetParent().DataProvider
     if not dataProvider then return end
 
     local maxCapacity = MoneyLooter.Data.CBCapacity
@@ -163,7 +167,7 @@ local function CreateLootScrollBox(parent)
     scrollBox:SetResizable(true)
 
     scrollBox.ScrollBar = CreateFrame("EventFrame", nil, scrollBox, "MinimalScrollBar")
-    scrollBox.DataProvider = CreateDataProvider()
+    scrollBox.DataProvider = DataProvider.CreateDataProvider()
     scrollBox.ScrollView = CreateScrollBoxListLinearView()
     scrollBox.ScrollView:SetDataProvider(scrollBox.DataProvider)
 

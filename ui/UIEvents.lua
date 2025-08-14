@@ -15,13 +15,15 @@ local CBFunctions = MoneyLooter.CBFunctions
 local Core = MoneyLooter.Core
 ---@class ML_SMFunctions
 local SMFunctions = MoneyLooter.SMFunctions
+---@class ML_Profiler
+local Profiler = MoneyLooter.Profiler
 
 ----------------------------------------------------------------------------------------
 local GetAddOnMetadata = C_AddOns.GetAddOnMetadata or GetAddOnMetadata
 local GetMoney, CreateFrame = GetMoney, CreateFrame
 ----------------------------------------------------------------------------------------
 local date, tostring = date, tostring
-local strlenutf8, print, tonumber, ipairs = strlenutf8, print, tonumber, ipairs
+local strlenutf8, print, tonumber, ipairs, unpack = strlenutf8, print, tonumber, ipairs, unpack
 ----------------------------------------------------------------------------------------
 
 ---@param visible boolean
@@ -57,23 +59,27 @@ local function PopulateData()
 end
 
 local function PopulateLoot()
+    Profiler.Start("PopulateLoot")
     Data.InitListLootedItems()
     UI.MLMainFrame.ScrollBoxLoot.DataProvider:Flush()
     if Data.GetListLootedItemsCount() > 0 then
-        local lootedItems = Data.GetListLootedItems()
-        CBFunctions.Iterate(lootedItems, function(lootedItem)
-            UI.MLMainFrame.ScrollBoxLoot.DataProvider:Insert(lootedItem)
-        end)
+        local lootedItems = CBFunctions.ToTable(Data.GetListLootedItems())
+        Profiler.Start("PopulateLoot.BulkInsert")
+        UI.MLMainFrame.ScrollBoxLoot.DataProvider:BulkInsert(unpack(lootedItems))
+        Profiler.Stop("PopulateLoot.BulkInsert")
     end
     UI.MLMainFrame.ScrollBoxLoot:ScrollToEnd()
+    Profiler.Stop("PopulateLoot")
 end
 
 local function PopulateSummary()
+    Profiler.Start("PopulateSummary")
     UI.MLMainFrame.ScrollBoxLoot.DataProvider:Flush()
     local topItems = SMFunctions.GetTopItems(Data.GetSummary())
-    for _, lootedItem in ipairs(topItems) do
-        UI.MLMainFrame.ScrollBoxLoot.DataProvider:Insert(lootedItem)
-    end
+    Profiler.Start("PopulateSummary.BulkInsert")
+    UI.MLMainFrame.ScrollBoxLoot.DataProvider:BulkInsert(unpack(topItems))
+    Profiler.Stop("PopulateSummary.BulkInsert")
+    Profiler.Stop("PopulateSummary")
 end
 
 -----------------------------------------------------------------------------------------------
@@ -101,15 +107,15 @@ local function UpdateTexts()
     UI.MLMainFrame.GPHFS:SetText(Utils.GetCoinTextString(Data.CalcGPH()))
 end
 
-function UpdateLoot()
+---@param item ML_Item
+function UpdateLoot(item)
     if not Data.IsSummaryMode() then
-        for _, lootedItem in ipairs(Data.GetLootedItems()) do
-            UI.MLMainFrame.ScrollBoxLoot.DataProvider:Insert(lootedItem)
-        end
+        Profiler.Start("UpdateLoot.SingleInsert")
+        UI.MLMainFrame.ScrollBoxLoot.DataProvider:SingleInsert(item)
+        Profiler.Stop("UpdateLoot.SingleInsert")
         UI.MLMainFrame.ScrollBoxLoot:ScrollToEnd()
         UI.MLMainFrame.PriciestFS:SetText(Utils.GetCoinTextString(Data.GetPriciest()))
         UI.MLMainFrame.ItemsGoldFS:SetText(Utils.GetCoinTextString(Data.GetItemsMoney()))
-        Data.ResetLootedItems()
     else
         PopulateSummary()
     end
@@ -155,7 +161,7 @@ UI.MLMainFrame.MinimizeCheck:SetScript(Constants.Events.OnClick, function(_, but
         if mode then
             PopulateSummary()
         else
-            UpdateLoot()
+            -- UpdateLoot()
             PopulateLoot()
         end
     end
@@ -290,6 +296,8 @@ local function slash(msg, _)
         ParseCustomString(msg)
     elseif string.sub(msg, 1, 6) == "mprice" then
         ParseMinPrice(msg)
+    elseif msg == "profiler" then
+        Profiler.ToggleProfiler()
     else
         print(_G.MONEYLOOTER_L_USAGE .. Constants.Strings.ADDON_VERSION)
     end
