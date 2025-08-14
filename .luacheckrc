@@ -65,5 +65,8 @@ globals = {
     "ERR_QUEST_REWARD_MONEY_S",
     "OEMarketInfo",
     "RECrystallize_PriceCheck",
-    "Auctioneer"
+    "Auctioneer",
+    "GetTimePreciseSec",
+    "GetServerTime",
+    "GetTime"
 }
