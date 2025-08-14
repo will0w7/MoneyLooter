@@ -58,3 +58,15 @@ function CBFunctions.Iterate(buffer, func)
         i = (i % buffer.capacity) + 1
     end
 end
+
+---@param buffer ML_CircularBuffer
+---@return table
+function CBFunctions.ToTable(buffer)
+    local result = {}
+    local i = buffer.tail
+    for _ = 1, buffer.size do
+        result[#result + 1] = buffer.buffer[i]
+        i = (i % buffer.capacity) + 1
+    end
+    return result
+end
