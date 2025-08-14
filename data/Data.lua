@@ -95,7 +95,6 @@ end
 
 ---@class ML_TempData
 local MoneyLooterTempData = {
-    LootedItems = {},
     InteractionPaused = false,
     SummaryMode = false
 }
@@ -174,19 +173,6 @@ function Data.GetPriciestLink()
     return MoneyLooterDB.PriciestLink
 end
 
----@return table
-function Data.GetLootedItems()
-    return MoneyLooterTempData.LootedItems
-end
-
-function Data.ResetLootedItems()
-    if MoneyLooterTempData.LootedItems == nil then
-        MoneyLooterTempData.LootedItems = {}
-    else
-        table.wipe(MoneyLooterTempData.LootedItems)
-    end
-end
-
 function Data.InitListLootedItems()
     if MoneyLooterDB.ListLootedItems == nil or MoneyLooterDB.ListLootedItems.buffer == nil then
         MoneyLooterDB.ListLootedItems = CBFunctions.New(MoneyLooterDB.ListLootedItems, Data.CBCapacity)
@@ -200,11 +186,8 @@ end
 
 ---@param lootedItem ML_Item
 function Data.InsertLootedItem(lootedItem)
-    if MoneyLooterTempData.LootedItems == nil then MoneyLooterTempData.LootedItems = {} end
-    if lootedItem ~= nil then
-        table.insert(MoneyLooterTempData.LootedItems, lootedItem)
-        CBFunctions.Push(MoneyLooterDB.ListLootedItems, lootedItem)
-    end
+    if lootedItem == nil then return end
+    CBFunctions.Push(MoneyLooterDB.ListLootedItems, lootedItem)
 end
 
 ---@return integer
@@ -378,9 +361,8 @@ end
 
 ---@param paused boolean
 function Data.SetInteractionPaused(paused)
-    if paused ~= nil then
-        MoneyLooterTempData.InteractionPaused = paused
-    end
+    if paused == nil then return end
+    MoneyLooterTempData.InteractionPaused = paused
 end
 
 function Data.IsSummaryMode()
@@ -388,17 +370,15 @@ function Data.IsSummaryMode()
 end
 
 function Data.SetSummaryMode(summaryMode)
-    if summaryMode ~= nil then
-        MoneyLooterTempData.SummaryMode = summaryMode
-    end
+    if summaryMode == nil then return end
+    MoneyLooterTempData.SummaryMode = summaryMode
 end
 
 ---@param lootedItem ML_Item
 function Data.InsertSummaryItem(lootedItem)
     if MoneyLooterDB.Summary == nil then MoneyLooterDB.Summary = {} end
-    if lootedItem ~= nil then
-        MoneyLooterDB.Summary = SMFunctions.InsertLootedItem(MoneyLooterDB.Summary, lootedItem)
-    end
+    if lootedItem == nil then return end
+    MoneyLooterDB.Summary = SMFunctions.InsertLootedItem(MoneyLooterDB.Summary, lootedItem)
 end
 
 function Data.GetSummary()
