@@ -12,7 +12,11 @@ plain-copy:
 optional-dependencies:
   - tradeskill-master
   - auctionator
+  - auctioneer
+  - oribos-exchange
+  - recrystallize-auction-house-scanner
 tools-used:
   - devtool
   - addon-usage
   - wowlua
+  - numy-addon-profiler
