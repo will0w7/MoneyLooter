@@ -69,5 +69,8 @@ globals = {
     "GetTimePreciseSec",
     "GetServerTime",
     "GetTime",
-    "CreateTableEnumerator"
+    "CreateTableEnumerator",
+    "CreateFromMixins",
+    "Mixin",
+    "CallbackRegistryMixin"
 }
