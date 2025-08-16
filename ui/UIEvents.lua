@@ -186,26 +186,27 @@ local MoneyLooterLootEvents = CreateFrame("Frame")
 ---@type FunctionContainer
 local timer
 
+local EVENTS = {
+    Constants.Events.ChatMsgMoney,
+    Constants.Events.ChatMsgLoot,
+    Constants.Events.QuestTurnedIn,
+    Constants.Events.PInteractionManagerShow,
+    Constants.Events.PInteractionManagerHide,
+    Constants.Events.ChatMsgSystem,
+}
+
 function RegisterStartEvents()
-    MoneyLooterLootEvents:RegisterEvent(Constants.Events.ChatMsgMoney)
-    MoneyLooterLootEvents:RegisterEvent(Constants.Events.ChatMsgLoot)
-    MoneyLooterLootEvents:RegisterEvent(Constants.Events.QuestTurnedIn)
-    MoneyLooterLootEvents:RegisterEvent(Constants.Events.PInteractionManagerShow)
-    MoneyLooterLootEvents:RegisterEvent(Constants.Events.PInteractionManagerHide)
-    MoneyLooterLootEvents:RegisterEvent(Constants.Events.ChatMsgSystem)
-    MoneyLooterLootEvents:SetScript(Constants.Events.OnEvent, Core.LootEventHandler)
+    for _, ev in ipairs(EVENTS) do
+        MoneyLooterLootEvents:RegisterEvent(ev)
+    end
+    MoneyLooterLootEvents:SetScript("OnEvent", Core.OnEvent)
 
     timer = C_Timer.NewTicker(1, UpdateTexts)
 end
 
 function UnregisterStartEvents()
-    MoneyLooterLootEvents:UnregisterEvent(Constants.Events.ChatMsgMoney)
-    MoneyLooterLootEvents:UnregisterEvent(Constants.Events.ChatMsgLoot)
-    MoneyLooterLootEvents:UnregisterEvent(Constants.Events.QuestTurnedIn)
-    MoneyLooterLootEvents:UnregisterEvent(Constants.Events.PInteractionManagerShow)
-    MoneyLooterLootEvents:UnregisterEvent(Constants.Events.PInteractionManagerHide)
-    MoneyLooterLootEvents:UnregisterEvent(Constants.Events.ChatMsgSystem)
-    MoneyLooterLootEvents:SetScript(Constants.Events.OnEvent, nil)
+    MoneyLooterLootEvents:UnregisterAllEvents()
+    MoneyLooterLootEvents:SetScript("OnEvent", nil)
 
     if not timer:IsCancelled() then timer:Cancel() end
 end
