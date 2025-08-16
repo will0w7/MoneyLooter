@@ -68,5 +68,6 @@ globals = {
     "Auctioneer",
     "GetTimePreciseSec",
     "GetServerTime",
-    "GetTime"
+    "GetTime",
+    "CreateTableEnumerator"
 }

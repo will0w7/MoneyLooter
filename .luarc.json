@@ -33,7 +33,8 @@
     "GetItemInfoFromHyperlink",
     "GetUnitName",
     "WOW_PROJECT_MISTS_CLASSIC",
-    "Auctioneer"
+    "Auctioneer",
+    "CreateTableEnumerator"
   ],
   "runtime.version": "Lua 5.1",
   "workspace.ignoreDir": [
