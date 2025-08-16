@@ -1,28 +1,28 @@
 ---@class MoneyLooter
 local MoneyLooter = select(2, ...)
 
-local DataProviderMixin = CreateFromMixins(CallbackRegistryMixin)
+---@class ML_DataProviderMixin
+local DataProviderMixin = {}
+Mixin(DataProviderMixin, CallbackRegistryMixin)
 
 DataProviderMixin:GenerateCallbackEvents(
     {
         "OnSizeChanged",
         "OnInsert",
-        "OnRemove",
-        -- "OnSort",
-        -- "OnMove",
+        "OnRemove"
     }
 );
 
 ---@class ML_DataProvider
-local DataProvider       = {}
-DataProvider.__index     = DataProvider
+local DataProvider = {}
+DataProvider.__index = DataProvider
 MoneyLooter.DataProvider = DataProvider
 
-local tinsert            = table.insert
+local tinsert = table.insert
 
-local Event              = DataProviderMixin.Event
-local OnInsert           = Event.OnInsert
-local OnSizeChanged      = Event.OnSizeChanged
+local Event = DataProviderMixin.Event
+local OnInsert = Event.OnInsert
+local OnSizeChanged = Event.OnSizeChanged
 
 function DataProviderMixin:Enumerate(indexBegin, indexEnd)
     return CreateTableEnumerator(self.collection, indexBegin, indexEnd);
