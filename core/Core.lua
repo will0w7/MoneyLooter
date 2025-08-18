@@ -22,7 +22,7 @@ local RECrystallize_PriceCheck = RECrystallize_PriceCheck
 ------------------------------------------------------------------------------
 local GetItemInfo = C_Item.GetItemInfo or GetItemInfo
 local GetItemInfoFromHyperlink = GetItemInfoFromHyperlink
-local GetMoney, GetUnitName = GetMoney, GetUnitName
+local GetMoney, GetUnitName, GetTime = GetMoney, GetUnitName, GetTime
 local tonumber, strsplit, unpack = tonumber, strsplit, unpack
 local str_match = string.match
 ------------------------------------------------------------------------------
