@@ -6,59 +6,62 @@ local Locales = MoneyLooter.Locales
 
 Locales.frFR = function()
   local L = {}
-  L["START"] = "Start"
-  L["CONTINUE"] = "Continue"
+  L["START"] = "Démarrer"
+  L["CONTINUE"] = "Continuer"
   L["PAUSE"] = "Pause"
-  L["RESET"] = "Reset"
-  L["TIME_LABEL"] = "Time:"
-  L["GOLD_LABEL"] = "Gold:"
-  L["ITEMS_LABEL"] = "Items:"
+  L["RESET"] = "Réinitialiser"
+  L["TIME_LABEL"] = "Temps:"
+  L["GOLD_LABEL"] = "Or:"
+  L["ITEMS_LABEL"] = "Objets:"
   L["GPH_LABEL"] = "GPH:"
-  L["PRICIEST_LABEL"] = "Priciest:"
-  L["USAGE"] = [[====== |cFFd8de35MoneyLooter Usage Info|r ======
-  |cFF36e8e6/ml|r: Toggle Show/Hide
-  |cFF36e8e6/ml|r |cFFf1f488help|r: Show the help
-  |cFF36e8e6/ml|r |cFFf1f488show|r: Show MoneyLooter
-  |cFF36e8e6/ml|r |cFFf1f488hide|r: Hide MoneyLooter
-  |cFF36e8e6/ml|r |cFFf1f488info|r: Shows info about the addon.
-  |cFF36e8e6/ml|r |cFFf1f488custom 'custom TSM string'|r: Sets a custom TSM string to be used in the price calculation. If empty, returns the custom TSM string it's currently using.
-    Examples: /ml custom dbmarket
+  L["PRICIEST_LABEL"] = "Le plus cher:"
+  L["USAGE"] = [[====== |cFFd8de35Informations d'utilisation de MoneyLooter|r ======
+  |cFF36e8e6/ml|r : Activer/Désactiver l'affichage
+  |cFF36e8e6/ml|r |cFFf1f488help|r : Afficher l'aide
+  |cFF36e8e6/ml|r |cFFf1f488show|r : Afficher MoneyLooter
+  |cFF36e8e6/ml|r |cFFf1f488hide|r : Masquer MoneyLooter
+  |cFF36e8e6/ml|r |cFFf1f488info|r : Afficher les informations sur l'addon.
+  |cFF36e8e6/ml|r |cFFf1f488custom 'chaîne TSM personnalisée'|r : Définit la chaîne TSM utilisée pour le calcul du prix. Si vide, renvoie la chaîne TSM actuelle.
+    Exemples: /ml custom dbmarket
               /ml custom
-  |cFF36e8e6/ml|r |cFFf1f488mprice 'value'|r: Sets the minimum price threshold for a given quality.
-            mpricex: All available qualities.
-            mprice1: Quality 1 - Common - White
-            mprice2: Quality 2 - Uncommon - Green
-            mprice3: Quality 3 - Rare - Blue
-            mprice4: Quality 4 - Epic - Purple
-      The rest of the qualities will use the vendor price, if they have it.
-    Examples: /ml mprice1 50 s
+  |cFF36e8e6/ml|r |cFFf1f488mprice 'valeur'|r : Définit le seuil minimal de prix pour une qualité.
+            mpricex : Toutes les qualités disponibles.
+            mprice1 : Qualité 1 - Normale - Blanche
+            mprice2 : Qualité 2 - Peu courante - Verte
+            mprice3 : Qualité 3 - Rare - Bleue
+            mprice4 : Qualité 4 - Épique - Pourpre
+      Les autres qualités utiliseront le prix du vendeur, s'il est disponible.
+    Exemples: /ml mprice1 50 s
               /ml mprice2 5000
               /ml mprice3 500 g
               /ml mprice4 5 c
-      The price format for mprice is a number followed by g(old), s(ilver) or c(opper). If you only specify the number, gold will be used by default.
-  |cFF36e8e6Addon version:|r ]]
-  L["WELCOME"] = "Welcome to |cFFd8de35Money Looter|r! Use |cFF36e8e6/ml|r |cFFf1f488help|r for addon options."
-  L["CLOSE"] = "|cFF36e8e6/ml|r |cFFf1f488show|r: Show again |cFFd8de35MoneyLooter|r"
-  L["INFO"] = "|cFFd8de35MoneyLooter|r lightweight and fast loot tracker addon created by Will0w7."
-  L["TSM_NOT_AVAILABLE"] = "|cFFd8de35Money Looter:|r TSM is not available."
+      Le format de prix pour mprice est un nombre suivi de g (or), s (argent) ou c (cuivre). Si seul le nombre est fourni, l'or est utilisé par défaut.
+  |cFF36e8e6Version de l'addon:|r ]]
+  L["WELCOME"] =
+  "Bienvenue dans |cFFd8de35Money Looter|r! Utilisez |cFF36e8e6/ml|r |cFFf1f488help|r pour les options de l'addon."
+  L["CLOSE"] = "|cFF36e8e6/ml|r |cFFf1f488show|r : Afficher à nouveau |cFFd8de35MoneyLooter|r"
+  L["INFO"] = "|cFFd8de35Money Looter|r est un addon léger et rapide pour le suivi de butin, créé par Will0w7."
+  L["TSM_NOT_AVAILABLE"] = "|cFFd8de35Money Looter:|r TSM n'est pas disponible."
   L["TSM_CUSTOM_STRING_NOT_VALID"] =
-  "|cFFd8de35Money Looter:|r The next TSM custom string is not valid and was not set: "
-  L["TSM_CUSTOM_STRING_VALID"] = "|cFFd8de35Money Looter:|r The next TSM custom string is valid and was set: "
-  L["TSM_CUSTOM_STRING"] = "|cFFd8de35Money Looter:|r Using the next TSM custom string: "
-  L["NEW_DB_VERSION"] = "|cFFd8de35Money Looter:|r A new version of the database has been detected, updating..."
-  L["DB_UPDATED"] = "|cFFd8de35Money Looter:|r The database has been updated successfully!"
-  L["MPRICE_ERROR"] = "|cFFd8de35Money Looter:|r The next minimum price is invalid: "
-  L["MPRICE_VALID"] = "|cFFd8de35Money Looter:|r The next minimum price is valid and was set:"
-  L["MPRICE_QUALITY_1"] = "Common"
-  L["MPRICE_QUALITY_2"] = "Uncommon"
+  "|cFFd8de35Money Looter:|r La chaîne TSM indiquée est invalide et n'a pas été définie: "
+  L["TSM_CUSTOM_STRING_VALID"] = "|cFFd8de35Money Looter:|r La chaîne TSM indiquée est valide et a été définie: "
+  L["TSM_CUSTOM_STRING"] = "|cFFd8de35Money Looter:|r Utilisation de la chaîne TSM suivante: "
+  L["NEW_DB_VERSION"] =
+  "|cFFd8de35Money Looter:|r Une nouvelle version de la base de données a été détectée, mise à jour en cours…"
+  L["DB_UPDATED"] = "|cFFd8de35Money Looter:|r La base de données a été mise à jour avec succès!"
+  L["MPRICE_ERROR"] = "|cFFd8de35Money Looter:|r Le seuil minimal de prix indiqué est invalide: "
+  L["MPRICE_VALID"] = "|cFFd8de35Money Looter:|r Le seuil minimal de prix indiqué est valide et a été défini:"
+  L["MPRICE_QUALITY_1"] = "Normale"
+  L["MPRICE_QUALITY_2"] = "Peu courante"
   L["MPRICE_QUALITY_3"] = "Rare"
-  L["MPRICE_QUALITY_4"] = "Epic"
-  L["MPRICE_QUALITY_99"] = "All qualities"
-  L["MPRICE_UNRECOGNIZED_COIN"] = "|cFFd8de35Money Looter:|r Unrecognized coin, check input."
-  L["MPRICE_COIN_G"] = "Gold"
-  L["MPRICE_COIN_S"] = "Silver"
-  L["MPRICE_COIN_C"] = "Copper"
-  L["FORCE_VENDOR_PRICE_ENABLED"] = "|cFFd8de35Money Looter:|r Force vendor price enabled. Using only vendor sell price."
-  L["FORCE_VENDOR_PRICE_DISABLED"] = "|cFFd8de35Money Looter:|r Force vendor price disabled."
+  L["MPRICE_QUALITY_4"] = "Épique"
+  L["MPRICE_QUALITY_99"] = "Toutes les qualités"
+  L["MPRICE_UNRECOGNIZED_COIN"] = "|cFFd8de35Money Looter:|r Monnaie non reconnue, vérifiez l'entrée."
+  L["MPRICE_COIN_G"] = "Or"
+  L["MPRICE_COIN_S"] = "Argent"
+  L["MPRICE_COIN_C"] = "Cuivre"
+  L["FORCE_VENDOR_PRICE_ENABLED"] =
+  "|cFFd8de35Money Looter:|r Prix vendeur forcé activé. Seuls les prix de vente du vendeur seront utilisés."
+  L["FORCE_VENDOR_PRICE_DISABLED"] = "|cFFd8de35Money Looter:|r Prix vendeur forcé désactivé."
   return L
 end

@@ -37,13 +37,15 @@ Locales.ruRU = function()
               /ml mprice4 5 c
       Формат цены для mprice — это число, за которым следует g(золото), s(серебро) или c(медная). Если указать только число, по умолчанию будет использоваться золото.
   |cFF36e8e6Версия аддона:|r ]]
-  L["WELCOME"] = "Добро пожаловать в |cFFd8de35Money Looter|r! Используйте |cFF36e8e6/ml|r |cFFf1f488help|r для настроек аддона."
+  L["WELCOME"] =
+  "Добро пожаловать в |cFFd8de35Money Looter|r! Используйте |cFF36e8e6/ml|r |cFFf1f488help|r для настроек аддона."
   L["CLOSE"] = "|cFF36e8e6/ml|r |cFFf1f488show|r: Показать снова |cFFd8de35MoneyLooter|r"
   L["INFO"] = "|cFFd8de35MoneyLooter|r - лёгкий и быстрый аддон для отслеживания добычи, созданный Will0w7."
   L["TSM_NOT_AVAILABLE"] = "|cFFd8de35Money Looter:|r TSM недоступен."
   L["TSM_CUSTOM_STRING_NOT_VALID"] =
   "|cFFd8de35Money Looter:|r Следующая пользовательская строка TSM недействительна и не была установлена: "
-  L["TSM_CUSTOM_STRING_VALID"] = "|cFFd8de35Money Looter:|r Следующая пользовательская строка TSM действительна и была установлена: "
+  L["TSM_CUSTOM_STRING_VALID"] =
+  "|cFFd8de35Money Looter:|r Следующая пользовательская строка TSM действительна и была установлена: "
   L["TSM_CUSTOM_STRING"] = "|cFFd8de35Money Looter:|r Использование следующей пользовательской строки TSM: "
   L["NEW_DB_VERSION"] = "|cFFd8de35Money Looter:|r Обнаружена новая версия базы данных, обновление..."
   L["DB_UPDATED"] = "|cFFd8de35Money Looter:|r База данных успешно обновлена!"
@@ -58,7 +60,8 @@ Locales.ruRU = function()
   L["MPRICE_COIN_G"] = "Золото"
   L["MPRICE_COIN_S"] = "Серебро"
   L["MPRICE_COIN_C"] = "Медная"
-  L["FORCE_VENDOR_PRICE_ENABLED"] = "|cFFd8de35Money Looter:|r Принудительное включение цены продавца. Использование только цены продажи продавца."
+  L["FORCE_VENDOR_PRICE_ENABLED"] =
+  "|cFFd8de35Money Looter:|r Принудительное включение цены продавца. Использование только цены продажи продавца."
   L["FORCE_VENDOR_PRICE_DISABLED"] = "|cFFd8de35Money Looter:|r Принудительное отключение цены продавца."
   return L
 end

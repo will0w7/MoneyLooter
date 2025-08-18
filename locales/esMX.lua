@@ -9,11 +9,11 @@ Locales.esMX = function()
   L["START"] = "Comenzar"
   L["CONTINUE"] = "Continuar"
   L["PAUSE"] = "Pausar"
-  L["RESET"] = "Reset"
+  L["RESET"] = "Reiniciar"
   L["TIME_LABEL"] = "Tiempo:"
   L["GOLD_LABEL"] = "Oro:"
   L["ITEMS_LABEL"] = "Objetos:"
-  L["GPH_LABEL"] = "OPH:"
+  L["GPH_LABEL"] = "GPH:"
   L["PRICIEST_LABEL"] = "Más valioso:"
   L["USAGE"] = [[====== |cFFd8de35Información de uso de MoneyLooter|r ======
   |cFF36e8e6/ml|r: Alterna entre mostrar y ocultar
@@ -21,7 +21,7 @@ Locales.esMX = function()
   |cFF36e8e6/ml|r |cFFf1f488show|r: Muestra MoneyLooter
   |cFF36e8e6/ml|r |cFFf1f488hide|r: Oculta MoneyLooter
   |cFF36e8e6/ml|r |cFFf1f488info|r: Muestra información sobre el addon
-  |cFF36e8e6/ml|r |cFFf1f488custom "Custom TSM String"|r: Establece una cadena TSM custom que será usada para calcular el precio. Si está vacía, se devuelve la cadena que está siendo usada.
+  |cFF36e8e6/ml|r |cFFf1f488custom 'custom TSM string'|r: Establece una cadena TSM custom que será usada para calcular el precio. Si está vacía, se devuelve la cadena que está siendo usada.
     Ejemplos: /ml custom dbmarket
               /ml custom
   |cFF36e8e6/ml|r |cFFf1f488mprice 'value'|r: Sets the minimum price threshold for a given quality.
@@ -59,7 +59,8 @@ Locales.esMX = function()
   L["MPRICE_COIN_G"] = "Oro"
   L["MPRICE_COIN_S"] = "Plata"
   L["MPRICE_COIN_C"] = "Cobre"
-  L["FORCE_VENDOR_PRICE_ENABLED"] = "|cFFd8de35Money Looter:|r Forzar precio de venta de mercader habilitado. Se usarán solo los precios de venta del mercader."
+  L["FORCE_VENDOR_PRICE_ENABLED"] =
+  "|cFFd8de35Money Looter:|r Forzar precio de venta de mercader habilitado. Se usarán solo los precios de venta del mercader."
   L["FORCE_VENDOR_PRICE_DISABLED"] = "|cFFd8de35Money Looter:|r Forzar precio de venta de mercader deshabilitado."
   return L
 end
