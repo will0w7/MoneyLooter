@@ -4,6 +4,22 @@
 
 A lightweight and blazingly-fast 🦀 World of Warcraft addon designed to track your gold farms. Track both raw gold and the gold value of looted items thanks to amazing addons like Auctionator or TradeSkillMaster, with reload protection so you don't need to worry about disconnections.
 
+## New in 1.8: Performance improvements, internal profiler and cache system
+
+**EMA‑based GPH calculation:** GPH (Gold Per Hour) is now computed with an EMA (Exponential Moving Average), smoothing spikes. During the first 30 seconds, an adaptive alpha is applied in the calculation to prevent sudden spikes.
+
+**Two new cache systems:**
+- **Item cache:** A cache that persists only during the active session (a /reload clears it) and dramatically reduces calls to WoW’s internal APIs.
+- **Price cache:** A cache that also persists only during the active session but has a **one‑hour** expiration time. It prevents unnecessary calls to other addons APIs, as price updates are uncommon during farming sessions. To purge the cache, simply run **_/reload_** to delete it completely.
+
+These caching systems trade a small amount of extra memory for significant performance gains.
+
+**Core refactor:** A general refactor was performed on the addon, mainly in the Core module. This brings performance improvements and simplifies the code for easier maintenance.
+
+**Internal profiler:** I can now track performance regressions and improvements reliably (and everyone can, just use /ml profiler to toggle on/off the profiler).
+
+**Translations:** Translations were added for languages that previously had no localization. They were generated with gpt‑oss. While not perfect, providing them is better than nothing (esES, esMX, enUS, ruRU already had manual translations).
+
 ## New in 1.5: OribosExchange, RECrystallized and Auctioneer
 
 Added support for OribosExchange, RECrystallized and Auctioneer.
