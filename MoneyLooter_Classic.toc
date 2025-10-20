@@ -1,4 +1,4 @@
-## Interface: 11507
+## Interface: 11507, 11508
 ## Version: @project-version@
 ## Title: MoneyLooter
 ## Author: Will0w7
