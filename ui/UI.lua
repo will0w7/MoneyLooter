@@ -167,8 +167,15 @@ local function CreateLootScrollBox(parent)
     scrollBox:SetResizable(true)
 
     scrollBox.ScrollBar = CreateFrame("EventFrame", nil, scrollBox, "MinimalScrollBar")
+    scrollBox.ElementFactory = function(factory)
+        factory("ML_ItemScroll", function(button, elementData)
+            button:Init(elementData)
+        end)
+    end
+    -- scrollBox.ElementFactory = {}
     scrollBox.DataProvider = DataProvider.CreateDataProvider()
     scrollBox.ScrollView = CreateScrollBoxListLinearView()
+    scrollBox.ScrollView:SetElementFactory(scrollBox.ElementFactory)
     scrollBox.ScrollView:SetDataProvider(scrollBox.DataProvider)
 
     ---@param frame Frame

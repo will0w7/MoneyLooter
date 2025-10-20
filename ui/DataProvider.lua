@@ -24,6 +24,10 @@ local Event = DataProviderMixin.Event
 local OnInsert = Event.OnInsert
 local OnSizeChanged = Event.OnSizeChanged
 
+function DataProviderMixin:IsVirtual()
+    return false;
+end
+
 function DataProviderMixin:Enumerate(indexBegin, indexEnd)
     return CreateTableEnumerator(self.collection, indexBegin, indexEnd);
 end
