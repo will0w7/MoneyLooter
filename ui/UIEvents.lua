@@ -87,6 +87,14 @@ function UpdateRawMoney()
     UI.MLMainFrame.RawGoldFS:SetText(Utils.GetCoinTextString(Data.GetRawMoney()))
 end
 
+local function formatTime(seconds)
+    local h = math.floor(seconds / 3600)        -- hora total
+    local m = math.floor((seconds % 3600) / 60) -- minutos restantes
+    local s = seconds % 60                      -- segundos restantes
+
+    return string.format("%02d:%02d:%02d", h, m, s)
+end
+
 ---@param time integer
 ---@param rawGold integer
 ---@param itemsGold integer
@@ -95,7 +103,7 @@ end
 function UpdateAllTexts(time, rawGold, itemsGold, gph, priciest)
     Data.SetOldMoney(GetMoney())
     UI.MLMainFrame.StartButton:SetText(Data.GetCurrentStartText())
-    UI.MLMainFrame.TimeFS:SetText(tostring(date("!%X", time)))
+    UI.MLMainFrame.TimeFS:SetText(tostring(formatTime(time)))
     UI.MLMainFrame.RawGoldFS:SetText(Utils.GetCoinTextString(rawGold))
     UI.MLMainFrame.ItemsGoldFS:SetText(Utils.GetCoinTextString(itemsGold))
     UI.MLMainFrame.GPHFS:SetText(Utils.GetCoinTextString(gph))
@@ -103,7 +111,7 @@ function UpdateAllTexts(time, rawGold, itemsGold, gph, priciest)
 end
 
 local function UpdateTexts()
-    UI.MLMainFrame.TimeFS:SetText(tostring(date("!%X", Data.AddOneToTimer())))
+    UI.MLMainFrame.TimeFS:SetText(tostring(formatTime(Data.AddOneToTimer())))
     UI.MLMainFrame.GPHFS:SetText(Utils.GetCoinTextString(Data.CalcGPH()))
 end
 
@@ -278,6 +286,37 @@ local function ParseMinPrice(msg)
         tostring(qual)))
 end
 
+local function ParseTime(msg)
+    local _, time = string.split(" ", msg, 2)
+    if time == nil or strlenutf8(time) < 1 then
+        print(_G.MONEYLOOTER_L_TIME_ERROR)
+        return 0
+    end
+    local hours = nil
+    local minutes = nil
+    local seconds = nil
+    if string.find(time, "h") then
+        hours, time = string.split("h", time, 2)
+    end
+    if string.find(time, "m") then
+        minutes, time = string.split("m", time, 2)
+    end
+    if string.find(time, "s") then
+        seconds = string.split("s", time, 2)
+    end
+    local total = tonumber(0)
+    if seconds ~= nil then
+        total = total + tonumber(seconds)
+    end
+    if minutes ~= nil then
+        total = total + (tonumber(minutes) * 60)
+    end
+    if hours ~= nil then
+        total = total + (tonumber(hours) * 60 * 60)
+    end
+    return total
+end
+
 local function slash(msg, _)
     local mainVisible = Data.IsVisible()
     if msg == "show" or (msg == "" and not mainVisible) then
@@ -292,6 +331,16 @@ local function slash(msg, _)
             print(_G.MONEYLOOTER_L_FORCE_VENDOR_PRICE_ENABLED)
         else
             print(_G.MONEYLOOTER_L_FORCE_VENDOR_PRICE_DISABLED)
+        end
+    elseif string.sub(msg, 1, 7) == "addtime" then
+        local time = ParseTime(msg)
+        if time > 0 then
+            Data.AddXToTimer(time)
+        end
+    elseif string.sub(msg, 1, 7) == "subtime" then
+        local time = ParseTime(msg)
+        if time > 0 then
+            Data.SubXFromTimer(time)
         end
     elseif string.sub(msg, 1, 6) == "custom" then
         ParseCustomString(msg)

@@ -218,6 +218,20 @@ function Data.AddOneToTimer()
     return MoneyLooterDB.Timer
 end
 
+---@param time integer
+function Data.AddXToTimer(time)
+    MoneyLooterDB.Timer = MoneyLooterDB.Timer + time
+end
+
+---@param time integer
+function Data.SubXFromTimer(time)
+    if MoneyLooterDB.Timer - time >= 0 then
+        MoneyLooterDB.Timer = MoneyLooterDB.Timer - time
+    else
+        MoneyLooterDB.Timer = 0
+    end
+end
+
 ---@return string
 function Data.GetCurrentStartText()
     return MoneyLooterDB.CurrentStartText
