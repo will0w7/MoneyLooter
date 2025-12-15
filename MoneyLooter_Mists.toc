@@ -1,4 +1,4 @@
-## Interface: 50502
+## Interface: 50502, 50503
 ## Version: @project-version@
 ## Title: MoneyLooter
 ## Author: Will0w7
