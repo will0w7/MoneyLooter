@@ -1,43 +1,43 @@
 {
-  "diagnostics.disable": [
-    "lowercase-global",
-    "deprecated",
-    "undefined-field",
-    "param-type-mismatch"
-  ],
-  "diagnostics.globals": [
-    "Auctionator",
-    "SetItemRef",
-    "OnHyperlinkEnter",
-    "OnHyperlinkLeave",
-    "TSM_API",
-    "SlashCmdList",
-    "LOOT_ITEM_SELF",
-    "LOOT_ITEM_SELF_MULTIPLE",
-    "LOOT_ITEM_PUSHED_SELF",
-    "LOOT_ITEM_PUSHED_SELF_MULTIPLE",
-    "LOOT_ITEM",
-    "LOOT_ITEM_MULTIPLE",
-    "LOOT_ITEM_PUSHED",
-    "LOOT_ITEM_PUSHED_MULTIPLE",
-    "ScrollUtil",
-    "CreateDataProvider",
-    "CreateScrollBoxListLinearView",
-    "CreateAnchor",
-    "LOOT_ITEM_CREATED_SELF_MULTIPLE",
-    "LOOT_ITEM_CREATED_SELF",
-    "ERR_QUEST_REWARD_MONEY_S",
-    "OEMarketInfo",
-    "GetAddOnMetadata",
-    "RECrystallize_PriceCheck",
-    "GetItemInfoFromHyperlink",
-    "GetUnitName",
-    "WOW_PROJECT_MISTS_CLASSIC",
-    "Auctioneer",
-    "CreateTableEnumerator"
-  ],
-  "runtime.version": "Lua 5.1",
-  "workspace.ignoreDir": [
-    ".vscode"
-  ]
+    "diagnostics.disable": [
+        "lowercase-global",
+        "deprecated",
+        "undefined-field",
+        "param-type-mismatch"
+    ],
+    "diagnostics.globals": [
+        "Auctionator",
+        "SetItemRef",
+        "OnHyperlinkEnter",
+        "OnHyperlinkLeave",
+        "TSM_API",
+        "SlashCmdList",
+        "LOOT_ITEM_SELF",
+        "LOOT_ITEM_SELF_MULTIPLE",
+        "LOOT_ITEM_PUSHED_SELF",
+        "LOOT_ITEM_PUSHED_SELF_MULTIPLE",
+        "LOOT_ITEM",
+        "LOOT_ITEM_MULTIPLE",
+        "LOOT_ITEM_PUSHED",
+        "LOOT_ITEM_PUSHED_MULTIPLE",
+        "ScrollUtil",
+        "CreateDataProvider",
+        "CreateScrollBoxListLinearView",
+        "CreateAnchor",
+        "LOOT_ITEM_CREATED_SELF_MULTIPLE",
+        "LOOT_ITEM_CREATED_SELF",
+        "ERR_QUEST_REWARD_MONEY_S",
+        "OEMarketInfo",
+        "GetAddOnMetadata",
+        "RECrystallize_PriceCheck",
+        "GetItemInfoFromHyperlink",
+        "GetUnitName",
+        "WOW_PROJECT_MISTS_CLASSIC",
+        "Auctioneer",
+        "CreateTableEnumerator"
+    ],
+    "runtime.version": "Lua 5.1",
+    "workspace.ignoreDir": [
+        ".vscode"
+    ]
 }

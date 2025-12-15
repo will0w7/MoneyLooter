@@ -326,27 +326,25 @@ function Data.SetScrollLootFrameVisible(visible)
     end
 end
 
---- Calculates GPH using an EMA (Exponential Moving Average) with an adaptive alpha.
---- Alpha ramps up from 0 to 0.1 over the first 30s to prevent early spikes.
 ---@return integer
 function Data.CalcGPH()
     local total = MoneyLooterDB.TotalMoney
     local timer = MoneyLooterDB.Timer
 
-    local base_alpha = 0.1
-    local warmup_seconds = 30
-    local alpha = base_alpha * math.min(1, timer / warmup_seconds)
+    local baseAlpha = 0.1
+    local warmupSeconds = 30
+    local alpha = baseAlpha * math.min(1, timer / warmupSeconds)
 
-    local current_rate = 0
+    local currentRate = 0
     if total > 0 and timer > 0 then
-        current_rate = (total / timer) * 3600
+        currentRate = (total / timer) * 3600
     end
 
     if not MoneyLooterDB.EMA_GPH then
         MoneyLooterDB.EMA_GPH = 0
     end
 
-    MoneyLooterDB.EMA_GPH = alpha * current_rate + (1 - alpha) * MoneyLooterDB.EMA_GPH
+    MoneyLooterDB.EMA_GPH = alpha * currentRate + (1 - alpha) * MoneyLooterDB.EMA_GPH
     return math.floor(MoneyLooterDB.EMA_GPH)
 end
 

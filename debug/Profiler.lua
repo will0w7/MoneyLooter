@@ -39,13 +39,13 @@ function Profiler.RealMeasure(label, func, ...)
 end
 
 local function noop() end
-local function nopMeasure(_, func, ...) return func(...) end
+local function noopMeasure(_, func, ...) return func(...) end
 
 local function setProfilerEnabled(enabled)
     Profiler.enabled = enabled
     Profiler.Start   = enabled and Profiler.RealStart or noop
     Profiler.Stop    = enabled and Profiler.RealStop or noop
-    Profiler.Measure = enabled and Profiler.RealMeasure or nopMeasure
+    Profiler.Measure = enabled and Profiler.RealMeasure or noopMeasure
 end
 
 function Profiler.ToggleProfiler()

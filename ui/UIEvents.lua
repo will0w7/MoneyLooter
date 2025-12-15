@@ -22,7 +22,7 @@ local Profiler = MoneyLooter.Profiler
 local GetAddOnMetadata = C_AddOns.GetAddOnMetadata or GetAddOnMetadata
 local GetMoney, CreateFrame = GetMoney, CreateFrame
 ----------------------------------------------------------------------------------------
-local date, tostring = date, tostring
+local tostring = tostring
 local strlenutf8, print, tonumber, ipairs, unpack = strlenutf8, print, tonumber, ipairs, unpack
 ----------------------------------------------------------------------------------------
 
@@ -88,9 +88,9 @@ function UpdateRawMoney()
 end
 
 local function formatTime(seconds)
-    local h = math.floor(seconds / 3600)        -- hora total
-    local m = math.floor((seconds % 3600) / 60) -- minutos restantes
-    local s = seconds % 60                      -- segundos restantes
+    local h = math.floor(seconds / 3600)
+    local m = math.floor((seconds % 3600) / 60)
+    local s = seconds % 60
 
     return string.format("%02d:%02d:%02d", h, m, s)
 end
@@ -169,7 +169,6 @@ UI.MLMainFrame.MinimizeCheck:SetScript(Constants.Events.OnClick, function(_, but
         if mode then
             PopulateSummary()
         else
-            -- UpdateLoot()
             PopulateLoot()
         end
     end
