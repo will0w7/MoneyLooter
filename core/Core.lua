@@ -228,7 +228,7 @@ local function ChatMsgLoot(_, _, lootString, _, _, _, playerName2)
 
     local totalPrice = price * quantity
     local itemID = Profiler.Measure("GetCachedItemInfoFromHyperlink", GetCachedItemInfoFromHyperlink, itemLink)
-    local i = LootedItem.new(itemID, itemLink, price, quantity)
+    local i = LootedItem.new(Data.NextLootEntryId(), itemID, itemLink, price, quantity)
     Data.InsertLootedItem(i)
     Data.InsertSummaryItem(i)
     Data.AddItemsMoney(totalPrice)

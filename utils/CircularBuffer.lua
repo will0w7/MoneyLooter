@@ -70,3 +70,42 @@ function CBFunctions.ToTable(buffer)
     end
     return result
 end
+
+---@param buffer ML_CircularBuffer
+---@param itemToRemove ML_Item
+function CBFunctions.RemoveItem(buffer, itemToRemove)
+    if not buffer or not itemToRemove or buffer.size == 0 then return end
+
+    local removed = false
+    local newBuffer = {}
+    local newSize = 0
+
+    local i = buffer.tail
+    for _ = 1, buffer.size do
+        local item = buffer.buffer[i]
+        if item then
+            local isSame = item.entryId ~= nil and item.entryId == itemToRemove.entryId
+
+            if isSame and not removed then
+                removed = true
+            else
+                newBuffer[newSize + 1] = item
+                newSize = newSize + 1
+            end
+        end
+        i = (i % buffer.capacity) + 1
+    end
+
+    for j = 1, newSize do
+        buffer.buffer[j] = newBuffer[j]
+    end
+    for j = newSize + 1, buffer.size do
+        buffer.buffer[j] = nil
+    end
+
+    buffer.size = newSize
+    buffer.head = newSize + 1
+    buffer.tail = 1
+
+    return removed
+end

@@ -65,5 +65,6 @@ Locales.ruRU = function()
     L["FORCE_VENDOR_PRICE_DISABLED"] = "|cFFd8de35Money Looter:|r Принудительное отключение цены продавца."
     L["TIME_ERROR"] =
     "|cFFd8de35Money Looter:|r Формат неверен, он должен быть: 00h00m00s или любая комбинация времени (5m30s)."
+    L["REMOVE_CONFIRM"] = "Удалить %s из общей суммы сессии?"
     return L
 end

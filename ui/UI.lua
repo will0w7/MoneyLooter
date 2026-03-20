@@ -6,6 +6,8 @@ local Constants = MoneyLooter.Constants
 local Utils = MoneyLooter.Utils
 ---@class ML_DataProvider
 local DataProvider = MoneyLooter.DataProvider
+---@class ML_Data
+local Data = MoneyLooter.Data
 
 ---@class ML_UI
 local UI = {}
@@ -30,11 +32,45 @@ function ML_ItemScrollMixin:OnClick()
     GameTooltip:Show()
 end
 
+function ML_ItemScrollMixin:OnRemoveClick()
+    local elementData = self:GetElementData()
+    if not elementData then return end
+    if Data.IsSummaryMode() or elementData.entryId == nil then return end
+
+    StaticPopupDialogs["MONEYLOOTER_REMOVE_ITEM"] = {
+        text = string.format(_G.MONEYLOOTER_L_REMOVE_CONFIRM, elementData.itemLink),
+        button1 = _G.YES,
+        button2 = _G.NO,
+        OnAccept = function()
+            self:RemoveItemFromSession(elementData)
+        end,
+        timeout = 0,
+        whileDead = true,
+        hideOnEscape = true,
+        preferredIndex = 3,
+    }
+    StaticPopup_Show("MONEYLOOTER_REMOVE_ITEM")
+end
+
+function ML_ItemScrollMixin:RemoveItemFromSession(elementData)
+    if not elementData then return end
+    if not Data.RemoveLootedItem(elementData) then return end
+
+    UI.MLMainFrame.ItemsGoldFS:SetText(Utils.GetCoinTextString(Data.GetItemsMoney()))
+    UI.MLMainFrame.GPHFS:SetText(Utils.GetCoinTextString(Data.CalcGPH()))
+    UI.MLMainFrame.PriciestFS:SetText(Utils.GetCoinTextString(Data.GetPriciest()))
+
+    if MoneyLooter.UIEvents and MoneyLooter.UIEvents.RefreshLootList then
+        MoneyLooter.UIEvents.RefreshLootList()
+    end
+end
+
 function ML_ItemScrollMixin:Init()
     ---@class ML_Item
     local elementData = self:GetElementData()
     self:SetRightText(elementData.value * elementData.quantity)
     self:SetLeftText(elementData.id, elementData.quantity, elementData.itemLink)
+    self.RemoveButton:SetShown(not Data.IsSummaryMode() and elementData.entryId ~= nil)
     self:TrimDataProvider()
 end
 
