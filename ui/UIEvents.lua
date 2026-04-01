@@ -18,9 +18,6 @@ local SMFunctions = MoneyLooter.SMFunctions
 ---@class ML_Profiler
 local Profiler = MoneyLooter.Profiler
 
-MoneyLooter.UIEvents = MoneyLooter.UIEvents or {}
-local UIEvents = MoneyLooter.UIEvents
-
 ----------------------------------------------------------------------------------------
 local GetAddOnMetadata = C_AddOns.GetAddOnMetadata or GetAddOnMetadata
 local GetMoney, CreateFrame = GetMoney, CreateFrame
@@ -75,8 +72,6 @@ local function PopulateLoot()
     Profiler.Stop("PopulateLoot")
 end
 
-UIEvents.RefreshLootList = PopulateLoot
-
 local function PopulateSummary()
     Profiler.Start("PopulateSummary")
     UI.MLMainFrame.ScrollBoxLoot.DataProvider:Flush()
@@ -87,7 +82,17 @@ local function PopulateSummary()
     Profiler.Stop("PopulateSummary")
 end
 
-UIEvents.RefreshSummaryList = PopulateSummary
+Data.RegisterCallback("OnItemRemoved", function()
+    UI.MLMainFrame.ItemsGoldFS:SetText(Utils.GetCoinTextString(Data.GetItemsMoney()))
+    UI.MLMainFrame.GPHFS:SetText(Utils.GetCoinTextString(Data.CalcGPH()))
+    UI.MLMainFrame.PriciestFS:SetText(Utils.GetCoinTextString(Data.GetPriciest()))
+
+    if not Data.IsSummaryMode() then
+        PopulateLoot()
+    else
+        PopulateSummary()
+    end
+end)
 
 -----------------------------------------------------------------------------------------------
 function UpdateRawMoney()

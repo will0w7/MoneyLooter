@@ -21,6 +21,27 @@ MoneyLooter.Data = Data
 local CBCapacity = 100
 Data.CBCapacity = CBCapacity
 
+Data.callbacks = {}
+
+---@param eventName string
+---@param callback function
+function Data.RegisterCallback(eventName, callback)
+    if not Data.callbacks[eventName] then
+        Data.callbacks[eventName] = {}
+    end
+    table.insert(Data.callbacks[eventName], callback)
+end
+
+---@param eventName string
+---@param ... any
+function Data.TriggerEvent(eventName, ...)
+    if Data.callbacks[eventName] then
+        for _, cb in ipairs(Data.callbacks[eventName]) do
+            cb(...)
+        end
+    end
+end
+
 Data.DB = {}
 
 ---@class ML_DB
@@ -252,6 +273,7 @@ function Data.RemoveLootedItem(lootedItem)
     if not removed then return false end
 
     RebuildSummaryAndDerivedData()
+    Data.TriggerEvent("OnItemRemoved", lootedItem)
     return true
 end
 

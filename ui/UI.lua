@@ -54,15 +54,7 @@ end
 
 function ML_ItemScrollMixin:RemoveItemFromSession(elementData)
     if not elementData then return end
-    if not Data.RemoveLootedItem(elementData) then return end
-
-    UI.MLMainFrame.ItemsGoldFS:SetText(Utils.GetCoinTextString(Data.GetItemsMoney()))
-    UI.MLMainFrame.GPHFS:SetText(Utils.GetCoinTextString(Data.CalcGPH()))
-    UI.MLMainFrame.PriciestFS:SetText(Utils.GetCoinTextString(Data.GetPriciest()))
-
-    if MoneyLooter.UIEvents and MoneyLooter.UIEvents.RefreshLootList then
-        MoneyLooter.UIEvents.RefreshLootList()
-    end
+    Data.RemoveLootedItem(elementData)
 end
 
 function ML_ItemScrollMixin:Init()
