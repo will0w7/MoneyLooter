@@ -109,3 +109,40 @@ function CBFunctions.RemoveItem(buffer, itemToRemove)
 
     return removed
 end
+
+---@param buffer ML_CircularBuffer
+---@param itemID number
+function CBFunctions.RemoveAllItemsByID(buffer, itemID)
+    if not buffer or itemID == nil or buffer.size == 0 then return end
+
+    local removed = false
+    local newBuffer = {}
+    local newSize = 0
+
+    local i = buffer.tail
+    for _ = 1, buffer.size do
+        local item = buffer.buffer[i]
+        if item then
+            if item.id == itemID then
+                removed = true
+            else
+                newBuffer[newSize + 1] = item
+                newSize = newSize + 1
+            end
+        end
+        i = (i % buffer.capacity) + 1
+    end
+
+    for j = 1, newSize do
+        buffer.buffer[j] = newBuffer[j]
+    end
+    for j = newSize + 1, buffer.size do
+        buffer.buffer[j] = nil
+    end
+
+    buffer.size = newSize
+    buffer.head = newSize + 1
+    buffer.tail = 1
+
+    return removed
+end

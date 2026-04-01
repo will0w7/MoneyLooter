@@ -61,5 +61,6 @@ Locales.zhTW = function()
     L["FORCE_VENDOR_PRICE_DISABLED"] = "|cFFd8de35Money Looter:|r 強制使用商人價格已關閉。"
     L["TIME_ERROR"] =
     "|cFFd8de35Money Looter:|r 時間格式錯誤，必須為: 00h00m00s 或任意時間組合(5m30s)"
+    L["ALL"] = "全部"
     return L
 end

@@ -66,5 +66,6 @@ Locales.ruRU = function()
     L["TIME_ERROR"] =
     "|cFFd8de35Money Looter:|r Формат неверен, он должен быть: 00h00m00s или любая комбинация времени (5m30s)."
     L["REMOVE_CONFIRM"] = "Удалить %s из общей суммы сессии?"
+    L["ALL"] = "ВСЕ"
     return L
 end

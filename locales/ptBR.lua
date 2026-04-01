@@ -63,5 +63,6 @@ Locales.ptBR = function()
     L["FORCE_VENDOR_PRICE_DISABLED"] = "|cFFd8de35Money Looter:|r Preço do vendedor forçado desativado."
     L["TIME_ERROR"] =
     "|cFFd8de35Money Looter:|r O formato está incorreto, deve ser: 00h00m00s ou qualquer combinação de tempo (5m30s)"
+    L["ALL"] = "TODOS"
     return L
 end

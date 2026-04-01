@@ -61,5 +61,6 @@ Locales.zhCN = function()
     L["FORCE_VENDOR_PRICE_DISABLED"] = "|cFFd8de35Money Looter:|r 强制使用商人价格已关闭。"
     L["TIME_ERROR"] =
     "|cFFd8de35Money Looter:|r 时间格式错误，必须为: 00h00m00s 或任意时间组合(5m30s)"
+    L["ALL"] = "全部"
     return L
 end

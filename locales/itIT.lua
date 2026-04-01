@@ -66,5 +66,6 @@ Locales.itIT = function()
     L["FORCE_VENDOR_PRICE_DISABLED"] = "|cFFd8de35Money Looter:|r Prezzo venditore forzato disattivato."
     L["TIME_ERROR"] =
     "|cFFd8de35Money Looter:|r Il formato è errato, deve essere: 00h00m00s o qualsiasi combinazione di tempo (5m30s)"
+    L["ALL"] = "TUTTI"
     return L
 end

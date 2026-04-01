@@ -277,6 +277,16 @@ function Data.RemoveLootedItem(lootedItem)
     return true
 end
 
+---@param itemID number
+function Data.RemoveAllLootedItemsByID(itemID)
+    if itemID == nil or MoneyLooterDB.ListLootedItems == nil then return end
+    local removed = CBFunctions.RemoveAllItemsByID(MoneyLooterDB.ListLootedItems, itemID)
+    if not removed then return end
+
+    RebuildSummaryAndDerivedData()
+    Data.TriggerEvent("OnItemRemoved")
+end
+
 ---@return integer
 function Data.GetListLootedItemsCount()
     return CBFunctions.GetSize(MoneyLooterDB.ListLootedItems)

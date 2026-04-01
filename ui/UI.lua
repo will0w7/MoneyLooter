@@ -35,14 +35,25 @@ end
 function ML_ItemScrollMixin:OnRemoveClick()
     local elementData = self:GetElementData()
     if not elementData then return end
-    if Data.IsSummaryMode() or elementData.entryId == nil then return end
+    if not Data.IsSummaryMode() and elementData.entryId == nil then return end
+
+    local confirmText = ""
+    if Data.IsSummaryMode() then
+        confirmText = string.format(_G.MONEYLOOTER_L_REMOVE_CONFIRM, "|cffff0000" .. _G.MONEYLOOTER_L_ALL .. "|r " .. elementData.itemLink)
+    else
+        confirmText = string.format(_G.MONEYLOOTER_L_REMOVE_CONFIRM, elementData.itemLink)
+    end
 
     StaticPopupDialogs["MONEYLOOTER_REMOVE_ITEM"] = {
-        text = string.format(_G.MONEYLOOTER_L_REMOVE_CONFIRM, elementData.itemLink),
+        text = confirmText,
         button1 = _G.YES,
         button2 = _G.NO,
         OnAccept = function()
-            self:RemoveItemFromSession(elementData)
+            if Data.IsSummaryMode() then
+                Data.RemoveAllLootedItemsByID(elementData.id)
+            else
+                self:RemoveItemFromSession(elementData)
+            end
         end,
         timeout = 0,
         whileDead = true,
@@ -62,7 +73,7 @@ function ML_ItemScrollMixin:Init()
     local elementData = self:GetElementData()
     self:SetRightText(elementData.value * elementData.quantity)
     self:SetLeftText(elementData.id, elementData.quantity, elementData.itemLink)
-    self.RemoveButton:SetShown(not Data.IsSummaryMode() and elementData.entryId ~= nil)
+    self.RemoveButton:SetShown(Data.IsSummaryMode() or elementData.entryId ~= nil)
     self:TrimDataProvider()
 end
 

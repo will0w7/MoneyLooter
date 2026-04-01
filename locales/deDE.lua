@@ -66,5 +66,6 @@ Locales.deDE = function()
     L["FORCE_VENDOR_PRICE_DISABLED"] = "|cFFd8de35Money Looter:|r Händlerpreis zwingend deaktiviert."
     L["TIME_ERROR"] =
     "|cFFd8de35Money Looter:|r Das Format ist falsch, es muss sein: 00h00m00s oder eine beliebige Zeitkombination (5m30s)"
+    L["ALL"] = "ALLE"
     return L
 end

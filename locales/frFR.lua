@@ -66,5 +66,6 @@ Locales.frFR = function()
     L["TIME_ERROR"] =
     "|cFFd8de35Money Looter:|r Le format est incorrect, il doit être: 00h00m00s ou n'importe quelle combinaison de temps (5m30s)"
     L["REMOVE_CONFIRM"] = "Retirer %s du total de la session ?"
+    L["ALL"] = "TOUS"
     return L
 end

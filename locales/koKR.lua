@@ -61,5 +61,6 @@ Locales.koKR = function()
     L["FORCE_VENDOR_PRICE_DISABLED"] = "|cFFd8de35Money Looter:|r 판매자 가격 강제 비활성화."
     L["TIME_ERROR"] =
     "|cFFd8de35Money Looter:|r 형식이 잘못되었습니다. 올바른 형식은 00h00m00s 또는 시간 조합(5m30s)이어야 합니다."
+    L["ALL"] = "모두"
     return L
 end

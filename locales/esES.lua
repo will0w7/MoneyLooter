@@ -65,5 +65,6 @@ Locales.esES = function()
     L["TIME_ERROR"] =
     "|cFFd8de35Money Looter:|r El formato es incorrecto, debe ser: 00h00m00s o cualquier combinación de tiempo (5m30s)"
     L["REMOVE_CONFIRM"] = "¿Eliminar %s del total de la sesión?"
+    L["ALL"] = "TODOS"
     return L
 end
