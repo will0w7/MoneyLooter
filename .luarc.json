@@ -34,7 +34,9 @@
         "GetUnitName",
         "WOW_PROJECT_MISTS_CLASSIC",
         "Auctioneer",
-        "CreateTableEnumerator"
+        "CreateTableEnumerator",
+        "StaticPopupDialogs",
+        "StaticPopup_Show"
     ],
     "runtime.version": "Lua 5.1",
     "workspace.ignoreDir": [

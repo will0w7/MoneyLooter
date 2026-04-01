@@ -73,4 +73,6 @@ globals = {
     "CreateFromMixins",
     "Mixin",
     "CallbackRegistryMixin"
+    "StaticPopupDialogs",
+    "StaticPopup_Show"
 }
