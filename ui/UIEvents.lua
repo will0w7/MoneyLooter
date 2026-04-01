@@ -129,11 +129,11 @@ function UpdateLoot(item)
         UI.MLMainFrame.ScrollBoxLoot.DataProvider:SingleInsert(item)
         Profiler.Stop("UpdateLoot.SingleInsert")
         UI.MLMainFrame.ScrollBoxLoot:ScrollToEnd()
-        UI.MLMainFrame.PriciestFS:SetText(Utils.GetCoinTextString(Data.GetPriciest()))
-        UI.MLMainFrame.ItemsGoldFS:SetText(Utils.GetCoinTextString(Data.GetItemsMoney()))
     else
         PopulateSummary()
     end
+    UI.MLMainFrame.PriciestFS:SetText(Utils.GetCoinTextString(Data.GetPriciest()))
+    UI.MLMainFrame.ItemsGoldFS:SetText(Utils.GetCoinTextString(Data.GetItemsMoney()))
 end
 
 -----------------------------------------------------------------------------------------------
