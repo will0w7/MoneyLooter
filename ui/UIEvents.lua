@@ -18,6 +18,9 @@ local SMFunctions = MoneyLooter.SMFunctions
 ---@class ML_Profiler
 local Profiler = MoneyLooter.Profiler
 
+MoneyLooter.UIEvents = MoneyLooter.UIEvents or {}
+local UIEvents = MoneyLooter.UIEvents
+
 ----------------------------------------------------------------------------------------
 local GetAddOnMetadata = C_AddOns.GetAddOnMetadata or GetAddOnMetadata
 local GetMoney, CreateFrame = GetMoney, CreateFrame
@@ -72,6 +75,8 @@ local function PopulateLoot()
     Profiler.Stop("PopulateLoot")
 end
 
+UIEvents.RefreshLootList = PopulateLoot
+
 local function PopulateSummary()
     Profiler.Start("PopulateSummary")
     UI.MLMainFrame.ScrollBoxLoot.DataProvider:Flush()
@@ -81,6 +86,8 @@ local function PopulateSummary()
     Profiler.Stop("PopulateSummary.BulkInsert")
     Profiler.Stop("PopulateSummary")
 end
+
+UIEvents.RefreshSummaryList = PopulateSummary
 
 -----------------------------------------------------------------------------------------------
 function UpdateRawMoney()
@@ -365,6 +372,7 @@ function WatcherOnEvent(_, event, arg1)
     elseif event == Constants.Events.PlayerEnteringWorld and MoneyLooter.addonLoaded then
         Data.UpdateMLDB()
         Data.UpdateMLXDB()
+        Data.RebuildDerivedData()
         PopulateData()
         PopulateLoot()
         watcher:UnregisterEvent(Constants.Events.PlayerEnteringWorld)

@@ -21,9 +21,13 @@ local pairs = pairs
 ---@param quantity integer
 ---@param value integer
 function SMFunctions.Insert(summary, itemLink, quantity, value)
+    if summary == nil then
+        summary = {}
+    end
+
     if summary[itemLink] == nil then
         summary[itemLink] = { [1] = quantity, [2] = value }
-        return
+        return summary
     end
     summary[itemLink][1] = summary[itemLink][1] + quantity
     summary[itemLink][2] = value
@@ -44,7 +48,7 @@ function SMFunctions.GetTopItems(summary)
         local itemID = GetItemInfoFromHyperlink(itemLink)
         local quantity = item[1]
         local value = item[2]
-        local lootedItem = LootedItem.new(itemID, itemLink, value, quantity)
+        local lootedItem = LootedItem.new(nil, itemID, itemLink, value, quantity)
         table.insert(topItems, lootedItem)
     end
     table.sort(topItems, function(a, b)

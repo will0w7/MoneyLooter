@@ -63,5 +63,6 @@ Locales.enUS = function()
     L["FORCE_VENDOR_PRICE_DISABLED"] = "|cFFd8de35Money Looter:|r Force vendor price disabled."
     L["TIME_ERROR"] =
     "|cFFd8de35Money Looter:|r The format is incorrect, it must be: 00h00m00s or any time combination (5m30s)"
+    L["REMOVE_CONFIRM"] = "Remove %s from session total?"
     return L
 end

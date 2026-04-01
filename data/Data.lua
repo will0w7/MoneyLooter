@@ -40,6 +40,7 @@ Data.DB.prototype = {
     PriciestLink = "",
     ListLootedItems = CircularBuffer,
     Summary = Summary,
+    NextEntryId = 1,
     ----------------------------------------------
     Timer = 0,
     ----------------------------------------------
@@ -148,9 +149,29 @@ function Data.AddItemsMoney(money)
 end
 
 ---@param money integer
+function Data.SubItemsMoney(money)
+    if money ~= nil then
+        MoneyLooterDB.ItemsMoney = MoneyLooterDB.ItemsMoney - money
+        if MoneyLooterDB.ItemsMoney < 0 then
+            MoneyLooterDB.ItemsMoney = 0
+        end
+    end
+end
+
+---@param money integer
 function Data.AddTotalMoney(money)
     if money ~= nil then
         MoneyLooterDB.TotalMoney = MoneyLooterDB.TotalMoney + money
+    end
+end
+
+---@param money integer
+function Data.SubTotalMoney(money)
+    if money ~= nil then
+        MoneyLooterDB.TotalMoney = MoneyLooterDB.TotalMoney - money
+        if MoneyLooterDB.TotalMoney < 0 then
+            MoneyLooterDB.TotalMoney = 0
+        end
     end
 end
 
@@ -184,10 +205,54 @@ function Data.GetListLootedItems()
     return MoneyLooterDB.ListLootedItems
 end
 
+---@return integer
+function Data.NextLootEntryId()
+    local nextId = MoneyLooterDB.NextEntryId or 1
+    MoneyLooterDB.NextEntryId = nextId + 1
+    return nextId
+end
+
 ---@param lootedItem ML_Item
 function Data.InsertLootedItem(lootedItem)
     if lootedItem == nil then return end
     CBFunctions.Push(MoneyLooterDB.ListLootedItems, lootedItem)
+end
+
+local function RebuildSummaryAndDerivedData()
+    local itemsMoney = 0
+    local priciest = 0
+    local priciestLink = ""
+    local summary = {}
+
+    if MoneyLooterDB.ListLootedItems ~= nil then
+        CBFunctions.Iterate(MoneyLooterDB.ListLootedItems, function(lootedItem)
+            local itemTotal = lootedItem.value * lootedItem.quantity
+            itemsMoney = itemsMoney + itemTotal
+            summary = SMFunctions.InsertLootedItem(summary, lootedItem)
+
+            if lootedItem.value > priciest then
+                priciest = lootedItem.value
+                priciestLink = lootedItem.itemLink
+            end
+        end)
+    end
+
+    MoneyLooterDB.ItemsMoney = itemsMoney
+    MoneyLooterDB.TotalMoney = MoneyLooterDB.RawMoney + itemsMoney
+    MoneyLooterDB.Priciest = priciest
+    MoneyLooterDB.PriciestLink = priciestLink
+    MoneyLooterDB.Summary = summary
+end
+
+---@param lootedItem ML_Item
+---@return boolean
+function Data.RemoveLootedItem(lootedItem)
+    if lootedItem == nil or lootedItem.entryId == nil or MoneyLooterDB.ListLootedItems == nil then return false end
+    local removed = CBFunctions.RemoveItem(MoneyLooterDB.ListLootedItems, lootedItem)
+    if not removed then return false end
+
+    RebuildSummaryAndDerivedData()
+    return true
 end
 
 ---@return integer
@@ -398,6 +463,10 @@ function Data.GetSummary()
         MoneyLooterDB.Summary = {}
     end
     return MoneyLooterDB.Summary
+end
+
+function Data.RebuildDerivedData()
+    RebuildSummaryAndDerivedData()
 end
 
 ---@return boolean State_ForceVendorPrice
