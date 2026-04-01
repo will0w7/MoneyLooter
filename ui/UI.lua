@@ -127,7 +127,10 @@ end
 ---@param parent ML_MainFrame
 ---@return table|Button
 local function CreateCloseButton(parent)
-    return CreateFrame("Button", nil, parent, "ML_CloseButton")
+    local btn = CreateFrame("Button", nil, parent, "ML_CloseButton")
+    btn:SetSize(20, 20)
+    btn:SetPoint("TOPLEFT", parent, "TOPLEFT", 5, -5)
+    return btn
 end
 
 ---@param parent ML_MainFrame

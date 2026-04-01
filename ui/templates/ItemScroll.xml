@@ -13,7 +13,7 @@
                 <FontString parentKey="RightLabel" inherits="GameFontHighlight" justifyH="RIGHT">
                     <Size y="20" />
                     <Anchors>
-                        <Anchor point="RIGHT" x="-25" />
+                        <Anchor point="RIGHT" x="-20" />
                     </Anchors>
                 </FontString>
                 <FontString parentKey="LeftLabel" inherits="GameFontHighlight" wordwrap="false"
@@ -28,16 +28,11 @@
             </Layer>
         </Layers>
         <Frames>
-            <Button parentKey="RemoveButton">
-                <Size x="16" y="16"/>
+            <Button parentKey="RemoveButton" inherits="ML_CloseButton">
+                <Size x="8" y="8" />
                 <Anchors>
-                    <Anchor point="RIGHT" x="-5"/>
+                    <Anchor point="RIGHT" x="-5" />
                 </Anchors>
-                <Layers>
-                    <Layer level="ARTWORK">
-                        <Texture setAllPoints="true" file="Interface\Buttons\UI-Panel-MinimizeButton-Up"/>
-                    </Layer>
-                </Layers>
                 <Scripts>
                     <OnClick>
                         self:GetParent():OnRemoveClick()
