@@ -72,7 +72,7 @@ globals = {
     "CreateTableEnumerator",
     "CreateFromMixins",
     "Mixin",
-    "CallbackRegistryMixin"
+    "CallbackRegistryMixin",
     "StaticPopupDialogs",
     "StaticPopup_Show"
 }
