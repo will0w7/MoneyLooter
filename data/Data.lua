@@ -13,12 +13,14 @@ local CBFunctions = MoneyLooter.CBFunctions
 local Summary = MoneyLooter.Summary
 ---@class ML_SMFunctions
 local SMFunctions = MoneyLooter.SMFunctions
+---@class ML_Profiler
+local Profiler = MoneyLooter.Profiler
 
 ---@class ML_Data
 local Data = {}
 MoneyLooter.Data = Data
 
-local CBCapacity = 100
+local CBCapacity = 200
 Data.CBCapacity = CBCapacity
 
 Data.callbacks = {}
@@ -37,7 +39,7 @@ end
 function Data.TriggerEvent(eventName, ...)
     if Data.callbacks[eventName] then
         for _, cb in ipairs(Data.callbacks[eventName]) do
-            cb(...)
+            Profiler.Measure("MoneyLooterEvent." .. eventName, cb, ...)
         end
     end
 end
@@ -273,7 +275,7 @@ function Data.RemoveLootedItem(lootedItem)
     if not removed then return false end
 
     RebuildSummaryAndDerivedData()
-    Data.TriggerEvent("OnItemRemoved", lootedItem)
+    Data.TriggerEvent("OnItemRemoved")
     return true
 end
 

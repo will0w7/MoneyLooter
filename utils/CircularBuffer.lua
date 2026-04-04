@@ -74,75 +74,76 @@ end
 ---@param buffer ML_CircularBuffer
 ---@param itemToRemove ML_Item
 function CBFunctions.RemoveItem(buffer, itemToRemove)
-    if not buffer or not itemToRemove or buffer.size == 0 then return end
+    if not buffer or not itemToRemove or buffer.size == 0 then return false end
 
-    local removed = false
-    local newBuffer = {}
-    local newSize = 0
+    local read_i = buffer.tail
+    local found_step = 0
 
-    local i = buffer.tail
-    for _ = 1, buffer.size do
-        local item = buffer.buffer[i]
-        if item then
-            local isSame = item.entryId ~= nil and item.entryId == itemToRemove.entryId
-
-            if isSame and not removed then
-                removed = true
-            else
-                newBuffer[newSize + 1] = item
-                newSize = newSize + 1
-            end
+    for step = 1, buffer.size do
+        local item = buffer.buffer[read_i]
+        if item and item.entryId ~= nil and item.entryId == itemToRemove.entryId then
+            found_step = step
+            break
         end
-        i = (i % buffer.capacity) + 1
+        read_i = (read_i % buffer.capacity) + 1
     end
 
-    for j = 1, newSize do
-        buffer.buffer[j] = newBuffer[j]
-    end
-    for j = newSize + 1, buffer.size do
-        buffer.buffer[j] = nil
+    if found_step == 0 then return false end
+
+    local write_i = read_i
+    read_i = (read_i % buffer.capacity) + 1
+
+    for _ = found_step + 1, buffer.size do
+        buffer.buffer[write_i] = buffer.buffer[read_i]
+        write_i = (write_i % buffer.capacity) + 1
+        read_i = (read_i % buffer.capacity) + 1
     end
 
-    buffer.size = newSize
-    buffer.head = newSize + 1
-    buffer.tail = 1
+    buffer.buffer[write_i] = nil
+    buffer.size = buffer.size - 1
+    buffer.head = write_i
 
-    return removed
+    return true
 end
 
 ---@param buffer ML_CircularBuffer
 ---@param itemID number
 function CBFunctions.RemoveAllItemsByID(buffer, itemID)
-    if not buffer or itemID == nil or buffer.size == 0 then return end
+    if not buffer or itemID == nil or buffer.size == 0 then return false end
 
     local removed = false
-    local newBuffer = {}
+    local read_i = buffer.tail
+    local write_i = buffer.tail
     local newSize = 0
 
-    local i = buffer.tail
     for _ = 1, buffer.size do
-        local item = buffer.buffer[i]
-        if item then
-            if item.id == itemID then
-                removed = true
-            else
-                newBuffer[newSize + 1] = item
-                newSize = newSize + 1
+        local item = buffer.buffer[read_i]
+
+        if item and item.id == itemID then
+            removed = true
+        else
+            if read_i ~= write_i then
+                buffer.buffer[write_i] = item
             end
+            write_i = (write_i % buffer.capacity) + 1
+            newSize = newSize + 1
         end
-        i = (i % buffer.capacity) + 1
+
+        read_i = (read_i % buffer.capacity) + 1
     end
 
-    for j = 1, newSize do
-        buffer.buffer[j] = newBuffer[j]
-    end
-    for j = newSize + 1, buffer.size do
-        buffer.buffer[j] = nil
-    end
+    if removed then
+        local itemsRemoved = buffer.size - newSize
+        local cleanup_i = write_i
 
-    buffer.size = newSize
-    buffer.head = newSize + 1
-    buffer.tail = 1
+        for _ = 1, itemsRemoved do
+            buffer.buffer[cleanup_i] = nil
+            cleanup_i = (cleanup_i % buffer.capacity) + 1
+        end
+
+        buffer.size = newSize
+        buffer.head = write_i
+    end
 
     return removed
 end
