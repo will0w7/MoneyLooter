@@ -39,7 +39,8 @@ function ML_ItemScrollMixin:OnRemoveClick()
 
     local confirmText = ""
     if Data.IsSummaryMode() then
-        confirmText = string.format(_G.MONEYLOOTER_L_REMOVE_CONFIRM, "|cffff0000" .. _G.MONEYLOOTER_L_ALL .. "|r " .. elementData.itemLink)
+        confirmText = string.format(_G.MONEYLOOTER_L_REMOVE_CONFIRM,
+            "|cffff0000" .. _G.MONEYLOOTER_L_ALL .. "|r " .. elementData.itemLink)
     else
         confirmText = string.format(_G.MONEYLOOTER_L_REMOVE_CONFIRM, elementData.itemLink)
     end
@@ -50,7 +51,7 @@ function ML_ItemScrollMixin:OnRemoveClick()
         button2 = _G.NO,
         OnAccept = function()
             if Data.IsSummaryMode() then
-                Data.RemoveAllLootedItemsByID(elementData.id)
+                self:RemoveItemsFromSession(elementData)
             else
                 self:RemoveItemFromSession(elementData)
             end
@@ -61,6 +62,11 @@ function ML_ItemScrollMixin:OnRemoveClick()
         preferredIndex = 3,
     }
     StaticPopup_Show("MONEYLOOTER_REMOVE_ITEM")
+end
+
+function ML_ItemScrollMixin:RemoveItemsFromSession(elementData)
+    if not elementData then return end
+    Data.RemoveAllLootedItemsByID(elementData)
 end
 
 function ML_ItemScrollMixin:RemoveItemFromSession(elementData)

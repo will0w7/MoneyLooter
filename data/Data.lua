@@ -39,7 +39,7 @@ end
 function Data.TriggerEvent(eventName, ...)
     if Data.callbacks[eventName] then
         for _, cb in ipairs(Data.callbacks[eventName]) do
-            Profiler.Measure("MoneyLooterEvent." .. eventName, cb, ...)
+            Profiler.Measure("MLEvent." .. eventName, cb, ...)
         end
     end
 end
@@ -241,32 +241,6 @@ function Data.InsertLootedItem(lootedItem)
     CBFunctions.Push(MoneyLooterDB.ListLootedItems, lootedItem)
 end
 
-local function RebuildSummaryAndDerivedData()
-    local itemsMoney = 0
-    local priciest = 0
-    local priciestLink = ""
-    local summary = {}
-
-    if MoneyLooterDB.ListLootedItems ~= nil then
-        CBFunctions.Iterate(MoneyLooterDB.ListLootedItems, function(lootedItem)
-            local itemTotal = lootedItem.value * lootedItem.quantity
-            itemsMoney = itemsMoney + itemTotal
-            summary = SMFunctions.InsertLootedItem(summary, lootedItem)
-
-            if lootedItem.value > priciest then
-                priciest = lootedItem.value
-                priciestLink = lootedItem.itemLink
-            end
-        end)
-    end
-
-    MoneyLooterDB.ItemsMoney = itemsMoney
-    MoneyLooterDB.TotalMoney = MoneyLooterDB.RawMoney + itemsMoney
-    MoneyLooterDB.Priciest = priciest
-    MoneyLooterDB.PriciestLink = priciestLink
-    MoneyLooterDB.Summary = summary
-end
-
 ---@param lootedItem ML_Item
 ---@return boolean
 function Data.RemoveLootedItem(lootedItem)
@@ -274,19 +248,30 @@ function Data.RemoveLootedItem(lootedItem)
     local removed = CBFunctions.RemoveItem(MoneyLooterDB.ListLootedItems, lootedItem)
     if not removed then return false end
 
-    RebuildSummaryAndDerivedData()
-    Data.TriggerEvent("OnItemRemoved")
+    local itemTotal = lootedItem.value * lootedItem.quantity
+    Data.SubItemsMoney(itemTotal)
+    Data.SubTotalMoney(itemTotal)
+
+    Data.TriggerEvent("ML_OnItemRemoved")
     return true
 end
 
----@param itemID number
-function Data.RemoveAllLootedItemsByID(itemID)
-    if itemID == nil or MoneyLooterDB.ListLootedItems == nil then return end
-    local removed = CBFunctions.RemoveAllItemsByID(MoneyLooterDB.ListLootedItems, itemID)
+---@param lootedItem ML_Item
+function Data.RemoveAllLootedItemsByID(lootedItem)
+    if lootedItem == nil or lootedItem.id == nil or MoneyLooterDB.ListLootedItems == nil then return false end
+    local removed = CBFunctions.RemoveAllItemsByID(MoneyLooterDB.ListLootedItems, lootedItem)
+    print(removed)
     if not removed then return end
 
-    RebuildSummaryAndDerivedData()
-    Data.TriggerEvent("OnItemRemoved")
+    -- TODO: remove
+    print("value: " .. lootedItem.value)
+    print("quantity: " .. lootedItem.quantity)
+
+    local itemTotal = lootedItem.value * lootedItem.quantity
+    Data.SubItemsMoney(itemTotal)
+    Data.SubTotalMoney(itemTotal)
+
+    Data.TriggerEvent("ML_OnItemRemoved")
 end
 
 ---@return integer
@@ -492,15 +477,18 @@ function Data.InsertSummaryItem(lootedItem)
     MoneyLooterDB.Summary = SMFunctions.InsertLootedItem(MoneyLooterDB.Summary, lootedItem)
 end
 
+function Data.ResetSummary()
+    if MoneyLooterDB.Summary ~= nil then
+        table.wipe(MoneyLooterDB.Summary)
+    end
+    MoneyLooterDB.Summary = {}
+end
+
 function Data.GetSummary()
     if MoneyLooterDB.Summary == nil then
         MoneyLooterDB.Summary = {}
     end
     return MoneyLooterDB.Summary
-end
-
-function Data.RebuildDerivedData()
-    RebuildSummaryAndDerivedData()
 end
 
 ---@return boolean State_ForceVendorPrice

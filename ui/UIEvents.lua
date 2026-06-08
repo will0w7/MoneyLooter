@@ -72,7 +72,15 @@ local function PopulateLoot()
     Profiler.Stop("PopulateLoot")
 end
 
+local function RebuildSummary()
+    Profiler.Start("RebuildSummary")
+    Data.ResetSummary()
+    CBFunctions.Iterate(Data.GetListLootedItems(), Data.InsertSummaryItem)
+    Profiler.Stop("RebuildSummary")
+end
+
 local function PopulateSummary()
+    RebuildSummary()
     Profiler.Start("PopulateSummary")
     UI.MLMainFrame.ScrollBoxLoot.DataProvider:Flush()
     local topItems = SMFunctions.GetTopItems(Data.GetSummary())
@@ -82,10 +90,8 @@ local function PopulateSummary()
     Profiler.Stop("PopulateSummary")
 end
 
-Data.RegisterCallback("OnItemRemoved", function()
-    UI.MLMainFrame.ItemsGoldFS:SetText(Utils.GetCoinTextString(Data.GetItemsMoney()))
-    UI.MLMainFrame.GPHFS:SetText(Utils.GetCoinTextString(Data.CalcGPH()))
-    UI.MLMainFrame.PriciestFS:SetText(Utils.GetCoinTextString(Data.GetPriciest()))
+Data.RegisterCallback("ML_OnItemRemoved", function()
+    UpdateAllTexts(Data.GetTimer(), Data.GetRawMoney(), Data.GetItemsMoney(), Data.CalcGPH(), Data.GetPriciest())
 
     if not Data.IsSummaryMode() then
         PopulateLoot()
@@ -377,7 +383,6 @@ function WatcherOnEvent(_, event, arg1)
     elseif event == Constants.Events.PlayerEnteringWorld and MoneyLooter.addonLoaded then
         Data.UpdateMLDB()
         Data.UpdateMLXDB()
-        Data.RebuildDerivedData()
         PopulateData()
         PopulateLoot()
         watcher:UnregisterEvent(Constants.Events.PlayerEnteringWorld)

@@ -107,9 +107,9 @@ function CBFunctions.RemoveItem(buffer, itemToRemove)
 end
 
 ---@param buffer ML_CircularBuffer
----@param itemID number
-function CBFunctions.RemoveAllItemsByID(buffer, itemID)
-    if not buffer or itemID == nil or buffer.size == 0 then return false end
+---@param itemToRemove ML_Item
+function CBFunctions.RemoveAllItemsByID(buffer, itemToRemove)
+    if not buffer or not itemToRemove or buffer.size == 0 then return false end
 
     local removed = false
     local read_i = buffer.tail
@@ -119,7 +119,7 @@ function CBFunctions.RemoveAllItemsByID(buffer, itemID)
     for _ = 1, buffer.size do
         local item = buffer.buffer[read_i]
 
-        if item and item.id == itemID then
+        if item and item.id ~= nil and item.id == itemToRemove.id then
             removed = true
         else
             if read_i ~= write_i then
@@ -133,10 +133,10 @@ function CBFunctions.RemoveAllItemsByID(buffer, itemID)
     end
 
     if removed then
-        local itemsRemoved = buffer.size - newSize
+        local emptySlots = buffer.capacity - newSize
         local cleanup_i = write_i
 
-        for _ = 1, itemsRemoved do
+        for _ = 1, emptySlots do
             buffer.buffer[cleanup_i] = nil
             cleanup_i = (cleanup_i % buffer.capacity) + 1
         end
