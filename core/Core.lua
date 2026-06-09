@@ -222,7 +222,7 @@ local function ChatMsgLoot(_, _, lootString, _, _, _, playerName2)
     if playerName ~= playerNameFromPN2 then return end
 
     local itemLink, quantity = GetLinkAndQuantityLoot(lootString)
-    if itemLink == nil then return end
+    if itemLink == nil or itemLink:find("battlepet:") then return end
 
     local price = Profiler.Measure("CalculatePrice", CalculatePrice, itemLink)
 
