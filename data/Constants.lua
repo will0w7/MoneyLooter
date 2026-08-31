@@ -55,6 +55,13 @@ Constants.Inputs = {
     RightButton = "RightButton"
 }
 
+---@class ML_Constants_UIScale
+Constants.UIScale = {
+    Min = 0.5,
+    Max = 2,
+    Step = 0.1
+}
+
 -- Loot global patterns for self
 -- string.match returns itemLink, quantity || itemLink
 Constants.PATTERNS_SELF = {

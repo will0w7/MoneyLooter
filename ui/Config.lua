@@ -100,27 +100,44 @@ local function CreateConfigFrame()
     frame.TitleBar = CreateTitleBar(frame)
     frame.CloseButton = CreateCloseButton(frame)
 
+    -- UI scale
+    CreateLabel(frame, -40, _G.MONEYLOOTER_L_CONFIG_UI_SCALE)
+    frame.ScaleMinusButton = CreateFrame("Button", nil, frame, "ML_Button")
+    frame.ScaleMinusButton:SetSize(24, 20)
+    frame.ScaleMinusButton:SetPoint("TOPLEFT", frame, "TOPLEFT", 110, -40)
+    frame.ScaleMinusButton:SetText("-")
+
+    frame.ScaleValue = frame:CreateFontString(nil, "OVERLAY", Constants.Strings.FONT)
+    frame.ScaleValue:SetSize(44, 20)
+    frame.ScaleValue:SetJustifyH("CENTER")
+    frame.ScaleValue:SetPoint("LEFT", frame.ScaleMinusButton, "RIGHT", 6, 0)
+
+    frame.ScalePlusButton = CreateFrame("Button", nil, frame, "ML_Button")
+    frame.ScalePlusButton:SetSize(24, 20)
+    frame.ScalePlusButton:SetPoint("LEFT", frame.ScaleValue, "RIGHT", 6, 0)
+    frame.ScalePlusButton:SetText("+")
+
     -- Toggles
-    frame.ForceVendorCheck = CreateCheckboxRow(frame, -40, _G.MONEYLOOTER_L_CONFIG_FORCE_VENDOR_PRICE)
-    frame.UseDisenchantCheck = CreateCheckboxRow(frame, -66, _G.MONEYLOOTER_L_CONFIG_USE_DISENCHANT_VALUE)
+    frame.ForceVendorCheck = CreateCheckboxRow(frame, -70, _G.MONEYLOOTER_L_CONFIG_FORCE_VENDOR_PRICE)
+    frame.UseDisenchantCheck = CreateCheckboxRow(frame, -96, _G.MONEYLOOTER_L_CONFIG_USE_DISENCHANT_VALUE)
 
     -- TSM custom string
-    CreateLabel(frame, -98, _G.MONEYLOOTER_L_CONFIG_TSM_STRING)
+    CreateLabel(frame, -128, _G.MONEYLOOTER_L_CONFIG_TSM_STRING)
     frame.TSMEditBox = CreateFrame("EditBox", nil, frame, "InputBoxTemplate")
-    frame.TSMEditBox:SetPoint("TOPLEFT", frame, "TOPLEFT", 14, -120)
+    frame.TSMEditBox:SetPoint("TOPLEFT", frame, "TOPLEFT", 14, -150)
     frame.TSMEditBox:SetSize(250, 20)
     frame.TSMEditBox:SetAutoFocus(false)
 
-    frame.TSMValidateButton = CreateTextButton(frame, -148, 14, _G.MONEYLOOTER_L_CONFIG_VALIDATE)
-    frame.TSMResetButton = CreateTextButton(frame, -148, 130, _G.MONEYLOOTER_L_CONFIG_RESET)
-    frame.TSMStatus = CreateLabel(frame, -176, "")
+    frame.TSMValidateButton = CreateTextButton(frame, -178, 14, _G.MONEYLOOTER_L_CONFIG_VALIDATE)
+    frame.TSMResetButton = CreateTextButton(frame, -178, 130, _G.MONEYLOOTER_L_CONFIG_RESET)
+    frame.TSMStatus = CreateLabel(frame, -206, "")
 
     -- Minimum prices
-    CreateLabel(frame, -214, _G.MONEYLOOTER_L_CONFIG_MIN_PRICES)
+    CreateLabel(frame, -244, _G.MONEYLOOTER_L_CONFIG_MIN_PRICES)
 
     frame.MinPriceFrames = {}
     for i = 1, 4 do
-        local yOffset = -236 - (i - 1) * 28
+        local yOffset = -266 - (i - 1) * 28
         CreateLabel(frame, yOffset, _G["MONEYLOOTER_L_MPRICE_QUALITY_" .. i])
         local moneyInput = CreateFrame("Frame", "MONEYLOOTER_CONFIG_MINPRICE" .. i, frame,
             "MoneyInputFrameTemplate")
@@ -129,7 +146,7 @@ local function CreateConfigFrame()
     end
 
     -- Save button
-    frame.SaveStatus = CreateLabel(frame, -360, "")
+    frame.SaveStatus = CreateLabel(frame, -405, "")
     frame.SaveButton = CreateFrame("Button", nil, frame, "ML_Button")
     frame.SaveButton:SetSize(352, 22)
     frame.SaveButton:SetPoint("BOTTOM", frame, "BOTTOM", 0, 14)
@@ -157,6 +174,23 @@ local function CreateConfigFrame()
         frame.TSMEditBox:SetText(Data.GetCurrentTSMString())
     end
 
+    local currentScale = 1
+
+    local function RefreshScale()
+        frame.ScaleValue:SetText(string.format("%.1f", currentScale))
+    end
+
+    local function ChangeScale(delta)
+        currentScale = currentScale + delta
+        currentScale = math.floor(currentScale * 10 + 0.5) / 10
+        if currentScale < Constants.UIScale.Min then
+            currentScale = Constants.UIScale.Min
+        elseif currentScale > Constants.UIScale.Max then
+            currentScale = Constants.UIScale.Max
+        end
+        RefreshScale()
+    end
+
     local function Populate()
         frame.ForceVendorCheck:SetChecked(Data.GetForceVendorPrice())
         frame.UseDisenchantCheck:SetChecked(Data.GetUseDisenchantValue())
@@ -164,6 +198,8 @@ local function CreateConfigFrame()
             MoneyInputFrame_SetCopper(frame.MinPriceFrames[i], MIN_PRICE_GETTERS[i]())
         end
         RefreshTSMFields()
+        currentScale = Data.GetUIScale()
+        RefreshScale()
     end
 
     ---@return string|nil
@@ -208,6 +244,8 @@ local function CreateConfigFrame()
         for i = 1, 4 do
             MIN_PRICE_SETTERS[i](MoneyInputFrame_GetCopper(frame.MinPriceFrames[i]))
         end
+        Data.SetUIScale(currentScale)
+        Config.ApplyScale()
 
         frame.SaveStatus:SetText(_G.MONEYLOOTER_L_CONFIG_SAVED)
         frame.SaveStatus:SetTextColor(0.3, 1, 0.3)
@@ -220,6 +258,12 @@ local function CreateConfigFrame()
         frame.TSMStatus:SetText("")
     end)
     frame.SaveButton:SetScript(Constants.Events.OnClick, Save)
+    frame.ScaleMinusButton:SetScript(Constants.Events.OnClick, function()
+        ChangeScale(-Constants.UIScale.Step)
+    end)
+    frame.ScalePlusButton:SetScript(Constants.Events.OnClick, function()
+        ChangeScale(Constants.UIScale.Step)
+    end)
 
     frame:SetScript(Constants.Events.OnDragStart, frame.StartMoving)
     frame:SetScript(Constants.Events.OnDragStop, frame.StopMovingOrSizing)
@@ -234,6 +278,12 @@ end
 
 ---@class ML_ConfigFrame : Frame
 UI.MLConfigFrame = CreateConfigFrame()
+
+function Config.ApplyScale()
+    local scale = Data.GetUIScale()
+    UI.MLMainFrame:SetScale(scale)
+    UI.MLConfigFrame:SetScale(scale)
+end
 
 function Config.Show()
     UI.MLConfigFrame:Show()

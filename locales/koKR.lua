@@ -11,6 +11,7 @@ Locales.koKR = function()
     L["PAUSE"] = "일시정지"
     L["RESET"] = "초기화"
     L["CONFIG_TITLE"] = "MoneyLooter Configuration"
+    L["CONFIG_UI_SCALE"] = "UI Scale"
     L["CONFIG_FORCE_VENDOR_PRICE"] = "Force vendor price"
     L["CONFIG_USE_DISENCHANT_VALUE"] = "Use disenchant value"
     L["CONFIG_TSM_STRING"] = "TSM custom string"

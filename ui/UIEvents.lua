@@ -50,6 +50,8 @@ end
 local function PopulateData()
     Constants.Strings.ADDON_VERSION = GetAddOnMetadata(Constants.Strings.ADDON_NAME, "Version")
 
+    MoneyLooter.Config.ApplyScale()
+
     UpdateAllTexts(Data.GetTimer(), Data.GetRawMoney(), Data.GetItemsMoney(), Data.CalcGPH(), Data.GetPriciest())
 
     SetScrollVisible(Data.IsScrollLootFrameVisible())

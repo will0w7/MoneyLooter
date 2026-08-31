@@ -99,7 +99,9 @@ Data.XDB.prototype = {
     MinPrice1 = 0,
     MinPrice2 = 0,
     MinPrice3 = 0,
-    MinPrice4 = 0
+    MinPrice4 = 0,
+    ------------------------------
+    UIScale = 1
 }
 
 Data.XDB.mt = {}
@@ -511,4 +513,20 @@ end
 ---@param value boolean
 function Data.SetUseDisenchantValue(value)
     MoneyLooterDB.UseDisenchantValue = value
+end
+
+---@return number
+function Data.GetUIScale()
+    return MoneyLooterXDB.UIScale
+end
+
+---@param scale number
+function Data.SetUIScale(scale)
+    if scale == nil then return end
+    if scale < Constants.UIScale.Min then
+        scale = Constants.UIScale.Min
+    elseif scale > Constants.UIScale.Max then
+        scale = Constants.UIScale.Max
+    end
+    MoneyLooterXDB.UIScale = scale
 end

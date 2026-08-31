@@ -11,6 +11,7 @@ Locales.esES = function()
     L["PAUSE"] = "Pausar"
     L["RESET"] = "Reiniciar"
     L["CONFIG_TITLE"] = "Configuración de MoneyLooter"
+    L["CONFIG_UI_SCALE"] = "Escala de UI"
     L["CONFIG_FORCE_VENDOR_PRICE"] = "Forzar precio de vendedor"
     L["CONFIG_USE_DISENCHANT_VALUE"] = "Usar valor de desencantar"
     L["CONFIG_TSM_STRING"] = "Cadena TSM personalizada"
