@@ -170,12 +170,14 @@ UI.MLMainFrame.ResetButton:SetScript(Constants.Events.OnClick, function()
     if Data.IsRunning() then UnregisterStartEvents() end
 
     local forceVendor = Data.GetForceVendorPrice()
+    local disenchant = Data.GetUseDisenchantValue()
     local scrollVisible = Data.IsScrollLootFrameVisible()
     Data.ResetMoneyLooterDB()
     UpdateAllTexts(0, 0, 0, 0, 0)
     UI.MLMainFrame.ScrollBoxLoot.DataProvider:Flush()
     Data.SetScrollLootFrameVisible(scrollVisible)
     Data.SetForceVendorPrice(forceVendor)
+    Data.SetUseDisenchantValue(disenchant)
 end)
 
 UI.MLMainFrame.MinimizeCheck:SetScript(Constants.Events.OnClick, function(_, button)

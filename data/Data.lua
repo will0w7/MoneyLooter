@@ -69,7 +69,8 @@ Data.DB.prototype = {
     ----------------------------------------------
     CurrentStartText = _G.MONEYLOOTER_L_START,
     ----------------------------------------------
-    ForceVendorPrice = false
+    ForceVendorPrice = false,
+    UseDisenchantValue = false
 }
 
 Data.DB.mt = {}
@@ -98,9 +99,7 @@ Data.XDB.prototype = {
     MinPrice1 = 0,
     MinPrice2 = 0,
     MinPrice3 = 0,
-    MinPrice4 = 0,
-    ------------------------------
-    UseDisenchantValue = false
+    MinPrice4 = 0
 }
 
 Data.XDB.mt = {}
@@ -506,10 +505,10 @@ function Data.SetForceVendorPrice(force)
 end
 
 function Data.GetUseDisenchantValue()
-    return MoneyLooterXDB.UseDisenchantValue
+    return MoneyLooterDB.UseDisenchantValue
 end
 
 ---@param value boolean
 function Data.SetUseDisenchantValue(value)
-    MoneyLooterXDB.UseDisenchantValue = value
+    MoneyLooterDB.UseDisenchantValue = value
 end
