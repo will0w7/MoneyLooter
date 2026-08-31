@@ -28,11 +28,14 @@ Constants.Events = {
     OnDragStart = "OnDragStart",
     OnDragStop = "OnDragStop",
     OnHide = "OnHide",
+    OnShow = "OnShow",
     OnLoad = "OnLoad",
     OnEnter = "OnEnter",
     OnLeave = "OnLeave",
     OnLoop = "OnLoop",
     OnClick = "OnClick",
+    OnMouseDown = "OnMouseDown",
+    OnMouseUp = "OnMouseUp",
     --------------------------------------
     ChatMsgMoney = "CHAT_MSG_MONEY",
     ChatMsgLoot = "CHAT_MSG_LOOT",
@@ -44,6 +47,12 @@ Constants.Events = {
     PInteractionManagerHide = "PLAYER_INTERACTION_MANAGER_FRAME_HIDE",
     --------------------------------------
     ChatMsgSystem = "CHAT_MSG_SYSTEM"
+}
+
+---@class ML_Constants_Inputs
+Constants.Inputs = {
+    LeftButton = "LeftButton",
+    RightButton = "RightButton"
 }
 
 -- Loot global patterns for self

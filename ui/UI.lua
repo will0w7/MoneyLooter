@@ -129,6 +129,7 @@ local function CreateTitleBar(parent)
     local titleBar = CreateFrame("Frame", nil, parent, "ML_TitleBar")
     titleBar:SetPoint("TOPLEFT")
     titleBar:SetPoint("TOPRIGHT")
+    titleBar:EnableMouse(true)
     titleBar.Label:SetText(Constants.Strings.TITLE)
     return titleBar
 end
@@ -254,10 +255,10 @@ local function CreateResizeGrip(parent)
     grip:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
     grip:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
 
-    grip:SetScript("OnMouseDown", function(self)
+    grip:SetScript(Constants.Events.OnMouseDown, function(self)
         self:GetParent():StartSizing("BOTTOMRIGHT")
     end)
-    grip:SetScript("OnMouseUp", function(self)
+    grip:SetScript(Constants.Events.OnMouseUp, function(self)
         self:GetParent():StopMovingOrSizing()
     end)
     return grip
@@ -269,7 +270,7 @@ local function CreateMainFrame()
     mainFrame:SetPoint("CENTER")
     mainFrame:EnableMouse(true)
     mainFrame:SetMovable(true)
-    mainFrame:RegisterForDrag("LeftButton")
+    mainFrame:RegisterForDrag(Constants.Inputs.LeftButton)
 
     mainFrame:SetResizable(true)
 

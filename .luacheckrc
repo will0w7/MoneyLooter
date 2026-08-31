@@ -74,5 +74,7 @@ globals = {
     "Mixin",
     "CallbackRegistryMixin",
     "StaticPopupDialogs",
-    "StaticPopup_Show"
+    "StaticPopup_Show",
+    "MoneyInputFrame_GetCopper",
+    "MoneyInputFrame_SetCopper"
 }

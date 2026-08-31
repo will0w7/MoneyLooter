@@ -166,6 +166,20 @@ UI.MLMainFrame.CloseButton:SetScript(Constants.Events.OnClick, function()
     print(_G.MONEYLOOTER_L_CLOSE)
 end)
 
+UI.MLMainFrame.TitleBar:SetScript(Constants.Events.OnMouseDown, function(self, button)
+    if button == Constants.Inputs.RightButton then
+        MoneyLooter.Config.Toggle()
+    else
+        self:GetParent():StartMoving()
+    end
+end)
+
+UI.MLMainFrame.TitleBar:SetScript(Constants.Events.OnMouseUp, function(self, button)
+    if button == Constants.Inputs.LeftButton then
+        self:GetParent():StopMovingOrSizing()
+    end
+end)
+
 UI.MLMainFrame.ResetButton:SetScript(Constants.Events.OnClick, function()
     if Data.IsRunning() then UnregisterStartEvents() end
 
@@ -181,9 +195,9 @@ UI.MLMainFrame.ResetButton:SetScript(Constants.Events.OnClick, function()
 end)
 
 UI.MLMainFrame.MinimizeCheck:SetScript(Constants.Events.OnClick, function(_, button)
-    if button == "LeftButton" then
+    if button == Constants.Inputs.LeftButton then
         SetScrollVisible(not Data.IsScrollLootFrameVisible())
-    elseif button == "RightButton" then
+    elseif button == Constants.Inputs.RightButton then
         local mode = not Data.IsSummaryMode()
         Data.SetSummaryMode(mode)
         if mode then

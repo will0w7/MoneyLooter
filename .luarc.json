@@ -36,7 +36,9 @@
         "Auctioneer",
         "CreateTableEnumerator",
         "StaticPopupDialogs",
-        "StaticPopup_Show"
+        "StaticPopup_Show",
+        "MoneyInputFrame_GetCopper",
+        "MoneyInputFrame_SetCopper"
     ],
     "runtime.version": "Lua 5.1",
     "workspace.ignoreDir": [

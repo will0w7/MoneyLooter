@@ -2,5 +2,6 @@
     <Include file="templates/Manifest.xml" />
     <Script file="DataProvider.lua" />
     <Script file="UI.lua" />
+    <Script file="Config.lua" />
     <Script file="UIEvents.lua" />
 </Ui>
