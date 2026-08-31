@@ -111,10 +111,6 @@ local priceSources = {
 
             if Data.GetUseDisenchantValue() then
                 local disenchant = AUCTIONATOR_API.GetDisenchantPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
-                print("disenchant")
-                print(disenchant)
-                print("value")
-                print(value)
                 if disenchant ~= nil and value ~= nil and disenchant > value then
                     value = disenchant
                 end
