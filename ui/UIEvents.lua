@@ -349,6 +349,18 @@ local function slash(msg, _)
         else
             print(_G.MONEYLOOTER_L_FORCE_VENDOR_PRICE_DISABLED)
         end
+    elseif string.sub(msg, 1, 6) == "custom" then
+        ParseCustomString(msg)
+    elseif string.sub(msg, 1, 6) == "mprice" then
+        ParseMinPrice(msg)
+    elseif string.sub(msg, 1, 10) == "disenchant" then
+        local enable = not Data.GetUseDisenchantValue()
+        Data.SetUseDisenchantValue(enable)
+        if enable then
+            print(_G.MONEYLOOTER_L_USE_DISENCHANT_VALUE_ENABLED)
+        else
+            print(_G.MONEYLOOTER_L_USE_DISENCHANT_VALUE_DISABLED)
+        end
     elseif string.sub(msg, 1, 7) == "addtime" then
         local time = ParseTime(msg)
         if time > 0 then
@@ -359,10 +371,6 @@ local function slash(msg, _)
         if time > 0 then
             Data.SubXFromTimer(time)
         end
-    elseif string.sub(msg, 1, 6) == "custom" then
-        ParseCustomString(msg)
-    elseif string.sub(msg, 1, 6) == "mprice" then
-        ParseMinPrice(msg)
     elseif msg == "profiler" then
         Profiler.ToggleProfiler()
     else

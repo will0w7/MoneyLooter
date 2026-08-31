@@ -36,6 +36,7 @@ Locales.esES = function()
               /ml mprice3 500 g
               /ml mprice4 5 c
       El formato de precio para mprice es un número seguido de g(old), s(ilver) o c(opper) (oro, plata y cobre respectivamente). Si solo indicas un número, se usará oro por defecto.
+      |cFF36e8e6/ml|r |cFFf1f488disenchant|r: Habilita/deshabilita usar el valor de desencatamiento (si es más alto que el valor de venta directo en subasta).
   |cFF36e8e6Versión del addon:|r ]]
     L["WELCOME"] =
     "Bienvenido a |cFFd8de35Money Looter|r! Usa |cFF36e8e6/ml|r |cFFf1f488help|r para ver las opciones del addon."
@@ -66,5 +67,9 @@ Locales.esES = function()
     "|cFFd8de35Money Looter:|r El formato es incorrecto, debe ser: 00h00m00s o cualquier combinación de tiempo (5m30s)"
     L["REMOVE_CONFIRM"] = "¿Eliminar %s del total de la sesión?"
     L["ALL"] = "TODOS"
+    L["USE_DISENCHANT_VALUE_ENABLED"] =
+    "|cFFd8de35Money Looter:|r Usando valor de desencantamiento cuando es más alto que el valor de venta directo en subasta."
+    L["USE_DISENCHANT_VALUE_DISABLED"] =
+    "|cFFd8de35Money Looter:|r Se deja de usar el valor de desencatamiento. Siempre se usará el valor de venta directo en subasta."
     return L
 end

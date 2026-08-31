@@ -36,6 +36,7 @@ Locales.koKR = function()
               /ml mprice3 500 g
               /ml mprice4 5 c
       mprice의 가격 형식은 숫자 뒤에 g(골드), s(실버) 또는 c(코퍼)를 붙입니다. 숫자만 지정하면 골드를 기본값으로 사용합니다.
+      |cFF36e8e6/ml|r |cFFf1f488disenchant|r: Enable/disable the use of the disenchantment value for looted items (if it's higher than the direct auction value).
   |cFF36e8e6애드온 버전:|r ]]
     L["WELCOME"] = "MoneyLooter에 오신 것을 환영합니다! |cFF36e8e6/ml|r |cFFf1f488help|r을(를) 사용해 애드온 옵션을 확인하세요."
     L["CLOSE"] = "|cFF36e8e6/ml|r |cFFf1f488show|r: 다시 표시 |cFFd8de35MoneyLooter|r"
@@ -62,5 +63,9 @@ Locales.koKR = function()
     L["TIME_ERROR"] =
     "|cFFd8de35Money Looter:|r 형식이 잘못되었습니다. 올바른 형식은 00h00m00s 또는 시간 조합(5m30s)이어야 합니다."
     L["ALL"] = "모두"
+    L["USE_DISENCHANT_VALUE_ENABLED"] =
+    "|cFFd8de35Money Looter:|r Using disenchantment value when it is higher than the direct auction price."
+    L["USE_DISENCHANT_VALUE_DISABLED"] =
+    "|cFFd8de35Money Looter:|r Disenchantment value is no longer used. The direct auction price will always be used."
     return L
 end

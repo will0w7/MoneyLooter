@@ -36,6 +36,7 @@ Locales.itIT = function()
               /ml mprice3 500 g
               /ml mprice4 5 c
       Il formato di prezzo per mprice è un numero seguito da g (oro), s (argento) o c (rame). Se si indica solo il numero, viene usato oro per impostazione predefinita.
+      |cFF36e8e6/ml|r |cFFf1f488disenchant|r: Enable/disable the use of the disenchantment value for looted items (if it's higher than the direct auction value).
   |cFF36e8e6Versione dell'addon:|r ]]
     L["WELCOME"] =
     "Benvenuto in |cFFd8de35Money Looter|r! Usa |cFF36e8e6/ml|r |cFFf1f488help|r per le opzioni dell'addon."
@@ -67,5 +68,9 @@ Locales.itIT = function()
     L["TIME_ERROR"] =
     "|cFFd8de35Money Looter:|r Il formato è errato, deve essere: 00h00m00s o qualsiasi combinazione di tempo (5m30s)"
     L["ALL"] = "TUTTI"
+    L["USE_DISENCHANT_VALUE_ENABLED"] =
+    "|cFFd8de35Money Looter:|r Using disenchantment value when it is higher than the direct auction price."
+    L["USE_DISENCHANT_VALUE_DISABLED"] =
+    "|cFFd8de35Money Looter:|r Disenchantment value is no longer used. The direct auction price will always be used."
     return L
 end

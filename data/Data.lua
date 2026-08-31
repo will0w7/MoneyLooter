@@ -99,6 +99,8 @@ Data.XDB.prototype = {
     MinPrice2 = 0,
     MinPrice3 = 0,
     MinPrice4 = 0,
+    ------------------------------
+    UseDisenchantValue = false
 }
 
 Data.XDB.mt = {}
@@ -262,10 +264,6 @@ function Data.RemoveAllLootedItemsByID(lootedItem)
     local removed = CBFunctions.RemoveAllItemsByID(MoneyLooterDB.ListLootedItems, lootedItem)
     print(removed)
     if not removed then return end
-
-    -- TODO: remove
-    print("value: " .. lootedItem.value)
-    print("quantity: " .. lootedItem.quantity)
 
     local itemTotal = lootedItem.value * lootedItem.quantity
     Data.SubItemsMoney(itemTotal)
@@ -505,4 +503,13 @@ end
 ---@param force boolean
 function Data.SetForceVendorPrice(force)
     MoneyLooterDB.ForceVendorPrice = force
+end
+
+function Data.GetUseDisenchantValue()
+    return MoneyLooterXDB.UseDisenchantValue
+end
+
+---@param value boolean
+function Data.SetUseDisenchantValue(value)
+    MoneyLooterXDB.UseDisenchantValue = value
 end

@@ -2,7 +2,15 @@
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-A lightweight and blazingly-fast 🦀 World of Warcraft addon designed to track your gold farms. Track both raw gold and the gold value of looted items thanks to amazing addons like Auctionator or TradeSkillMaster, with reload protection so you don't need to worry about disconnections.
+A lightweight and fast World of Warcraft addon designed to track your gold farms. Track both raw gold and the gold value of looted items thanks to amazing addons like Auctionator or TradeSkillMaster, with reload protection so you don't need to worry about disconnections.
+
+## New in 1.11: Auto pick between disenchant value and auction value (disabled by default)
+
+Now, when enabled (using the toggle **_/ml disenchant_** or **_/moneylooter disenchant_**) the addon is going to pick the highest price between the disenchant value and the _raw_ auction value (just selling the item as is). For now, this is only enabled for Auctionator.
+
+Picking the highest value seems like a logical choice, since no one would disenchant an item with a disenchantment value of 2g and an auction price of 500g. However, I'm open to suggestions.
+
+This setting is account wide.
 
 ## New in 1.8: Performance improvements, internal profiler and cache system
 
@@ -60,14 +68,14 @@ Download the latest release from [Wago](https://addons.wago.io/addons/moneyloote
 
 ## Compatibility Status
 
-|             Version            | Status |
-| ------------------------------ | ------ |
-| Retail                         |   ✅   |
-| Cataclysm Classic              |   ✅   |
-| Classic Era                    |   ✅   |
-| Classic Hardcore               |   ✅   |
-| Season of Discovery            |   ✅   |
-| Mists of Pandaria              |   ✅   |
+| Version             | Status |
+| ------------------- | ------ |
+| Retail              | ✅      |
+| Cataclysm Classic   | ✅      |
+| Classic Era         | ✅      |
+| Classic Hardcore    | ✅      |
+| Season of Discovery | ✅      |
+| Mists of Pandaria   | ✅      |
 
 ✅ = Compatible
 

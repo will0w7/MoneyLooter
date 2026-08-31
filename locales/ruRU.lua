@@ -36,6 +36,7 @@ Locales.ruRU = function()
               /ml mprice3 500 g
               /ml mprice4 5 c
       Формат цены для mprice — это число, за которым следует g(золото), s(серебро) или c(медная). Если указать только число, по умолчанию будет использоваться золото.
+      |cFF36e8e6/ml|r |cFFf1f488disenchant|r: Enable/disable the use of the disenchantment value for looted items (if it's higher than the direct auction value).
   |cFF36e8e6Версия аддона:|r ]]
     L["WELCOME"] =
     "Добро пожаловать в |cFFd8de35Money Looter|r! Используйте |cFF36e8e6/ml|r |cFFf1f488help|r для настроек аддона."
@@ -67,5 +68,9 @@ Locales.ruRU = function()
     "|cFFd8de35Money Looter:|r Формат неверен, он должен быть: 00h00m00s или любая комбинация времени (5m30s)."
     L["REMOVE_CONFIRM"] = "Удалить %s из общей суммы сессии?"
     L["ALL"] = "ВСЕ"
+    L["USE_DISENCHANT_VALUE_ENABLED"] =
+    "|cFFd8de35Money Looter:|r Using disenchantment value when it is higher than the direct auction price."
+    L["USE_DISENCHANT_VALUE_DISABLED"] =
+    "|cFFd8de35Money Looter:|r Disenchantment value is no longer used. The direct auction price will always be used."
     return L
 end

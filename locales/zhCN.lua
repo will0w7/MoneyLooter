@@ -36,6 +36,7 @@ Locales.zhCN = function()
               /ml mprice3 500 g
               /ml mprice4 5 c
       mprice 的价格格式为数字后跟 g(金)、s(银) 或 c 铜)。若仅指定数字，则默认使用金。
+      |cFF36e8e6/ml|r |cFFf1f488disenchant|r: Enable/disable the use of the disenchantment value for looted items (if it's higher than the direct auction value).
   |cFF36e8e6插件版本:|r ]]
     L["WELCOME"] = "欢迎来到 |cFFd8de35Money Looter|r!请使用 |cFF36e8e6/ml|r |cFFf1f488help|r 查看插件选项。"
     L["CLOSE"] = "|cFF36e8e6/ml|r |cFFf1f488show|r: 再次显示 |cFFd8de35MoneyLooter|r"
@@ -62,5 +63,9 @@ Locales.zhCN = function()
     L["TIME_ERROR"] =
     "|cFFd8de35Money Looter:|r 时间格式错误，必须为: 00h00m00s 或任意时间组合(5m30s)"
     L["ALL"] = "全部"
+    L["USE_DISENCHANT_VALUE_ENABLED"] =
+    "|cFFd8de35Money Looter:|r Using disenchantment value when it is higher than the direct auction price."
+    L["USE_DISENCHANT_VALUE_DISABLED"] =
+    "|cFFd8de35Money Looter:|r Disenchantment value is no longer used. The direct auction price will always be used."
     return L
 end

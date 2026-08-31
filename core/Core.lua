@@ -38,6 +38,7 @@ local patternsLength = #patternsSelf
 local patternsCraftLength = #patternsCraft
 ------------------------------------------------------------------------------
 
+---@param itemLink string
 local function GetCachedPrice(itemLink)
     local entry = priceCache[itemLink]
     if not entry then return nil end
@@ -49,6 +50,8 @@ local function GetCachedPrice(itemLink)
     return nil
 end
 
+---@param itemLink string
+---@param price number
 local function SetCachedPrice(itemLink, price)
     priceCache[itemLink] = {
         price = price,
@@ -56,6 +59,7 @@ local function SetCachedPrice(itemLink, price)
     }
 end
 
+---@param itemString string
 local function GetCachedItemInfo(itemString)
     local info = itemInfoCache[itemString]
     if not info then
@@ -66,6 +70,7 @@ local function GetCachedItemInfo(itemString)
     return unpack(info)
 end
 
+---@param itemString string
 local function GetCachedItemInfoFromHyperlink(itemString)
     local info = itemInfoCacheLink[itemString]
     if not info then
@@ -75,7 +80,8 @@ local function GetCachedItemInfoFromHyperlink(itemString)
     return info
 end
 
-local function getMinPrice(quality)
+---@param quality number
+local function GetMinPrice(quality)
     if quality == 1 then
         return Data.GetMinPrice1()
     elseif quality == 2 then
@@ -94,17 +100,27 @@ local priceSources = {
             local tsmItemString = TSM_API.ToItemString(itemLink)
             local value = TSM_API.GetCustomPriceValue(Data.GetCurrentTSMString(), tsmItemString)
             if not value then return 0 end
-            local min = getMinPrice(quality)
+            local min = GetMinPrice(quality)
             return (value >= min or isCraftingReagent) and value or 0
         end
     },
     {
         cond = AUCTIONATOR_API,
         fn   = function(quality, itemLink, isCraftingReagent)
-            local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(
-                Constants.Strings.ADDON_NAME, itemLink)
+            local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
+
+            if Data.GetUseDisenchantValue() then
+                local disenchant = AUCTIONATOR_API.GetDisenchantPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
+                print("disenchant")
+                print(disenchant)
+                print("value")
+                print(value)
+                if disenchant ~= nil and value ~= nil and disenchant > value then
+                    value = disenchant
+                end
+            end
             if not value then return 0 end
-            local min = getMinPrice(quality)
+            local min = GetMinPrice(quality)
             return (value >= min or isCraftingReagent) and value or 0
         end
     },
@@ -116,7 +132,7 @@ local priceSources = {
             local overTime = stats["Stats:OverTime"]
             local value    = (overTime and overTime:Best()) or 0
             if not value then return 0 end
-            local min = getMinPrice(quality)
+            local min = GetMinPrice(quality)
             return (value >= min or isCraftingReagent) and value or 0
         end
     },
@@ -127,7 +143,7 @@ local priceSources = {
             OEMarketInfo(itemLink, info)
             if not info.region then return 0 end
             local value = info.region
-            local min = getMinPrice(quality)
+            local min = GetMinPrice(quality)
             return (value >= min or isCraftingReagent) and value or 0
         end
     },
@@ -136,7 +152,7 @@ local priceSources = {
         fn   = function(quality, itemLink, isCraftingReagent)
             local value = RECrystallize_PriceCheck(itemLink)
             if not value then return 0 end
-            local min = getMinPrice(quality)
+            local min = GetMinPrice(quality)
             return (value >= min or isCraftingReagent) and value or 0
         end
     },
