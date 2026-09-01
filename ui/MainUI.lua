@@ -8,13 +8,27 @@ local Utils = MoneyLooter.Utils
 local DataProvider = MoneyLooter.DataProvider
 ---@class ML_Data
 local Data = MoneyLooter.Data
+---@class ML_CBFunctions
+local CBFunctions = MoneyLooter.CBFunctions
+---@class ML_Core
+local Core = MoneyLooter.Core
+---@class ML_SMFunctions
+local SMFunctions = MoneyLooter.SMFunctions
+---@class ML_Profiler
+local Profiler = MoneyLooter.Profiler
 
 ---@class ML_UI
 local UI = {}
 MoneyLooter.UI = UI
 
+------------------------------------------------------------------------------
 local CreateFrame = CreateFrame
-local tostring, date = tostring, date
+local GetAddOnMetadata = C_AddOns.GetAddOnMetadata or GetAddOnMetadata
+local GetMoney = GetMoney
+------------------------------------------------------------------------------
+local tostring, date, print, tonumber = tostring, date, print, tonumber
+local strlenutf8, ipairs, unpack = strlenutf8, ipairs, unpack
+------------------------------------------------------------------------------
 
 ---@param itemId number
 ---@return string
@@ -123,6 +137,149 @@ function ML_ButtonMixin:SetText(val)
     self.Label:SetText(val)
 end
 
+---@param seconds number
+---@return string
+local function FormatTime(seconds)
+    local h = math.floor(seconds / 3600)
+    local m = math.floor((seconds % 3600) / 60)
+    local s = seconds % 60
+
+    return string.format("%02d:%02d:%02d", h, m, s)
+end
+
+---@param time integer
+---@param rawGold integer
+---@param itemsGold integer
+---@param gph integer
+---@param priciest integer
+local function UpdateAllTexts(time, rawGold, itemsGold, gph, priciest)
+    Data.SetOldMoney(GetMoney())
+    UI.MLMainFrame.StartButton:SetText(Data.GetCurrentStartText())
+    UI.MLMainFrame.TimeFS:SetText(tostring(FormatTime(time)))
+    UI.MLMainFrame.RawGoldFS:SetText(Utils.GetCoinTextString(rawGold))
+    UI.MLMainFrame.ItemsGoldFS:SetText(Utils.GetCoinTextString(itemsGold))
+    UI.MLMainFrame.GPHFS:SetText(Utils.GetCoinTextString(gph))
+    UI.MLMainFrame.PriciestFS:SetText(Utils.GetCoinTextString(priciest))
+end
+
+local function UpdateTexts()
+    UI.MLMainFrame.TimeFS:SetText(tostring(FormatTime(Data.AddOneToTimer())))
+    UI.MLMainFrame.GPHFS:SetText(Utils.GetCoinTextString(Data.CalcGPH()))
+end
+
+---@param visible boolean
+local function SetMainVisible(visible)
+    Data.SetVisible(visible)
+    if visible then
+        UI.MLMainFrame:Show()
+    else
+        UI.MLMainFrame:Hide()
+    end
+end
+
+---@param visible boolean
+local function SetScrollVisible(visible)
+    Data.SetScrollLootFrameVisible(visible)
+    UI.MLMainFrame.MinimizeCheck:SetChecked(visible)
+    if visible then
+        UI.MLMainFrame.ScrollBoxLoot:Show()
+    else
+        UI.MLMainFrame.ScrollBoxLoot:Hide()
+    end
+end
+
+local function RebuildSummary()
+    Profiler.Start("RebuildSummary")
+    Data.ResetSummary()
+    CBFunctions.Iterate(Data.GetListLootedItems(), Data.InsertSummaryItem)
+    Profiler.Stop("RebuildSummary")
+end
+
+local function PopulateSummary()
+    RebuildSummary()
+    Profiler.Start("PopulateSummary")
+    UI.MLMainFrame.ScrollBoxLoot.DataProvider:Flush()
+    local topItems = SMFunctions.GetTopItems(Data.GetSummary())
+    Profiler.Start("PopulateSummary.BulkInsert")
+    UI.MLMainFrame.ScrollBoxLoot.DataProvider:BulkInsert(unpack(topItems))
+    Profiler.Stop("PopulateSummary.BulkInsert")
+    Profiler.Stop("PopulateSummary")
+end
+
+local function PopulateLoot()
+    Profiler.Start("PopulateLoot")
+    Data.InitListLootedItems()
+    UI.MLMainFrame.ScrollBoxLoot.DataProvider:Flush()
+    if Data.GetListLootedItemsCount() > 0 then
+        local lootedItems = CBFunctions.ToTable(Data.GetListLootedItems())
+        Profiler.Start("PopulateLoot.BulkInsert")
+        UI.MLMainFrame.ScrollBoxLoot.DataProvider:BulkInsert(unpack(lootedItems))
+        Profiler.Stop("PopulateLoot.BulkInsert")
+    end
+    UI.MLMainFrame.ScrollBoxLoot:ScrollToEnd()
+    Profiler.Stop("PopulateLoot")
+end
+
+local MoneyLooterLootEvents = CreateFrame("Frame")
+
+---@type FunctionContainer
+local timer
+
+local EVENTS = {
+    Constants.Events.ChatMsgMoney,
+    Constants.Events.ChatMsgLoot,
+    Constants.Events.QuestTurnedIn,
+    Constants.Events.PInteractionManagerShow,
+    Constants.Events.PInteractionManagerHide,
+    Constants.Events.ChatMsgSystem,
+}
+
+local function RegisterStartEvents()
+    for _, ev in ipairs(EVENTS) do
+        MoneyLooterLootEvents:RegisterEvent(ev)
+    end
+    MoneyLooterLootEvents:SetScript("OnEvent", Core.OnEvent)
+
+    timer = C_Timer.NewTicker(1, UpdateTexts)
+end
+
+local function UnregisterStartEvents()
+    MoneyLooterLootEvents:UnregisterAllEvents()
+    MoneyLooterLootEvents:SetScript("OnEvent", nil)
+
+    if not timer:IsCancelled() then timer:Cancel() end
+end
+
+local function PopulateData()
+    Constants.Strings.ADDON_VERSION = GetAddOnMetadata(Constants.Strings.ADDON_NAME, "Version")
+    MoneyLooter.Config.ApplyScale()
+
+    UpdateAllTexts(Data.GetTimer(), Data.GetRawMoney(), Data.GetItemsMoney(), Data.CalcGPH(), Data.GetPriciest())
+
+    SetScrollVisible(Data.IsScrollLootFrameVisible())
+    SetMainVisible(Data.IsVisible())
+
+    if Data.IsRunning() then RegisterStartEvents() end
+end
+
+function UI.UpdateRawMoney()
+    UI.MLMainFrame.RawGoldFS:SetText(Utils.GetCoinTextString(Data.GetRawMoney()))
+end
+
+---@param item ML_Item
+function UI.UpdateLoot(item)
+    if not Data.IsSummaryMode() then
+        Profiler.Start("UpdateLoot.SingleInsert")
+        UI.MLMainFrame.ScrollBoxLoot.DataProvider:SingleInsert(item)
+        Profiler.Stop("UpdateLoot.SingleInsert")
+        UI.MLMainFrame.ScrollBoxLoot:ScrollToEnd()
+    else
+        PopulateSummary()
+    end
+    UI.MLMainFrame.PriciestFS:SetText(Utils.GetCoinTextString(Data.GetPriciest()))
+    UI.MLMainFrame.ItemsGoldFS:SetText(Utils.GetCoinTextString(Data.GetItemsMoney()))
+end
+
 ---@param parent ML_MainFrame
 ---@return table|Frame
 local function CreateTitleBar(parent)
@@ -131,6 +288,20 @@ local function CreateTitleBar(parent)
     titleBar:SetPoint("TOPRIGHT")
     titleBar:EnableMouse(true)
     titleBar.Label:SetText(Constants.Strings.TITLE)
+
+    titleBar:SetScript(Constants.Events.OnMouseDown, function(self, button)
+        if button == Constants.Inputs.RightButton then
+            MoneyLooter.Config.Toggle()
+        else
+            self:GetParent():StartMoving()
+        end
+    end)
+    titleBar:SetScript(Constants.Events.OnMouseUp, function(self, button)
+        if button == Constants.Inputs.LeftButton then
+            self:GetParent():StopMovingOrSizing()
+        end
+    end)
+
     return titleBar
 end
 
@@ -140,6 +311,12 @@ local function CreateCloseButton(parent)
     local btn = CreateFrame("Button", nil, parent, "ML_CloseButton")
     btn:SetSize(20, 20)
     btn:SetPoint("TOPLEFT", parent, "TOPLEFT", 5, -5)
+
+    btn:SetScript(Constants.Events.OnClick, function()
+        SetMainVisible(false)
+        print(_G.MONEYLOOTER_L_CLOSE)
+    end)
+
     return btn
 end
 
@@ -148,6 +325,22 @@ end
 local function CreateMinimizeCheckButton(parent)
     local checkButton = CreateFrame("CheckButton", nil, parent, "ML_CheckButton")
     checkButton:SetChecked(true)
+
+    checkButton:SetScript(Constants.Events.OnClick, function(_, button)
+        if button == Constants.Inputs.LeftButton then
+            SetScrollVisible(not Data.IsScrollLootFrameVisible())
+        elseif button == Constants.Inputs.RightButton then
+            local mode = not Data.IsSummaryMode()
+            Data.SetSummaryMode(mode)
+            if mode then
+                PopulateSummary()
+            else
+                PopulateLoot()
+            end
+        end
+        checkButton:SetChecked(Data.IsScrollLootFrameVisible())
+    end)
+
     return checkButton
 end
 
@@ -158,6 +351,20 @@ local function CreateStartButton(parent)
     button:SetPoint("BOTTOMLEFT", 5, 5)
     button:SetSize(65, 20)
     button:SetText(_G.MONEYLOOTER_L_START)
+
+    button:SetScript(Constants.Events.OnClick, function()
+        if Data.IsRunning() then
+            Data.SetRunning(false)
+            button:SetText(Data.SetCurrentStartText(_G.MONEYLOOTER_L_CONTINUE))
+            UnregisterStartEvents()
+        else
+            Data.SetRunning(true)
+            Data.SetOldMoney(GetMoney())
+            button:SetText(Data.SetCurrentStartText(_G.MONEYLOOTER_L_PAUSE))
+            RegisterStartEvents()
+        end
+    end)
+
     return button
 end
 
@@ -168,6 +375,21 @@ local function CreateResetButton(parent)
     button:SetPoint("BOTTOMRIGHT", -18, 5)
     button:SetSize(65, 20)
     button:SetText(_G.MONEYLOOTER_L_RESET)
+
+    button:SetScript(Constants.Events.OnClick, function()
+        if Data.IsRunning() then UnregisterStartEvents() end
+
+        local forceVendor = Data.GetForceVendorPrice()
+        local disenchant = Data.GetUseDisenchantValue()
+        local scrollVisible = Data.IsScrollLootFrameVisible()
+        Data.ResetMoneyLooterDB()
+        UpdateAllTexts(0, 0, 0, 0, 0)
+        UI.MLMainFrame.ScrollBoxLoot.DataProvider:Flush()
+        Data.SetScrollLootFrameVisible(scrollVisible)
+        Data.SetForceVendorPrice(forceVendor)
+        Data.SetUseDisenchantValue(disenchant)
+    end)
+
     return button
 end
 
@@ -205,6 +427,17 @@ local function CreateStatisticLabels(parent)
     labels.ItemsGoldLabel, labels.ItemsGold = createLabelPair(stats[3])
     labels.GPHLabel, labels.GPH = createLabelPair(stats[4])
     labels.PriciestLabel, labels.Priciest = createLabelPair(stats[5])
+
+    labels.Priciest:SetScript(Constants.Events.OnEnter, function()
+        local priciestLink = Data.GetPriciestLink()
+        if priciestLink == nil or priciestLink == "" then return end
+        GameTooltip:SetOwner(labels.Priciest, "ANCHOR_BOTTOMRIGHT")
+        GameTooltip:SetHyperlink(priciestLink)
+        GameTooltip:Show()
+    end)
+    labels.Priciest:SetScript(Constants.Events.OnLeave, function()
+        GameTooltip:Hide()
+    end)
 
     return labels
 end
@@ -327,6 +560,10 @@ local function CreateMainFrame()
         frame:UpdateLayout(width, height)
     end)
 
+    mainFrame:SetScript(Constants.Events.OnDragStart, mainFrame.StartMoving)
+    mainFrame:SetScript(Constants.Events.OnDragStop, mainFrame.StopMovingOrSizing)
+    mainFrame:SetScript(Constants.Events.OnHide, mainFrame.StopMovingOrSizing)
+
     local initialWidth, initialHeight = mainFrame:GetSize()
     mainFrame:UpdateLayout(initialWidth, initialHeight)
 
@@ -335,3 +572,171 @@ end
 
 ---@class ML_MainFrame : Frame
 UI.MLMainFrame = CreateMainFrame()
+
+Data.RegisterCallback("ML_OnItemRemoved", function()
+    UpdateAllTexts(Data.GetTimer(), Data.GetRawMoney(), Data.GetItemsMoney(), Data.CalcGPH(), Data.GetPriciest())
+
+    if not Data.IsSummaryMode() then
+        PopulateLoot()
+    else
+        PopulateSummary()
+    end
+end)
+
+SLASH_MONEYLOOTER1 = "/ml"
+SLASH_MONEYLOOTER2 = "/moneylooter"
+
+local function ParseCustomString(msg)
+    local _, tsmString = string.split(" ", msg, 2)
+    if tsmString == nil or tsmString == "" then
+        print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING .. "|cFF36e8e6" .. Data.GetCurrentTSMString() .. "|r")
+        return
+    end
+    Data.SetTSMString(tsmString)
+end
+
+local function ParseMinPrice(msg)
+    local mprice, value, coin = string.split(" ", msg, 3)
+    if strlenutf8(mprice) < 7 then
+        print(_G.MONEYLOOTER_L_MPRICE_ERROR)
+        return
+    end
+    local mprices = {
+        [1] = function(val)
+            Data.SetMinPrice1(val)
+        end,
+        [2] = function(val)
+            Data.SetMinPrice2(val)
+        end,
+        [3] = function(val)
+            Data.SetMinPrice3(val)
+        end,
+        [4] = function(val)
+            Data.SetMinPrice4(val)
+        end,
+        [99] = function(val)
+            Data.SetAllMinPrices(val)
+        end
+    }
+    local coinValue
+    if coin == nil or coin == "g" then
+        coinValue = 10000
+        coin = "G"
+    elseif coin == "s" then
+        coinValue = 100
+        coin = "S"
+    elseif coin == "c" then
+        coinValue = 1
+        coin = "C"
+    else
+        print(_G.MONEYLOOTER_L_MPRICE_UNRECOGNIZED_COIN)
+        return
+    end
+    local type = string.sub(mprice, 7, 8)
+    local qual
+    if type == "x" then
+        qual = 99
+    else
+        qual = tonumber(type)
+    end
+    mprices[qual](value * coinValue)
+    print(string.format("%s |cFF36e8e6%s %s|r - %s [%s]", _G.MONEYLOOTER_L_MPRICE_VALID, tostring(value),
+        _G["MONEYLOOTER_L_MPRICE_COIN_" .. coin], _G["MONEYLOOTER_L_MPRICE_QUALITY_" .. tostring(qual)],
+        tostring(qual)))
+end
+
+local function ParseTime(msg)
+    local _, time = string.split(" ", msg, 2)
+    if time == nil or strlenutf8(time) < 1 then
+        print(_G.MONEYLOOTER_L_TIME_ERROR)
+        return 0
+    end
+    local hours = nil
+    local minutes = nil
+    local seconds = nil
+    if string.find(time, "h") then
+        hours, time = string.split("h", time, 2)
+    end
+    if string.find(time, "m") then
+        minutes, time = string.split("m", time, 2)
+    end
+    if string.find(time, "s") then
+        seconds = string.split("s", time, 2)
+    end
+    local total = tonumber(0)
+    if seconds ~= nil then
+        total = total + tonumber(seconds)
+    end
+    if minutes ~= nil then
+        total = total + (tonumber(minutes) * 60)
+    end
+    if hours ~= nil then
+        total = total + (tonumber(hours) * 60 * 60)
+    end
+    return total
+end
+
+local function slash(msg, _)
+    local mainVisible = Data.IsVisible()
+    if msg == "show" or (msg == "" and not mainVisible) then
+        SetMainVisible(true)
+    elseif msg == "hide" or (msg == "" and mainVisible) then
+        SetMainVisible(false)
+    elseif msg == "info" then
+        print(_G.MONEYLOOTER_L_INFO)
+    elseif msg == "forcevendorprice" then
+        local state = Data.ToggleForceVendorPrice()
+        if state then
+            print(_G.MONEYLOOTER_L_FORCE_VENDOR_PRICE_ENABLED)
+        else
+            print(_G.MONEYLOOTER_L_FORCE_VENDOR_PRICE_DISABLED)
+        end
+    elseif string.sub(msg, 1, 6) == "custom" then
+        ParseCustomString(msg)
+    elseif string.sub(msg, 1, 6) == "mprice" then
+        ParseMinPrice(msg)
+    elseif string.sub(msg, 1, 10) == "disenchant" then
+        local enable = not Data.GetUseDisenchantValue()
+        Data.SetUseDisenchantValue(enable)
+        if enable then
+            print(_G.MONEYLOOTER_L_USE_DISENCHANT_VALUE_ENABLED)
+        else
+            print(_G.MONEYLOOTER_L_USE_DISENCHANT_VALUE_DISABLED)
+        end
+    elseif string.sub(msg, 1, 7) == "addtime" then
+        local time = ParseTime(msg)
+        if time > 0 then
+            Data.AddXToTimer(time)
+        end
+    elseif string.sub(msg, 1, 7) == "subtime" then
+        local time = ParseTime(msg)
+        if time > 0 then
+            Data.SubXFromTimer(time)
+        end
+    elseif msg == "profiler" then
+        Profiler.ToggleProfiler()
+    else
+        print(_G.MONEYLOOTER_L_USAGE .. Constants.Strings.ADDON_VERSION)
+    end
+end
+SlashCmdList["MONEYLOOTER"] = slash
+
+local watcher = CreateFrame("Frame")
+
+local addonLoaded = false
+local function WatcherOnEvent(_, event, arg1)
+    if event == Constants.Events.AddonLoaded and arg1 == Constants.Strings.ADDON_NAME then
+        addonLoaded = true
+        watcher:UnregisterEvent(Constants.Events.AddonLoaded)
+    elseif event == Constants.Events.PlayerEnteringWorld and addonLoaded then
+        Data.UpdateMLDB()
+        Data.UpdateMLXDB()
+        PopulateData()
+        PopulateLoot()
+        watcher:UnregisterEvent(Constants.Events.PlayerEnteringWorld)
+    end
+end
+
+watcher:RegisterEvent(Constants.Events.AddonLoaded)
+watcher:RegisterEvent(Constants.Events.PlayerEnteringWorld)
+watcher:SetScript(Constants.Events.OnEvent, WatcherOnEvent)

@@ -246,7 +246,7 @@ local function ChatMsgLoot(_, _, lootString, _, _, _, playerName2)
     Data.AddTotalMoney(totalPrice)
     -- only price of individual items, not groups (1xBismuth not 5xBismuth)
     Data.SetPriciest(price, itemLink)
-    Profiler.Measure("UpdateLoot", UpdateLoot, i)
+    Profiler.Measure("UpdateLoot", MoneyLooter.UI.UpdateLoot, i)
 end
 
 local function ChatMsgMoney_QuestTurnedIn()
@@ -257,7 +257,7 @@ local function ChatMsgMoney_QuestTurnedIn()
     Data.AddRawMoney(change)
     Data.AddTotalMoney(change)
     Data.SetOldMoney(newMoney)
-    UpdateRawMoney()
+    MoneyLooter.UI.UpdateRawMoney()
 end
 
 ---@param receivedString string
@@ -268,7 +268,7 @@ local function ChatMsgSystem(_, _, receivedString)
     Data.AddRawMoney(change)
     Data.AddTotalMoney(change)
     Data.SetOldMoney(newMoney)
-    UpdateRawMoney()
+    MoneyLooter.UI.UpdateRawMoney()
 end
 
 ---@param interaction Enum.PlayerInteractionType

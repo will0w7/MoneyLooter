@@ -3,5 +3,4 @@
     <Script file="DataProvider.lua" />
     <Script file="MainUI.lua" />
     <Script file="ConfigUI.lua" />
-    <Script file="UIEvents.lua" />
 </Ui>

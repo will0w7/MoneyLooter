@@ -11,9 +11,7 @@ unused = false
 ignore = {
     "SlashCmdList",
     "SLASH_MONEYLOOTER1",
-    "SLASH_MONEYLOOTER2",
-    "UpdateRawMoney",
-    "UpdateLoot"
+    "SLASH_MONEYLOOTER2"
 }
 
 globals = {
@@ -35,9 +33,6 @@ globals = {
     "strsplit",
     "strsub",
     "strlenutf8",
-    "UpdateLoot",
-    "UpdateRawMoney",
-    "UpdateLoot",
     "GameTooltip",
     "C_Timer",
     "LOOT_ITEM_SELF_MULTIPLE",

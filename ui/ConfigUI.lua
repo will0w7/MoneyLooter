@@ -7,27 +7,31 @@ local Constants = MoneyLooter.Constants
 ---@class ML_Data
 local Data = MoneyLooter.Data
 
+------------------------------------------------------------------------------
 local CreateFrame = CreateFrame
 local MoneyInputFrame_GetCopper = MoneyInputFrame_GetCopper
 local MoneyInputFrame_SetCopper = MoneyInputFrame_SetCopper
+------------------------------------------------------------------------------
 
 ---@class ML_Config
 local Config = {}
 MoneyLooter.Config = Config
 
-local MIN_PRICE_GETTERS = {
+local MinPriceGetters = {
     Data.GetMinPrice1,
     Data.GetMinPrice2,
     Data.GetMinPrice3,
     Data.GetMinPrice4,
 }
+local MinPriceGettersLenght = #MinPriceGetters
 
-local MIN_PRICE_SETTERS = {
+local MinPriceSetters = {
     Data.SetMinPrice1,
     Data.SetMinPrice2,
     Data.SetMinPrice3,
     Data.SetMinPrice4,
 }
+local MinPriceSettersLenght = #MinPriceSetters
 
 ---@param parent ML_ConfigFrame
 ---@return table|Frame
@@ -194,8 +198,8 @@ local function CreateConfigFrame()
     local function Populate()
         frame.ForceVendorCheck:SetChecked(Data.GetForceVendorPrice())
         frame.UseDisenchantCheck:SetChecked(Data.GetUseDisenchantValue())
-        for i = 1, 4 do
-            MoneyInputFrame_SetCopper(frame.MinPriceFrames[i], MIN_PRICE_GETTERS[i]())
+        for i = 1, MinPriceGettersLenght do
+            MoneyInputFrame_SetCopper(frame.MinPriceFrames[i], MinPriceGetters[i]())
         end
         RefreshTSMFields()
         currentScale = Data.GetUIScale()
@@ -241,8 +245,8 @@ local function CreateConfigFrame()
 
         Data.SetForceVendorPrice(frame.ForceVendorCheck:GetChecked())
         Data.SetUseDisenchantValue(frame.UseDisenchantCheck:GetChecked())
-        for i = 1, 4 do
-            MIN_PRICE_SETTERS[i](MoneyInputFrame_GetCopper(frame.MinPriceFrames[i]))
+        for i = 1, MinPriceSettersLenght do
+            MinPriceSetters[i](MoneyInputFrame_GetCopper(frame.MinPriceFrames[i]))
         end
         Data.SetUIScale(currentScale)
         Config.ApplyScale()
