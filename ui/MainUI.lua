@@ -284,22 +284,7 @@ local function CreateTitleBar(parent)
     local titleBar = CreateFrame("Frame", nil, parent, "ML_TitleBar")
     titleBar:SetPoint("TOPLEFT")
     titleBar:SetPoint("TOPRIGHT")
-    titleBar:EnableMouse(true)
     titleBar.Label:SetText(Constants.Strings.TITLE)
-
-    titleBar:SetScript(Constants.Events.OnMouseDown, function(self, button)
-        if button == Constants.Inputs.RightButton then
-            MoneyLooter.Config.Toggle()
-        else
-            self:GetParent():StartMoving()
-        end
-    end)
-    titleBar:SetScript(Constants.Events.OnMouseUp, function(self, button)
-        if button == Constants.Inputs.LeftButton then
-            self:GetParent():StopMovingOrSizing()
-        end
-    end)
-
     return titleBar
 end
 
@@ -370,8 +355,8 @@ end
 ---@return table|Button
 local function CreateResetButton(parent)
     local button = CreateFrame("Button", nil, parent, "ML_Button")
-    button:SetPoint("BOTTOMRIGHT", -18, 5)
-    button:SetSize(65, 20)
+    button:SetPoint("BOTTOMRIGHT", -32, 5)
+    button:SetSize(60, 20)
     button:SetText(_G.MONEYLOOTER_L_RESET)
 
     button:SetScript(Constants.Events.OnClick, function()
@@ -389,6 +374,31 @@ local function CreateResetButton(parent)
     end)
 
     return button
+end
+
+---@param parent ML_MainFrame
+---@return table|Button
+local function CreateConfigButton(parent)
+    local btn = CreateFrame("Button", nil, parent)
+    btn:SetSize(20, 20)
+    btn:SetPoint("BOTTOMRIGHT", -10, 5)
+
+    btn:SetNormalTexture("Interface\\Buttons\\UI-OptionsButton")
+    btn:GetNormalTexture():SetDesaturated(true)
+
+    btn:SetHighlightTexture("Interface\\Buttons\\UI-OptionsButton")
+    btn:GetHighlightTexture():SetDesaturated(true)
+    btn:GetHighlightTexture():SetVertexColor(1.4, 1.4, 1.4, 1)
+
+    btn:SetPushedTexture("Interface\\Buttons\\UI-OptionsButton")
+    btn:GetPushedTexture():SetDesaturated(true)
+    btn:GetPushedTexture():SetVertexColor(0.6, 0.6, 0.6, 1)
+
+    btn:SetScript(Constants.Events.OnClick, function()
+        MoneyLooter.Config.Toggle()
+    end)
+
+    return btn
 end
 
 ---@param parent ML_MainFrame
@@ -510,6 +520,7 @@ local function CreateMainFrame()
     mainFrame.MinimizeCheck = CreateMinimizeCheckButton(mainFrame)
     mainFrame.StartButton = CreateStartButton(mainFrame)
     mainFrame.ResetButton = CreateResetButton(mainFrame)
+    mainFrame.ConfigButton = CreateConfigButton(mainFrame)
 
     local stats = CreateStatisticLabels(mainFrame)
     mainFrame.TimeLabelFS = stats.TimeLabel

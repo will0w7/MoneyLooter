@@ -274,6 +274,8 @@ local function CreateConfigFrame()
     frame:SetScript(Constants.Events.OnHide, frame.StopMovingOrSizing)
 
     frame.CloseButton:SetScript(Constants.Events.OnClick, function()
+        frame.SaveStatus:SetText("")
+        frame.SaveStatus:SetTextColor(1, 1, 1)
         frame:Hide()
     end)
 
@@ -303,4 +305,6 @@ function Config.Toggle()
     else
         Config.Show()
     end
+    UI.MLConfigFrame.SaveStatus:SetText("")
+    UI.MLConfigFrame.SaveStatus:SetTextColor(1, 1, 1)
 end

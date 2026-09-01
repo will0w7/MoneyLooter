@@ -4,19 +4,33 @@
 
 A lightweight and fast World of Warcraft addon designed to track your gold farms. Track both raw gold and the gold value of looted items thanks to amazing addons like Auctionator or TradeSkillMaster, with reload protection so you don't need to worry about disconnections.
 
+## New in 2.0: Configuration menu and UI scale
+
+MoneyLooter 2.0 brings a proper configuration menu, so you no longer need slash commands to set up the addon.
+
+**Configuration menu:** Click the gear button in the bottom-right corner of the addon to open the new configuration window, change what you need and press **Save** to apply it. From here you can now configure:
+
+- **Force vendor price** — the same toggle as `/ml forcevendorprice`. Per-character (as it has always been).
+- **Use disenchant value** — the same toggle as `/ml disenchant`. Now per-character, it was account-wide in the previous version.
+- **TSM custom string** — with a **Validate** button that tells you whether the string is valid, and a **Reset** button to restore the default (`dbmarket`).
+- **Minimum prices** — one row per quality (Common, Uncommon, Rare, Epic) with gold/silver/copper fields, the same as `/ml mprice1..4` or `/ml mpricex`.
+
+**UI scale:** A new account-wide setting that scales the whole interface (window, text and icons) with a single factor. The default is `1.0`, and it can be adjusted between `0.5` and `2.0` in steps of `0.1`.
+
 ## New in 1.11: Auto pick between disenchant value and auction value (disabled by default)
 
 Now, when enabled (using the toggle **_/ml disenchant_** or **_/moneylooter disenchant_**) the addon is going to pick the highest price between the disenchant value and the _raw_ auction value (just selling the item as is). For now, this is only enabled for Auctionator.
 
 Picking the highest value seems like a logical choice, since no one would disenchant an item with a disenchantment value of 2g and an auction price of 500g. However, I'm open to suggestions.
 
-This setting is account wide.
+~~This setting is account wide.~~
 
 ## New in 1.8: Performance improvements, internal profiler and cache system
 
-**EMA‑based GPH calculation:** GPH (Gold Per Hour) is now computed with an EMA (Exponential Moving Average), smoothing spikes. During the first 30 seconds, an adaptive alpha is applied in the calculation to prevent sudden spikes.
+**EMA‑based GPH calculation:** GPH (Gold Per Hour) is now computed with an EMA (Exponential Moving Average), smoothing spikes. During the first 30 seconds, an adaptive alpha is applied in the calculation to prevent sudden spikes.
 
 **Two new cache systems:**
+
 - **Item cache:** A cache that persists only during the active session (a /reload clears it) and dramatically reduces calls to WoW’s internal APIs.
 - **Price cache:** A cache that also persists only during the active session but has a **one‑hour** expiration time. It prevents unnecessary calls to other addons APIs, as price updates are uncommon during farming sessions. To purge the cache, simply run **_/reload_** to delete it completely.
 
@@ -70,12 +84,12 @@ Download the latest release from [Wago](https://addons.wago.io/addons/moneyloote
 
 | Version             | Status |
 | ------------------- | ------ |
-| Retail              | ✅      |
-| Cataclysm Classic   | ✅      |
-| Classic Era         | ✅      |
-| Classic Hardcore    | ✅      |
-| Season of Discovery | ✅      |
-| Mists of Pandaria   | ✅      |
+| Retail              | ✅     |
+| Cataclysm Classic   | ✅     |
+| Classic Era         | ✅     |
+| Classic Hardcore    | ✅     |
+| Season of Discovery | ✅     |
+| Mists of Pandaria   | ✅     |
 
 ✅ = Compatible
 
@@ -134,7 +148,7 @@ The price format for mpricex is a number followed by g(old), s(ilver) or c(opper
 MoneyLooter by default sets the minimum prices to 0 for all item qualities. Also, the TSM string it uses is 'dbmarket'.
 If you want to change this setting you can do the following:
 
-* **TSM Custom String:** Type /ml custom 'TSMCustomString'
+- **TSM Custom String:** Type /ml custom 'TSMCustomString'
 
         For example:
         /ml custom check(dbmarket - 1000g, 95% dbmarket, 50% dbmarket)
@@ -144,7 +158,8 @@ If you want to change this setting you can do the following:
     If you want to return to the default settings use:
 
         /ml custom dbmarket
-* **TSM Minimum price threshold:** Type /ml mprice1 '1234 (g|s|c)'
+
+- **TSM Minimum price threshold:** Type /ml mprice1 '1234 (g|s|c)'
 
         For example:
         /ml mprice2 5500 g
