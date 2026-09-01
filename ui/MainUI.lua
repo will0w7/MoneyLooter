@@ -10,8 +10,6 @@ local DataProvider = MoneyLooter.DataProvider
 local Data = MoneyLooter.Data
 ---@class ML_CBFunctions
 local CBFunctions = MoneyLooter.CBFunctions
----@class ML_Core
-local Core = MoneyLooter.Core
 ---@class ML_SMFunctions
 local SMFunctions = MoneyLooter.SMFunctions
 ---@class ML_Profiler
@@ -238,7 +236,7 @@ local function RegisterStartEvents()
     for _, ev in ipairs(EVENTS) do
         MoneyLooterLootEvents:RegisterEvent(ev)
     end
-    MoneyLooterLootEvents:SetScript("OnEvent", Core.OnEvent)
+    MoneyLooterLootEvents:SetScript("OnEvent", MoneyLooter.Core.OnEvent)
 
     timer = C_Timer.NewTicker(1, UpdateTexts)
 end

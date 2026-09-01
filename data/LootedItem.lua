@@ -11,7 +11,7 @@ MoneyLooter.LootedItem = LootedItem
 ---@param value integer
 ---@param quantity integer
 ---@return ML_Item
-function LootedItem.new(entryId, id, itemLink, value, quantity)
+function LootedItem.New(entryId, id, itemLink, value, quantity)
     local self = {}
     self.entryId = entryId
     self.id = id

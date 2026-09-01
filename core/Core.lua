@@ -19,12 +19,41 @@ local TSM_API = TSM_API
 local AUCTIONATOR_API = Auctionator and Auctionator.API and Auctionator.API.v1
 local AUCTIONEER_API = Auctioneer
 local RECrystallize_PriceCheck = RECrystallize_PriceCheck
+local OEMarketInfo = OEMarketInfo
 ------------------------------------------------------------------------------
 local GetItemInfo = C_Item.GetItemInfo or GetItemInfo
 local GetItemInfoFromHyperlink = GetItemInfoFromHyperlink
 local GetMoney, GetUnitName, GetTime = GetMoney, GetUnitName, GetTime
-local tonumber, strsplit, unpack = tonumber, strsplit, unpack
+local tonumber, strsplit, unpack, ipairs = tonumber, strsplit, unpack, ipairs
 local str_match = string.match
+------------------------------------------------------------------------------
+local TSM_ToItemString = TSM_API and TSM_API.ToItemString
+local TSM_GetCustomPriceValue = TSM_API and TSM_API.GetCustomPriceValue
+local AUCTIONATOR_GetAuctionPriceByItemLink = AUCTIONATOR_API and AUCTIONATOR_API.GetAuctionPriceByItemLink
+local AUCTIONATOR_GetDisenchantPriceByItemLink = AUCTIONATOR_API and AUCTIONATOR_API.GetDisenchantPriceByItemLink
+------------------------------------------------------------------------------
+local Measure = Profiler.Measure
+local LootedItemNew = LootedItem.New
+------------------------------------------------------------------------------
+local IsInteractionPaused = Data.IsInteractionPaused
+local NextLootEntryId = Data.NextLootEntryId
+local InsertLootedItem = Data.InsertLootedItem
+local AddItemsMoney = Data.AddItemsMoney
+local AddTotalMoney = Data.AddTotalMoney
+local SetPriciest = Data.SetPriciest
+local GetForceVendorPrice = Data.GetForceVendorPrice
+local GetCurrentTSMString = Data.GetCurrentTSMString
+local GetUseDisenchantValue = Data.GetUseDisenchantValue
+local GetMinPrice1 = Data.GetMinPrice1
+local GetMinPrice2 = Data.GetMinPrice2
+local GetMinPrice3 = Data.GetMinPrice3
+local GetMinPrice4 = Data.GetMinPrice4
+local GetOldMoney = Data.GetOldMoney
+local AddRawMoney = Data.AddRawMoney
+local SetOldMoney = Data.SetOldMoney
+local SetInteractionPaused = Data.SetInteractionPaused
+local UpdateLoot = MoneyLooter.UI.UpdateLoot
+local UpdateRawMoney = MoneyLooter.UI.UpdateRawMoney
 ------------------------------------------------------------------------------
 local playerName = GetUnitName("player")
 local itemInfoCache = {}
@@ -83,13 +112,13 @@ end
 ---@param quality number
 local function GetMinPrice(quality)
     if quality == 1 then
-        return Data.GetMinPrice1()
+        return GetMinPrice1()
     elseif quality == 2 then
-        return Data.GetMinPrice2()
+        return GetMinPrice2()
     elseif quality == 3 then
-        return Data.GetMinPrice3()
+        return GetMinPrice3()
     elseif quality == 4 then
-        return Data.GetMinPrice4()
+        return GetMinPrice4()
     end
 end
 
@@ -97,8 +126,8 @@ local priceSources = {
     {
         cond = TSM_API,
         fn   = function(quality, itemLink, isCraftingReagent)
-            local tsmItemString = TSM_API.ToItemString(itemLink)
-            local value = TSM_API.GetCustomPriceValue(Data.GetCurrentTSMString(), tsmItemString)
+            local tsmItemString = TSM_ToItemString(itemLink)
+            local value = TSM_GetCustomPriceValue(GetCurrentTSMString(), tsmItemString)
             if not value then return 0 end
             local min = GetMinPrice(quality)
             return (value >= min or isCraftingReagent) and value or 0
@@ -107,10 +136,10 @@ local priceSources = {
     {
         cond = AUCTIONATOR_API,
         fn   = function(quality, itemLink, isCraftingReagent)
-            local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
+            local value = AUCTIONATOR_GetAuctionPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
 
-            if Data.GetUseDisenchantValue() then
-                local disenchant = AUCTIONATOR_API.GetDisenchantPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
+            if GetUseDisenchantValue() then
+                local disenchant = AUCTIONATOR_GetDisenchantPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
                 if disenchant ~= nil and value ~= nil and disenchant > value then
                     value = disenchant
                 end
@@ -163,9 +192,9 @@ local function CalculatePrice(itemLink)
 
     local itemString = str_match(itemLink, "item[%-%d:]+")
     local quality, sellPrice, isCraftingReagent =
-        Profiler.Measure("GetCachedItemInfo", GetCachedItemInfo, itemString)
+        Measure("GetCachedItemInfo", GetCachedItemInfo, itemString)
 
-    if Data.GetForceVendorPrice() then
+    if GetForceVendorPrice() then
         SetCachedPrice(itemLink, sellPrice or 0)
         return sellPrice or 0
     end
@@ -179,7 +208,7 @@ local function CalculatePrice(itemLink)
     local price = 0
     for _, src in ipairs(priceSources) do
         if src.cond then
-            price = Profiler.Measure("CalculatePrice.EXT_API", src.fn, quality, itemLink, isCraftingReagent)
+            price = Measure("CalculatePrice.EXT_API", src.fn, quality, itemLink, isCraftingReagent)
             if price > 0 then break end
         end
     end
@@ -226,7 +255,7 @@ end
 ---@param lootString string
 ---@param playerName2 string
 local function ChatMsgLoot(_, _, lootString, _, _, _, playerName2)
-    if Data.IsInteractionPaused() then return end
+    if IsInteractionPaused() then return end
     if lootString == nil then return end
     if GetLinkAndQuantityCraft(lootString) then return end
 
@@ -236,67 +265,67 @@ local function ChatMsgLoot(_, _, lootString, _, _, _, playerName2)
     local itemLink, quantity = GetLinkAndQuantityLoot(lootString)
     if itemLink == nil or itemLink:find("battlepet:") then return end
 
-    local price = Profiler.Measure("CalculatePrice", CalculatePrice, itemLink)
+    local price = Measure("CalculatePrice", CalculatePrice, itemLink)
 
     local totalPrice = price * quantity
-    local itemID = Profiler.Measure("GetCachedItemInfoFromHyperlink", GetCachedItemInfoFromHyperlink, itemLink)
-    local i = LootedItem.new(Data.NextLootEntryId(), itemID, itemLink, price, quantity)
-    Data.InsertLootedItem(i)
-    Data.AddItemsMoney(totalPrice)
-    Data.AddTotalMoney(totalPrice)
+    local itemID = Measure("GetCachedItemInfoFromHyperlink", GetCachedItemInfoFromHyperlink, itemLink)
+    local i = LootedItemNew(NextLootEntryId(), itemID, itemLink, price, quantity)
+    InsertLootedItem(i)
+    AddItemsMoney(totalPrice)
+    AddTotalMoney(totalPrice)
     -- only price of individual items, not groups (1xBismuth not 5xBismuth)
-    Data.SetPriciest(price, itemLink)
-    Profiler.Measure("UpdateLoot", MoneyLooter.UI.UpdateLoot, i)
+    SetPriciest(price, itemLink)
+    Measure("UpdateLoot", UpdateLoot, i)
 end
 
 local function ChatMsgMoney_QuestTurnedIn()
     -- here we dont stop interaction, if we turn in a quest with a profession
     -- window opened, we want to register the money change
     local newMoney = GetMoney()
-    local change = (newMoney - Data.GetOldMoney())
-    Data.AddRawMoney(change)
-    Data.AddTotalMoney(change)
-    Data.SetOldMoney(newMoney)
-    MoneyLooter.UI.UpdateRawMoney()
+    local change = (newMoney - GetOldMoney())
+    AddRawMoney(change)
+    AddTotalMoney(change)
+    SetOldMoney(newMoney)
+    UpdateRawMoney()
 end
 
 ---@param receivedString string
 local function ChatMsgSystem(_, _, receivedString)
     if not ReceivedMoney(receivedString) then return end
     local newMoney = GetMoney()
-    local change = (newMoney - Data.GetOldMoney())
-    Data.AddRawMoney(change)
-    Data.AddTotalMoney(change)
-    Data.SetOldMoney(newMoney)
-    MoneyLooter.UI.UpdateRawMoney()
+    local change = (newMoney - GetOldMoney())
+    AddRawMoney(change)
+    AddTotalMoney(change)
+    SetOldMoney(newMoney)
+    UpdateRawMoney()
 end
 
 ---@param interaction Enum.PlayerInteractionType
 local function PInteractionManagerShow(_, _, interaction)
     if Constants.RelevantInteractions[interaction] then
-        Data.SetInteractionPaused(true)
+        SetInteractionPaused(true)
     end
 end
 
 ---@param interaction Enum.PlayerInteractionType
 local function PInteractionManagerHide(_, _, interaction)
     if Constants.RelevantInteractions[interaction] then
-        Data.SetInteractionPaused(false)
-        Data.SetOldMoney(GetMoney())
+        SetInteractionPaused(false)
+        SetOldMoney(GetMoney())
     end
 end
 
 ---@param event WowEvent
 function Core.OnEvent(_, event, ...)
     if event == Constants.Events.ChatMsgLoot then
-        Profiler.Measure(event, ChatMsgLoot, nil, event, ...)
+        Measure(event, ChatMsgLoot, nil, event, ...)
     elseif event == Constants.Events.ChatMsgMoney or event == Constants.Events.QuestTurnedIn then
-        Profiler.Measure(event, ChatMsgMoney_QuestTurnedIn)
+        Measure(event, ChatMsgMoney_QuestTurnedIn)
     elseif event == Constants.Events.ChatMsgSystem then
-        Profiler.Measure(event, ChatMsgSystem, nil, event, ...)
+        Measure(event, ChatMsgSystem, nil, event, ...)
     elseif event == Constants.Events.PInteractionManagerShow then
-        Profiler.Measure(event, PInteractionManagerShow, nil, event, ...)
+        Measure(event, PInteractionManagerShow, nil, event, ...)
     elseif event == Constants.Events.PInteractionManagerHide then
-        Profiler.Measure(event, PInteractionManagerHide, nil, event, ...)
+        Measure(event, PInteractionManagerHide, nil, event, ...)
     end
 end
