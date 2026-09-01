@@ -75,6 +75,7 @@ local function CreateCheckboxRow(parent, yOffset, text)
     local label = parent:CreateFontString(nil, "OVERLAY", Constants.Strings.FONT)
     label:SetPoint("LEFT", check, "RIGHT", 8, 0)
     label:SetText(text)
+    check.Label = label
 
     return check
 end
@@ -140,17 +141,21 @@ local function CreateConfigFrame()
     CreateLabel(frame, -244, _G.MONEYLOOTER_L_CONFIG_MIN_PRICES)
 
     frame.MinPriceFrames = {}
+    frame.ForceDisenchantChecks = {}
     for i = 1, 4 do
-        local yOffset = -266 - (i - 1) * 28
+        local yOffset = -266 - (i - 1) * 50
         CreateLabel(frame, yOffset, _G["MONEYLOOTER_L_MPRICE_QUALITY_" .. i])
         local moneyInput = CreateFrame("Frame", "MONEYLOOTER_CONFIG_MINPRICE" .. i, frame,
             "MoneyInputFrameTemplate")
         moneyInput:SetPoint("TOPLEFT", frame, "TOPLEFT", 160, yOffset)
         frame.MinPriceFrames[i] = moneyInput
+
+        frame.ForceDisenchantChecks[i] = CreateCheckboxRow(frame, yOffset - 20,
+            _G.MONEYLOOTER_L_CONFIG_FORCE_USE_DISENCHANT_VALUE)
     end
 
     -- Save button
-    frame.SaveStatus = CreateLabel(frame, -405, "")
+    frame.SaveStatus = CreateLabel(frame, -480, "")
     frame.SaveButton = CreateFrame("Button", nil, frame, "ML_Button")
     frame.SaveButton:SetSize(352, 22)
     frame.SaveButton:SetPoint("BOTTOM", frame, "BOTTOM", 0, 14)
@@ -195,15 +200,42 @@ local function CreateConfigFrame()
         RefreshScale()
     end
 
+    local realUseDisenchant = false
+
+    local function HasAnyForceDisenchant()
+        for i = 1, 4 do
+            if frame.ForceDisenchantChecks[i]:GetChecked() then
+                return true
+            end
+        end
+        return false
+    end
+
+    local function RefreshDisenchant()
+        if HasAnyForceDisenchant() then
+            frame.UseDisenchantCheck:SetChecked(true)
+            frame.UseDisenchantCheck:Disable()
+            frame.UseDisenchantCheck.Label:SetTextColor(0.5, 0.5, 0.5)
+        else
+            frame.UseDisenchantCheck:Enable()
+            frame.UseDisenchantCheck.Label:SetTextColor(1, 1, 1)
+            frame.UseDisenchantCheck:SetChecked(realUseDisenchant)
+        end
+    end
+
     local function Populate()
         frame.ForceVendorCheck:SetChecked(Data.GetForceVendorPrice())
-        frame.UseDisenchantCheck:SetChecked(Data.GetUseDisenchantValue())
+        realUseDisenchant = Data.GetUseDisenchantValue()
+        for i = 1, 4 do
+            frame.ForceDisenchantChecks[i]:SetChecked(Data.GetForceUseDisenchantValueIndex(i))
+        end
         for i = 1, MinPriceGettersLenght do
             MoneyInputFrame_SetCopper(frame.MinPriceFrames[i], MinPriceGetters[i]())
         end
         RefreshTSMFields()
         currentScale = Data.GetUIScale()
         RefreshScale()
+        RefreshDisenchant()
     end
 
     ---@return string|nil
@@ -245,6 +277,9 @@ local function CreateConfigFrame()
 
         Data.SetForceVendorPrice(frame.ForceVendorCheck:GetChecked())
         Data.SetUseDisenchantValue(frame.UseDisenchantCheck:GetChecked())
+        for i = 1, 4 do
+            Data.SetForceUseDisenchantValueIndex(frame.ForceDisenchantChecks[i]:GetChecked(), i)
+        end
         for i = 1, MinPriceSettersLenght do
             MinPriceSetters[i](MoneyInputFrame_GetCopper(frame.MinPriceFrames[i]))
         end
@@ -268,6 +303,12 @@ local function CreateConfigFrame()
     frame.ScalePlusButton:SetScript(Constants.Events.OnClick, function()
         ChangeScale(Constants.UIScale.Step)
     end)
+    frame.UseDisenchantCheck:SetScript(Constants.Events.OnClick, function()
+        realUseDisenchant = frame.UseDisenchantCheck:GetChecked()
+    end)
+    for i = 1, 4 do
+        frame.ForceDisenchantChecks[i]:SetScript(Constants.Events.OnClick, RefreshDisenchant)
+    end
 
     frame:SetScript(Constants.Events.OnDragStart, frame.StartMoving)
     frame:SetScript(Constants.Events.OnDragStop, frame.StopMovingOrSizing)

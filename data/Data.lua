@@ -70,7 +70,8 @@ Data.DB.prototype = {
     CurrentStartText = _G.MONEYLOOTER_L_START,
     ----------------------------------------------
     ForceVendorPrice = false,
-    UseDisenchantValue = false
+    UseDisenchantValue = false,
+    ForceUseDisenchantValue = { false, false, false, false }
 }
 
 Data.DB.mt = {}
@@ -513,6 +514,24 @@ end
 ---@param value boolean
 function Data.SetUseDisenchantValue(value)
     MoneyLooterDB.UseDisenchantValue = value
+end
+
+function Data.GetForceUseDisenchantValue()
+    return MoneyLooterDB.ForceUseDisenchantValue
+end
+
+---@param value table
+function Data.SetForceUseDisenchantValue(value)
+    MoneyLooterDB.ForceUseDisenchantValue = value
+end
+
+function Data.GetForceUseDisenchantValueIndex(index)
+    return MoneyLooterDB.ForceUseDisenchantValue[index]
+end
+
+---@param value boolean
+function Data.SetForceUseDisenchantValueIndex(value, index)
+    MoneyLooterDB.ForceUseDisenchantValue[index] = value
 end
 
 ---@return number

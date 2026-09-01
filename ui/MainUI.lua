@@ -364,6 +364,7 @@ local function CreateResetButton(parent)
 
         local forceVendor = Data.GetForceVendorPrice()
         local disenchant = Data.GetUseDisenchantValue()
+        local forceDisenchant = Data.GetForceUseDisenchantValue()
         local scrollVisible = Data.IsScrollLootFrameVisible()
         Data.ResetMoneyLooterDB()
         UpdateAllTexts(0, 0, 0, 0, 0)
@@ -371,6 +372,7 @@ local function CreateResetButton(parent)
         Data.SetScrollLootFrameVisible(scrollVisible)
         Data.SetForceVendorPrice(forceVendor)
         Data.SetUseDisenchantValue(disenchant)
+        Data.SetForceUseDisenchantValue(forceDisenchant)
     end)
 
     return button

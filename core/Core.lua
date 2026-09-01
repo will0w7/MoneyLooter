@@ -122,6 +122,41 @@ local function GetMinPrice(quality)
     end
 end
 
+local disenchantPriceSources = {
+    {
+        cond = false and TSM_API,
+        fn   = function(itemLink)
+            return 0
+        end
+    },
+    {
+        cond = AUCTIONATOR_API,
+        fn   = function(itemLink)
+            local value = AUCTIONATOR_GetDisenchantPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
+            if not value then return 0 end
+            return value or 0
+        end
+    },
+    {
+        cond = false and AUCTIONEER_API,
+        fn   = function(itemLink)
+            return 0
+        end
+    },
+    {
+        cond = false and MoneyLooter.isRetail and OEMarketInfo,
+        fn   = function(itemLink)
+            return 0
+        end
+    },
+    {
+        cond = false and MoneyLooter.isRetail and RECrystallize_PriceCheck,
+        fn   = function(itemLink)
+            return 0
+        end
+    },
+}
+
 local priceSources = {
     {
         cond = TSM_API,
@@ -194,31 +229,49 @@ local function CalculatePrice(itemLink)
     local quality, sellPrice, isCraftingReagent =
         Measure("GetCachedItemInfo", GetCachedItemInfo, itemString)
 
+    local sellPriceOrZero = sellPrice or 0
+
     if GetForceVendorPrice() then
-        SetCachedPrice(itemLink, sellPrice or 0)
-        return sellPrice or 0
+        SetCachedPrice(itemLink, sellPriceOrZero)
+        return sellPriceOrZero
     end
 
     if quality < 1 or quality > 4 then
-        local price = sellPrice and (sellPrice > 0 and sellPrice) or 0
-        SetCachedPrice(itemLink, price)
-        return price
+        SetCachedPrice(itemLink, sellPriceOrZero)
+        return sellPriceOrZero
     end
 
     local price = 0
-    for _, src in ipairs(priceSources) do
-        if src.cond then
-            price = Measure("CalculatePrice.EXT_API", src.fn, quality, itemLink, isCraftingReagent)
-            if price > 0 then break end
+
+    if Data.GetForceUseDisenchantValueIndex(quality) and not isCraftingReagent then
+        for _, src in ipairs(disenchantPriceSources) do
+            if src.cond then
+                price = Measure("CalculatePriceDisenchant.EXT_API", src.fn, itemLink)
+                if price > 0 then break end
+            end
+        end
+    else
+        for i, _ in ipairs(priceSources) do
+            if priceSources[i].cond then
+                price = Measure("CalculatePrice.EXT_API", priceSources[i].fn, quality, itemLink, isCraftingReagent)
+                if Data.GetUseDisenchantValue() and disenchantPriceSources[i].cond then
+                    local disenchant = Measure("CalculatePriceDisenchant.EXT_API", disenchantPriceSources[i].fn, itemLink)
+                    if disenchant ~= nil and disenchant > price then
+                        price = disenchant
+                    end
+                end
+                if price > 0 then break end
+            end
         end
     end
 
-    if price == 0 and sellPrice > 0 then
+    if price == 0 then
         price = sellPrice
     end
 
+    price = price or 0
     SetCachedPrice(itemLink, price)
-    return price or 0
+    return price
 end
 
 ---@param lootString string
