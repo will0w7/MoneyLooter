@@ -133,8 +133,7 @@ local disenchantPriceSources = {
         cond = AUCTIONATOR_API,
         fn   = function(itemLink)
             local value = AUCTIONATOR_GetDisenchantPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
-            if not value then return 0 end
-            return value or 0
+            return value
         end
     },
     {
@@ -242,15 +241,19 @@ local function CalculatePrice(itemLink)
     end
 
     local price = 0
-
-    if Data.GetForceUseDisenchantValueIndex(quality) and not isCraftingReagent then
+    local disenchantPrice = nil
+    local forceThisQuality = Data.GetForceUseDisenchantValueIndex(quality) and not isCraftingReagent
+    if forceThisQuality and quality ~= 1 then
         for _, src in ipairs(disenchantPriceSources) do
             if src.cond then
-                price = Measure("CalculatePriceDisenchant.EXT_API", src.fn, itemLink)
-                if price > 0 then break end
+                disenchantPrice = Measure("CalculatePriceDisenchant.EXT_API", src.fn, itemLink)
+                if disenchantPrice ~= nil and disenchantPrice > 0 then break end
             end
         end
-    else
+    end
+    if disenchantPrice ~= nil and disenchantPrice > 0 then price = disenchantPrice end
+
+    if not forceThisQuality or (forceThisQuality and (disenchantPrice == nil or disenchantPrice == 0)) then
         for i, _ in ipairs(priceSources) do
             if priceSources[i].cond then
                 price = Measure("CalculatePrice.EXT_API", priceSources[i].fn, quality, itemLink, isCraftingReagent)
@@ -265,7 +268,7 @@ local function CalculatePrice(itemLink)
         end
     end
 
-    if price == 0 then
+    if price == 0 and sellPrice > 0 then
         price = sellPrice
     end
 

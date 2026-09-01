@@ -11,6 +11,15 @@ local Data = MoneyLooter.Data
 local CreateFrame = CreateFrame
 local MoneyInputFrame_GetCopper = MoneyInputFrame_GetCopper
 local MoneyInputFrame_SetCopper = MoneyInputFrame_SetCopper
+local strupper = string.upper
+------------------------------------------------------------------------------
+local SECTION_TITLE_COLOR = { 1, 0.82, 0 }
+local QUALITY_COLORS = {
+    { 1.0,  1.0,  1.0 },  -- Common
+    { 0.12, 1.0,  0.0 },  -- Uncommon
+    { 0.0,  0.44, 0.87 }, -- Rare
+    { 0.64, 0.21, 0.93 }, -- Epic
+}
 ------------------------------------------------------------------------------
 
 ---@class ML_Config
@@ -66,6 +75,18 @@ end
 ---@param parent ML_ConfigFrame
 ---@param yOffset number
 ---@param text string
+---@return FontString
+local function CreateSectionTitle(parent, yOffset, text)
+    local label = parent:CreateFontString(nil, "OVERLAY", Constants.Strings.FONT)
+    label:SetPoint("TOPLEFT", parent, "TOPLEFT", 14, yOffset)
+    label:SetText(strupper(text))
+    label:SetTextColor(SECTION_TITLE_COLOR[1], SECTION_TITLE_COLOR[2], SECTION_TITLE_COLOR[3])
+    return label
+end
+
+---@param parent ML_ConfigFrame
+---@param yOffset number
+---@param text string
 ---@return table|CheckButton
 local function CreateCheckboxRow(parent, yOffset, text)
     local check = CreateFrame("CheckButton", nil, parent, "ML_CheckButton")
@@ -106,7 +127,7 @@ local function CreateConfigFrame()
     frame.CloseButton = CreateCloseButton(frame)
 
     -- UI scale
-    CreateLabel(frame, -40, _G.MONEYLOOTER_L_CONFIG_UI_SCALE)
+    CreateSectionTitle(frame, -44, _G.MONEYLOOTER_L_CONFIG_UI_SCALE)
     frame.ScaleMinusButton = CreateFrame("Button", nil, frame, "ML_Button")
     frame.ScaleMinusButton:SetSize(24, 20)
     frame.ScaleMinusButton:SetPoint("TOPLEFT", frame, "TOPLEFT", 110, -40)
@@ -127,10 +148,10 @@ local function CreateConfigFrame()
     frame.UseDisenchantCheck = CreateCheckboxRow(frame, -96, _G.MONEYLOOTER_L_CONFIG_USE_DISENCHANT_VALUE)
 
     -- TSM custom string
-    CreateLabel(frame, -128, _G.MONEYLOOTER_L_CONFIG_TSM_STRING)
+    CreateSectionTitle(frame, -132, _G.MONEYLOOTER_L_CONFIG_TSM_STRING)
     frame.TSMEditBox = CreateFrame("EditBox", nil, frame, "InputBoxTemplate")
     frame.TSMEditBox:SetPoint("TOPLEFT", frame, "TOPLEFT", 14, -150)
-    frame.TSMEditBox:SetSize(250, 20)
+    frame.TSMEditBox:SetSize(298, 20)
     frame.TSMEditBox:SetAutoFocus(false)
 
     frame.TSMValidateButton = CreateTextButton(frame, -178, 14, _G.MONEYLOOTER_L_CONFIG_VALIDATE)
@@ -138,26 +159,32 @@ local function CreateConfigFrame()
     frame.TSMStatus = CreateLabel(frame, -206, "")
 
     -- Minimum prices
-    CreateLabel(frame, -244, _G.MONEYLOOTER_L_CONFIG_MIN_PRICES)
+    CreateSectionTitle(frame, -248, _G.MONEYLOOTER_L_CONFIG_MIN_PRICES)
 
     frame.MinPriceFrames = {}
     frame.ForceDisenchantChecks = {}
     for i = 1, 4 do
         local yOffset = -266 - (i - 1) * 50
-        CreateLabel(frame, yOffset, _G["MONEYLOOTER_L_MPRICE_QUALITY_" .. i])
+        local qualityLabel = CreateLabel(frame, yOffset - 4, _G["MONEYLOOTER_L_MPRICE_QUALITY_" .. i])
+        qualityLabel:SetTextColor(QUALITY_COLORS[i][1], QUALITY_COLORS[i][2], QUALITY_COLORS[i][3])
+
         local moneyInput = CreateFrame("Frame", "MONEYLOOTER_CONFIG_MINPRICE" .. i, frame,
             "MoneyInputFrameTemplate")
-        moneyInput:SetPoint("TOPLEFT", frame, "TOPLEFT", 160, yOffset)
+        moneyInput:SetPoint("TOPLEFT", frame, "TOPLEFT", 120, yOffset)
         frame.MinPriceFrames[i] = moneyInput
 
-        frame.ForceDisenchantChecks[i] = CreateCheckboxRow(frame, yOffset - 20,
-            _G.MONEYLOOTER_L_CONFIG_FORCE_USE_DISENCHANT_VALUE)
+        if i ~= 1 then
+            frame.ForceDisenchantChecks[i] = CreateCheckboxRow(frame, yOffset - 22,
+                _G.MONEYLOOTER_L_CONFIG_FORCE_USE_DISENCHANT_VALUE)
+            frame.ForceDisenchantChecks[i].Label:SetTextColor(QUALITY_COLORS[i][1], QUALITY_COLORS[i][2],
+                QUALITY_COLORS[i][3])
+        end
     end
 
     -- Save button
-    frame.SaveStatus = CreateLabel(frame, -480, "")
+    frame.SaveStatus = CreateLabel(frame, -500, "")
     frame.SaveButton = CreateFrame("Button", nil, frame, "ML_Button")
-    frame.SaveButton:SetSize(352, 22)
+    frame.SaveButton:SetSize(300, 22)
     frame.SaveButton:SetPoint("BOTTOM", frame, "BOTTOM", 0, 14)
     frame.SaveButton:SetText(_G.MONEYLOOTER_L_CONFIG_SAVE)
 
@@ -203,7 +230,7 @@ local function CreateConfigFrame()
     local realUseDisenchant = false
 
     local function HasAnyForceDisenchant()
-        for i = 1, 4 do
+        for i = 2, 4 do
             if frame.ForceDisenchantChecks[i]:GetChecked() then
                 return true
             end
@@ -226,7 +253,7 @@ local function CreateConfigFrame()
     local function Populate()
         frame.ForceVendorCheck:SetChecked(Data.GetForceVendorPrice())
         realUseDisenchant = Data.GetUseDisenchantValue()
-        for i = 1, 4 do
+        for i = 2, 4 do
             frame.ForceDisenchantChecks[i]:SetChecked(Data.GetForceUseDisenchantValueIndex(i))
         end
         for i = 1, MinPriceGettersLenght do
@@ -277,7 +304,7 @@ local function CreateConfigFrame()
 
         Data.SetForceVendorPrice(frame.ForceVendorCheck:GetChecked())
         Data.SetUseDisenchantValue(frame.UseDisenchantCheck:GetChecked())
-        for i = 1, 4 do
+        for i = 2, 4 do
             Data.SetForceUseDisenchantValueIndex(frame.ForceDisenchantChecks[i]:GetChecked(), i)
         end
         for i = 1, MinPriceSettersLenght do
@@ -306,7 +333,7 @@ local function CreateConfigFrame()
     frame.UseDisenchantCheck:SetScript(Constants.Events.OnClick, function()
         realUseDisenchant = frame.UseDisenchantCheck:GetChecked()
     end)
-    for i = 1, 4 do
+    for i = 2, 4 do
         frame.ForceDisenchantChecks[i]:SetScript(Constants.Events.OnClick, RefreshDisenchant)
     end
 

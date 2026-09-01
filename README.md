@@ -2,20 +2,27 @@
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-A lightweight and fast World of Warcraft addon designed to track your gold farms. Track both raw gold and the gold value of looted items thanks to amazing addons like Auctionator or TradeSkillMaster, with reload protection so you don't need to worry about disconnections.
+A lightweight and fast World of Warcraft addon designed to track your gold farms. Track both raw gold and the gold value of looted items thanks to amazing addons like TradeSkillMaster, Auctionator, Auctioneer, OribosExchange or RECrystallized, with reload protection so you don't need to worry about disconnections.
 
-## New in 2.0: Configuration menu and UI scale
+## New in 2.0: Configuration menu, UI scale and more
 
-MoneyLooter 2.0 brings a proper configuration menu, so you no longer need slash commands to set up the addon.
+![MoneyLooter 2.0 Config menu](https://github.com/will0w7/MoneyLooter/blob/main/images/MoneyLooter2.0.png?raw=true)
 
-**Configuration menu:** Click the gear button in the bottom-right corner of the addon to open the new configuration window, change what you need and press **Save** to apply it. From here you can now configure:
+\[**_WARNING_**\] This version changes a lot of things in the addon, a lot of internal refactors and major changes in the loot price calculations (for the new disenchant settings). Please, if you find a bug, report it on Github (https://github.com/will0w7/MoneyLooter/issues). Thank you!
 
-- **Force vendor price** — the same toggle as `/ml forcevendorprice`. Per-character (as it has always been).
-- **Use disenchant value** — the same toggle as `/ml disenchant`. Now per-character, it was account-wide in the previous version.
-- **TSM custom string** — with a **Validate** button that tells you whether the string is valid, and a **Reset** button to restore the default (`dbmarket`).
-- **Minimum prices** — one row per quality (Common, Uncommon, Rare, Epic) with gold/silver/copper fields, the same as `/ml mprice1..4` or `/ml mpricex`.
+MoneyLooter 2.0 brings a proper configuration menu, so you no longer need slash commands to configure the addon.
 
-**UI scale:** A new account-wide setting that scales the whole interface (window, text and icons) with a single factor. The default is `1.0`, and it can be adjusted between `0.5` and `2.0` in steps of `0.1`.
+I hadn't added this option in the past in order to keep the addon as simple as possible, but the addon has reached a point where the simplest thing (for the user) is to add it.
+
+\[**_NEW_**\] **Configuration menu:** Click the gear button in the bottom right corner of the addon to open/close the new configuration window, change what you need and press _Save_ to apply the changes. From here you can configure:
+
+- \[**_NEW_**\] **Use disenchant value:** The same toggle as `/ml disenchant`. Now per character, it was account wide in the previous version (released in 1.11).
+- \[**_NEW_**\] **Force disenchant value:** One toggle per quality (Common, Uncommon, Rare, Epic). When enabled for a quality, that quality always uses the disenchant value instead of the regular price (except for crafting reagents). **This works only with Auctionator** and only when it is possible to determine whether the item can be disenchanted. In the retail version, Auctionator provides this information (**according to Auctionator**) for **WoD, Legion, BfA, and Shadowlands**. **If it cannot be determined** whether the item can be disenchanted, **the _raw_ auction value will be used** (if it's higher than the configured thresholds).
+- **Force vendor price:** The same toggle as `/ml forcevendorprice`. Per character (as it has always been).
+- **TSM custom string:** With a _Validate_ button that tells you whether the string is valid, and a _Reset_ button to restore the default (`dbmarket`).
+- **Minimum prices:** One row per quality (Common, Uncommon, Rare, Epic) with gold/silver/copper fields, the same as `/ml mprice1..4 value` or `/ml mpricex value`.
+
+\[**_NEW_**\] **UI scale:** A new account wide setting that scales the whole interface (window, text and icons). The default is `1.0`, and it can be adjusted between `0.5` and `2.0` in steps of `0.1`.
 
 ## New in 1.11: Auto pick between disenchant value and auction value (disabled by default)
 
@@ -97,8 +104,6 @@ Download the latest release from [Wago](https://addons.wago.io/addons/moneyloote
 
 ❌ = Not compatible
 
-**Note:** Since Wrath and TBC no longer have official servers and are causing some issues with CurseForge, I will no longer be supporting these versions but I will continue packaging the TOC files in the addon.
-
 ## Price source order
 
 1. TSM
@@ -110,6 +115,18 @@ Download the latest release from [Wago](https://addons.wago.io/addons/moneyloote
 It's a cascading fallback system, if TSM doesn't find a price, it will look for it in Auctionator, then in Auctioneer, etc. When it finds a valid price, it doesn't continue searching in other addons.
 
 For example, if it finds a valid price in TSM, it won't search in Auctionator or other addons.
+
+## How items are valued
+
+When an item is looted, MoneyLooter determines its value in this order:
+
+1. If **Force vendor price** is enabled, the vendor sell price is always used and no other source is checked.
+2. If the item is not Common, Uncommon, Rare or Epic quality, the vendor sell price is used.
+3. If **Force disenchant value** is enabled for the item's quality and the external addon can determine its disenchant value, the item is valued using its disenchant value. Currently only Auctionator provides disenchant values. If no disenchant value is available, the regular pricing below is used instead.
+4. Otherwise, the regular price sources are tried in the order described above and the first valid price wins.
+5. Each price source must return at least the **minimum price threshold** configured for that quality (crafting reagents ignore it). If a source's auction price is below the threshold, it's treated as "no price" and the next source is tried. This threshold is meant to skip items whose auction price is overvalued.
+6. If **Use disenchant value** is enabled, the disenchant value is also checked and the higher of the two is used. The disenchant value ignores the threshold, so an item whose auction price falls below the threshold can still be counted by its disenchant value.
+7. If no source returns a price, the vendor sell price is used as a last resort.
 
 ## Usage
 
@@ -172,7 +189,7 @@ If you want to change this setting you can do the following:
 
     See [Usage](#usage) and check available qualities.
 
-This setting are account-wide so you only have to set it once and you can use it on all your characters.
+This setting are account wide so you only have to set it once and you can use it on all your characters.
 
 **Note:** For accurate item pricing using Auctionator, ensure you have scanned the auction house with it recently.
 
