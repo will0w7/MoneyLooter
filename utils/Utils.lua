@@ -14,6 +14,30 @@ function Utils.DeepCopyMeta(obj)
     return res
 end
 
+---@param quality integer
+---@return string
+function Utils.GetQualityName(quality)
+    return _G["MONEYLOOTER_L_MPRICE_QUALITY_" .. quality]
+        or _G["ITEM_QUALITY" .. quality .. "_DESC"]
+        or tostring(quality)
+end
+
+---@param quality integer
+---@return number r
+---@return number g
+---@return number b
+function Utils.GetQualityColor(quality)
+    local C_GetItemQualityColor = C_Item and C_Item.GetItemQualityColor
+    local getItemQualityColor = C_GetItemQualityColor or _G.GetItemQualityColor
+    if getItemQualityColor then
+        local r, g, b = getItemQualityColor(quality)
+        if r ~= nil then
+            return r, g, b
+        end
+    end
+    return 1, 1, 1
+end
+
 ---@param val integer
 ---@return string
 function Utils.GetCoinTextString(val)

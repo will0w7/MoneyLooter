@@ -96,12 +96,9 @@ Data.XDB = {}
 ---@class ML_CrossDB
 Data.XDB.prototype = {
     CurrentTSMString = "dbmarket",
+    CurrentTSMDisenchantString = "destroy",
     ------------------------------
-    MinPrice1 = 0,
-    MinPrice2 = 0,
-    MinPrice3 = 0,
-    MinPrice4 = 0,
-    ------------------------------
+    MinPrices = { [0] = 0, 0, 0, 0, 0 },
     UIScale = 1
 }
 
@@ -119,6 +116,17 @@ local function initialize_xdb()
         setmetatable(MoneyLooterXDB, nil)
     end
     setmetatable(MoneyLooterXDB, Data.XDB.mt)
+
+    if MoneyLooterXDB.MinPrices == nil then
+        MoneyLooterXDB.MinPrices = {}
+    end
+    for quality = 1, 4 do
+        local legacyKey = "MinPrice" .. quality
+        if MoneyLooterXDB[legacyKey] ~= nil then
+            MoneyLooterXDB.MinPrices[quality] = MoneyLooterXDB[legacyKey]
+            MoneyLooterXDB[legacyKey] = nil
+        end
+    end
 end
 
 ---@class ML_TempData
@@ -330,52 +338,78 @@ function Data.SetCurrentStartText(text)
     return MoneyLooterDB.CurrentStartText
 end
 
+---@param quality integer
 ---@return integer
-function Data.GetMinPrice1()
-    return MoneyLooterXDB.MinPrice1
+function Data.GetMinPrice(quality)
+    return MoneyLooterXDB.MinPrices[quality] or 0
 end
 
+---@param quality integer
 ---@param money integer
-function Data.SetMinPrice1(money)
-    MoneyLooterXDB.MinPrice1 = money
+function Data.SetMinPrice(quality, money)
+    MoneyLooterXDB.MinPrices[quality] = money
 end
 
----@return integer
-function Data.GetMinPrice2()
-    return MoneyLooterXDB.MinPrice2
+---@return table
+function Data.GetMinPrices()
+    return MoneyLooterXDB.MinPrices
 end
 
----@param money integer
-function Data.SetMinPrice2(money)
-    MoneyLooterXDB.MinPrice2 = money
-end
-
----@return integer
-function Data.GetMinPrice3()
-    return MoneyLooterXDB.MinPrice3
-end
-
----@param money integer
-function Data.SetMinPrice3(money)
-    MoneyLooterXDB.MinPrice3 = money
-end
-
----@return integer
-function Data.GetMinPrice4()
-    return MoneyLooterXDB.MinPrice4
-end
-
----@param money integer
-function Data.SetMinPrice4(money)
-    MoneyLooterXDB.MinPrice4 = money
+---@param value table
+function Data.SetMinPrices(value)
+    MoneyLooterXDB.MinPrices = value
 end
 
 ---@param money integer
 function Data.SetAllMinPrices(money)
-    MoneyLooterXDB.MinPrice1 = money
-    MoneyLooterXDB.MinPrice2 = money
-    MoneyLooterXDB.MinPrice3 = money
-    MoneyLooterXDB.MinPrice4 = money
+    for quality = Constants.ItemQualities.Min, Constants.ItemQualities.Max do
+        MoneyLooterXDB.MinPrices[quality] = money
+    end
+end
+
+---@param class integer
+---@return boolean
+function Data.IsArmorOrWeapon(class)
+    return class == Constants.ItemClass.Weapon or class == Constants.ItemClass.Armor
+end
+
+---@param class integer
+---@return boolean
+function Data.IsDisenchantableClass(class)
+    if Data.IsArmorOrWeapon(class) then
+        return true
+    end
+    -- retail only, profession items
+    return MoneyLooter.isRetail and (class == Constants.ItemClass.Profession)
+end
+
+---@param quality integer
+---@param class integer
+---@param equipLoc string|nil
+---@return boolean
+function Data.IsDisenchantable(quality, class, equipLoc)
+    if quality < Constants.ItemQualities.DisenchantableMin
+        or quality > Constants.ItemQualities.DisenchantableMax then
+        return false
+    end
+    -- shirts and tabards
+    if equipLoc == "INVTYPE_BODY" or equipLoc == "INVTYPE_TABARD" then
+        return false
+    end
+    return Data.IsDisenchantableClass(class)
+end
+
+---@param quality integer
+---@param class integer
+---@return boolean
+function Data.IsQualityManaged(quality, class)
+    if type(quality) ~= "number" then return false end
+    if quality < Constants.ItemQualities.Min or quality > Constants.ItemQualities.Max then return false end
+    -- retail only for transmogs
+    if quality == 0 then
+        return (MoneyLooter.isRetail == true) and Data.IsArmorOrWeapon(class)
+    end
+    return true
 end
 
 ---@return string
@@ -395,6 +429,26 @@ function Data.SetTSMString(tsmString)
         return
     end
     MoneyLooterXDB.CurrentTSMString = tsmString
+    print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING_VALID .. "|cFF36e8e6" .. tsmString .. "|r")
+end
+
+---@return string
+function Data.GetCurrentTSMDisenchantString()
+    return MoneyLooterXDB.CurrentTSMDisenchantString
+end
+
+---@param tsmString string
+function Data.SetTSMDisenchantString(tsmString)
+    local TSM_API = TSM_API
+    if TSM_API == nil then
+        print(_G.MONEYLOOTER_L_TSM_NOT_AVAILABLE)
+        return
+    end
+    if not TSM_API.IsCustomPriceValid(tsmString) then
+        print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING_NOT_VALID .. "|cFF36e8e6" .. tsmString .. "|r")
+        return
+    end
+    MoneyLooterXDB.CurrentTSMDisenchantString = tsmString
     print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING_VALID .. "|cFF36e8e6" .. tsmString .. "|r")
 end
 

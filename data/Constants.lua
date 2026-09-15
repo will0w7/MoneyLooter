@@ -18,7 +18,8 @@ Constants.Strings = {
     ADDON_VERSION = "",
     TITLE = "MoneyLooter",
     FONT = "GameFontHighlight",
-    TSM_STRING = "dbmarket"
+    TSM_STRING = "dbmarket",
+    TSM_DE_STRING = "destroy"
 }
 
 ---@class ML_Constants_Events
@@ -61,6 +62,24 @@ Constants.UIScale = {
     Max = 2,
     Step = 0.1
 }
+
+---@class ML_Constants_ItemQualities
+Constants.ItemQualities = {
+    Min = 0, -- Poor
+    Max = 4, -- Epic
+    DisenchantableMin = 2,
+    DisenchantableMax = 4
+}
+
+---@class ML_Constants_ItemClass
+Constants.ItemClass = {
+    Weapon = Enum.ItemClass.Weapon,
+    Armor = Enum.ItemClass.Armor
+}
+
+if MoneyLooter.isRetail then
+    Constants.ItemClass.Profession = Enum.ItemClass.Profession
+end
 
 -- Loot global patterns for self
 -- string.match returns itemLink, quantity || itemLink

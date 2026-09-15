@@ -16,6 +16,7 @@ Locales.esES = function()
     L["CONFIG_USE_DISENCHANT_VALUE"] = "Usar valor de desencantar"
     L["CONFIG_FORCE_USE_DISENCHANT_VALUE"] = "Forzar desencantar"
     L["CONFIG_TSM_STRING"] = "Cadena TSM personalizada"
+    L["CONFIG_TSM_DISENCHANT_STRING"] = "Cadena TSM de desencantar"
     L["CONFIG_MIN_PRICES"] = "Precios mínimos"
     L["CONFIG_VALIDATE"] = "Validar"
     L["CONFIG_RESET"] = "Restablecer"
@@ -40,14 +41,15 @@ Locales.esES = function()
   |cFF36e8e6/ml|r |cFFf1f488custom 'custom TSM string'|r: Establece una cadena TSM custom que será usada para calcular el precio. Si está vacía, se devuelve la cadena que está siendo usada.
     Ejemplos: /ml custom dbmarket
               /ml custom
-  |cFF36e8e6/ml|r |cFFf1f488mprice 'value'|r: Sets the minimum price threshold for a given quality.
-            mpricex: All available qualities.
-            mprice1: Quality 1 - Común - Blanco
-            mprice2: Quality 2 - Poco común - Verde
-            mprice3: Quality 3 - Raro - Azul
-            mprice4: Quality 4 - Épico - Morado
-      El resto de calidades usarán el precio de vendedor, si lo tienen.
-    Ejemplos: /ml mprice1 50 s
+  |cFF36e8e6/ml|r |cFFf1f488mprice 'value'|r: Establece el precio mínimo para una calidad.
+            mpricex: Todas las calidades.
+            mprice0: Calidad 0 - Pobre - Gris
+            mprice1: Calidad 1 - Común - Blanco
+            mprice2: Calidad 2 - Poco común - Verde
+            mprice3: Calidad 3 - Raro - Azul
+            mprice4: Calidad 4 - Épico - Morado
+    Ejemplos: /ml mprice0 50 s
+              /ml mprice1 50 s
               /ml mprice2 5000
               /ml mprice3 500 g
               /ml mprice4 5 c

@@ -121,11 +121,11 @@ For example, if it finds a valid price in TSM, it won't search in Auctionator or
 When an item is looted, MoneyLooter determines its value in this order:
 
 1. If **Force vendor price** is enabled, the vendor sell price is always used and no other source is checked.
-2. If the item is not Common, Uncommon, Rare or Epic quality, the vendor sell price is used.
-3. If **Force disenchant value** is enabled for the item's quality and the external addon can determine its disenchant value, the item is valued using its disenchant value. Currently only Auctionator provides disenchant values. If no disenchant value is available, the regular pricing below is used instead.
+2. If the item's quality is not a managed quality, the vendor sell price is used. Poor (0) through Epic (4) are managed; Poor items are only valued in retail, and only if they are armor or weapons (because they can be sold for transmog). Legendary and above are never auctionable, so they always use the vendor price.
+3. If **Force disenchant value** is enabled for the item's quality, the item is disenchantable (armor/weapon of Uncommon, Rare or Epic quality) and the external addon can determine its disenchant value, the item is valued using its disenchant value. Currently only Auctionator provides disenchant values. If no disenchant value is available, the regular pricing below is used instead.
 4. Otherwise, the regular price sources are tried in the order described above and the first valid price wins.
 5. Each price source must return at least the **minimum price threshold** configured for that quality (crafting reagents ignore it). If a source's auction price is below the threshold, it's treated as "no price" and the next source is tried. This threshold is meant to skip items whose auction price is overvalued.
-6. If **Use disenchant value** is enabled, the disenchant value is also checked and the higher of the two is used. The disenchant value ignores the threshold, so an item whose auction price falls below the threshold can still be counted by its disenchant value.
+6. If **Use disenchant value** is enabled and the item is disenchantable, the disenchant value is also checked and the higher of the two is used. The disenchant value ignores the threshold, so an item whose auction price falls below the threshold can still be counted by its disenchant value.
 7. If no source returns a price, the vendor sell price is used as a last resort.
 
 ## Usage
@@ -143,16 +143,19 @@ You can alternate between **/ml** or **/moneylooter** for chat commands. In the 
 
         /ml forcevendorprice: This command forces the merchant's selling price to always be used, skipping addons. It's a toggle.
 
+        /ml disenchant: Toggles the use of the disenchantment value when it is higher than the direct auction price.
+
         /ml mprice: Sets the minimum price threshold for a given quality.
             mpricex: All available qualities.
+            mprice0: Quality 0 - Poor - Grey
             mprice1: Quality 1 - Common - White
             mprice2: Quality 2 - Uncommon - Green
             mprice3: Quality 3 - Rare - Blue
             mprice4: Quality 4 - Epic - Purple
-        * The rest of the qualities will use the vendor price, if they have it.
 
-The price format for mpricex is a number followed by g(old), s(ilver) or c(opper). If you only specify the number, gold will be used by default.
+The price format for mprice is a number followed by g(old), s(ilver) or c(opper). If you only specify the number, gold will be used by default.
 
+        /ml mprice0 50 s
         /ml mprice1 50 s
         /ml mprice2 5000
         /ml mprice3 500 g

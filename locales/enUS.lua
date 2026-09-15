@@ -16,6 +16,7 @@ Locales.enUS = function()
     L["CONFIG_USE_DISENCHANT_VALUE"] = "Use disenchant value"
     L["CONFIG_FORCE_USE_DISENCHANT_VALUE"] = "Force disenchant"
     L["CONFIG_TSM_STRING"] = "TSM custom string"
+    L["CONFIG_TSM_DISENCHANT_STRING"] = "TSM disenchant string"
     L["CONFIG_MIN_PRICES"] = "Minimum prices"
     L["CONFIG_VALIDATE"] = "Validate"
     L["CONFIG_RESET"] = "Reset"
@@ -42,12 +43,13 @@ Locales.enUS = function()
               /ml custom
   |cFF36e8e6/ml|r |cFFf1f488mprice 'value'|r: Sets the minimum price threshold for a given quality.
             mpricex: All available qualities.
+            mprice0: Quality 0 - Poor - Grey
             mprice1: Quality 1 - Common - White
             mprice2: Quality 2 - Uncommon - Green
             mprice3: Quality 3 - Rare - Blue
             mprice4: Quality 4 - Epic - Purple
-      The rest of the qualities will use the vendor price, if they have it.
-    Examples: /ml mprice1 50 s
+    Examples: /ml mprice0 50 s
+              /ml mprice1 50 s
               /ml mprice2 5000
               /ml mprice3 500 g
               /ml mprice4 5 c

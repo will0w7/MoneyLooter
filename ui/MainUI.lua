@@ -612,23 +612,6 @@ local function ParseMinPrice(msg)
         print(_G.MONEYLOOTER_L_MPRICE_ERROR)
         return
     end
-    local mprices = {
-        [1] = function(val)
-            Data.SetMinPrice1(val)
-        end,
-        [2] = function(val)
-            Data.SetMinPrice2(val)
-        end,
-        [3] = function(val)
-            Data.SetMinPrice3(val)
-        end,
-        [4] = function(val)
-            Data.SetMinPrice4(val)
-        end,
-        [99] = function(val)
-            Data.SetAllMinPrices(val)
-        end
-    }
     local coinValue
     if coin == nil or coin == "g" then
         coinValue = 10000
@@ -643,17 +626,22 @@ local function ParseMinPrice(msg)
         print(_G.MONEYLOOTER_L_MPRICE_UNRECOGNIZED_COIN)
         return
     end
-    local type = string.sub(mprice, 7, 8)
-    local qual
-    if type == "x" then
-        qual = 99
+    local qualifier = string.sub(mprice, 7, 8)
+    local copper = tonumber(value) * coinValue
+    local quality
+    if qualifier == "x" then
+        quality = 99
+        Data.SetAllMinPrices(copper)
     else
-        qual = tonumber(type)
+        quality = tonumber(qualifier)
+        if quality == nil or quality < Constants.ItemQualities.Min or quality > Constants.ItemQualities.Max then
+            print(_G.MONEYLOOTER_L_MPRICE_ERROR)
+            return
+        end
+        Data.SetMinPrice(quality, copper)
     end
-    mprices[qual](value * coinValue)
     print(string.format("%s |cFF36e8e6%s %s|r - %s [%s]", _G.MONEYLOOTER_L_MPRICE_VALID, tostring(value),
-        _G["MONEYLOOTER_L_MPRICE_COIN_" .. coin], _G["MONEYLOOTER_L_MPRICE_QUALITY_" .. tostring(qual)],
-        tostring(qual)))
+        _G["MONEYLOOTER_L_MPRICE_COIN_" .. coin], Utils.GetQualityName(quality), tostring(qualifier)))
 end
 
 local function ParseTime(msg)

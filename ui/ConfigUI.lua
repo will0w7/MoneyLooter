@@ -6,6 +6,8 @@ local UI = MoneyLooter.UI
 local Constants = MoneyLooter.Constants
 ---@class ML_Data
 local Data = MoneyLooter.Data
+---@class ML_Utils
+local Utils = MoneyLooter.Utils
 
 ------------------------------------------------------------------------------
 local CreateFrame = CreateFrame
@@ -14,33 +16,11 @@ local MoneyInputFrame_SetCopper = MoneyInputFrame_SetCopper
 local strupper = string.upper
 ------------------------------------------------------------------------------
 local SECTION_TITLE_COLOR = { 1, 0.82, 0 }
-local QUALITY_COLORS = {
-    { 1.0,  1.0,  1.0 },  -- Common
-    { 0.12, 1.0,  0.0 },  -- Uncommon
-    { 0.0,  0.44, 0.87 }, -- Rare
-    { 0.64, 0.21, 0.93 }, -- Epic
-}
 ------------------------------------------------------------------------------
 
 ---@class ML_Config
 local Config = {}
 MoneyLooter.Config = Config
-
-local MinPriceGetters = {
-    Data.GetMinPrice1,
-    Data.GetMinPrice2,
-    Data.GetMinPrice3,
-    Data.GetMinPrice4,
-}
-local MinPriceGettersLenght = #MinPriceGetters
-
-local MinPriceSetters = {
-    Data.SetMinPrice1,
-    Data.SetMinPrice2,
-    Data.SetMinPrice3,
-    Data.SetMinPrice4,
-}
-local MinPriceSettersLenght = #MinPriceSetters
 
 ---@param parent ML_ConfigFrame
 ---@return table|Frame
@@ -114,6 +94,29 @@ local function CreateTextButton(parent, yOffset, xOffset, text)
     return btn
 end
 
+---@param parent ML_ConfigFrame
+---@param yOffset number
+---@param titleText string
+---@param defaultString string
+---@return table
+local function CreateTSMStringGroup(parent, yOffset, titleText, defaultString)
+    local group = {}
+
+    CreateSectionTitle(parent, yOffset, titleText)
+
+    group.EditBox = CreateFrame("EditBox", nil, parent, "InputBoxTemplate")
+    group.EditBox:SetPoint("TOPLEFT", parent, "TOPLEFT", 14, yOffset - 18)
+    group.EditBox:SetSize(298, 20)
+    group.EditBox:SetAutoFocus(false)
+
+    group.ValidateButton = CreateTextButton(parent, yOffset - 46, 14, _G.MONEYLOOTER_L_CONFIG_VALIDATE)
+    group.ResetButton = CreateTextButton(parent, yOffset - 46, 130, _G.MONEYLOOTER_L_CONFIG_RESET)
+    group.Status = CreateLabel(parent, yOffset - 74, "")
+    group.DefaultString = defaultString
+
+    return group
+end
+
 ---@return table|Frame|ML_ConfigFrame
 local function CreateConfigFrame()
     local frame = CreateFrame("Frame", "MONEYLOOTER_CONFIG_FRAME", UIParent, "ML_ConfigFrame")
@@ -147,67 +150,66 @@ local function CreateConfigFrame()
     frame.ForceVendorCheck = CreateCheckboxRow(frame, -70, _G.MONEYLOOTER_L_CONFIG_FORCE_VENDOR_PRICE)
     frame.UseDisenchantCheck = CreateCheckboxRow(frame, -96, _G.MONEYLOOTER_L_CONFIG_USE_DISENCHANT_VALUE)
 
-    -- TSM custom string
-    CreateSectionTitle(frame, -132, _G.MONEYLOOTER_L_CONFIG_TSM_STRING)
-    frame.TSMEditBox = CreateFrame("EditBox", nil, frame, "InputBoxTemplate")
-    frame.TSMEditBox:SetPoint("TOPLEFT", frame, "TOPLEFT", 14, -150)
-    frame.TSMEditBox:SetSize(298, 20)
-    frame.TSMEditBox:SetAutoFocus(false)
-
-    frame.TSMValidateButton = CreateTextButton(frame, -178, 14, _G.MONEYLOOTER_L_CONFIG_VALIDATE)
-    frame.TSMResetButton = CreateTextButton(frame, -178, 130, _G.MONEYLOOTER_L_CONFIG_RESET)
-    frame.TSMStatus = CreateLabel(frame, -206, "")
+    -- TSM custom strings
+    local tsmGroup = CreateTSMStringGroup(frame, -132, _G.MONEYLOOTER_L_CONFIG_TSM_STRING,
+        Constants.Strings.TSM_STRING)
+    local tsmDisenchantGroup = CreateTSMStringGroup(frame, -248, _G.MONEYLOOTER_L_CONFIG_TSM_DISENCHANT_STRING,
+        Constants.Strings.TSM_DE_STRING)
 
     -- Minimum prices
-    CreateSectionTitle(frame, -248, _G.MONEYLOOTER_L_CONFIG_MIN_PRICES)
+    CreateSectionTitle(frame, -364, _G.MONEYLOOTER_L_CONFIG_MIN_PRICES)
 
     frame.MinPriceFrames = {}
     frame.ForceDisenchantChecks = {}
-    for i = 1, 4 do
-        local yOffset = -266 - (i - 1) * 50
-        local qualityLabel = CreateLabel(frame, yOffset - 4, _G["MONEYLOOTER_L_MPRICE_QUALITY_" .. i])
-        qualityLabel:SetTextColor(QUALITY_COLORS[i][1], QUALITY_COLORS[i][2], QUALITY_COLORS[i][3])
+    local minQuality = Constants.ItemQualities.Min
+    for quality = minQuality, Constants.ItemQualities.Max do
+        local yOffset = -382 - (quality - minQuality) * 50
+        local qualityLabel = CreateLabel(frame, yOffset - 4, Utils.GetQualityName(quality))
+        local r, g, b = Utils.GetQualityColor(quality)
+        qualityLabel:SetTextColor(r, g, b)
 
-        local moneyInput = CreateFrame("Frame", "MONEYLOOTER_CONFIG_MINPRICE" .. i, frame,
+        local moneyInput = CreateFrame("Frame", "MONEYLOOTER_CONFIG_MINPRICE" .. quality, frame,
             "MoneyInputFrameTemplate")
         moneyInput:SetPoint("TOPLEFT", frame, "TOPLEFT", 120, yOffset)
-        frame.MinPriceFrames[i] = moneyInput
+        frame.MinPriceFrames[quality] = moneyInput
 
-        if i ~= 1 then
-            frame.ForceDisenchantChecks[i] = CreateCheckboxRow(frame, yOffset - 22,
+        if quality >= 2 and quality <= 4 then
+            frame.ForceDisenchantChecks[quality] = CreateCheckboxRow(frame, yOffset - 22,
                 _G.MONEYLOOTER_L_CONFIG_FORCE_USE_DISENCHANT_VALUE)
-            frame.ForceDisenchantChecks[i].Label:SetTextColor(QUALITY_COLORS[i][1], QUALITY_COLORS[i][2],
-                QUALITY_COLORS[i][3])
+            frame.ForceDisenchantChecks[quality].Label:SetTextColor(r, g, b)
         end
     end
 
     -- Save button
-    frame.SaveStatus = CreateLabel(frame, -500, "")
     frame.SaveButton = CreateFrame("Button", nil, frame, "ML_Button")
     frame.SaveButton:SetSize(300, 22)
     frame.SaveButton:SetPoint("BOTTOM", frame, "BOTTOM", 0, 14)
     frame.SaveButton:SetText(_G.MONEYLOOTER_L_CONFIG_SAVE)
 
-    local function RefreshTSMFields()
+    frame.SaveStatus = CreateLabel(frame, 0, "")
+    frame.SaveStatus:ClearAllPoints()
+    frame.SaveStatus:SetPoint("BOTTOM", frame.SaveButton, "TOP", 0, 6)
+
+    local function RefreshTSMGroup(group, getter)
         if TSM_API == nil then
-            frame.TSMEditBox:SetEnabled(false)
-            frame.TSMEditBox:SetTextColor(0.5, 0.5, 0.5)
-            frame.TSMValidateButton:Disable()
-            frame.TSMValidateButton.Label:SetTextColor(0.5, 0.5, 0.5)
-            frame.TSMResetButton:Disable()
-            frame.TSMResetButton.Label:SetTextColor(0.5, 0.5, 0.5)
-            frame.TSMStatus:SetText(_G.MONEYLOOTER_L_CONFIG_TSM_NOT_AVAILABLE)
-            frame.TSMStatus:SetTextColor(1, 0.3, 0.3)
+            group.EditBox:SetEnabled(false)
+            group.EditBox:SetTextColor(0.5, 0.5, 0.5)
+            group.ValidateButton:Disable()
+            group.ValidateButton.Label:SetTextColor(0.5, 0.5, 0.5)
+            group.ResetButton:Disable()
+            group.ResetButton.Label:SetTextColor(0.5, 0.5, 0.5)
+            group.Status:SetText(_G.MONEYLOOTER_L_CONFIG_TSM_NOT_AVAILABLE)
+            group.Status:SetTextColor(1, 0.3, 0.3)
         else
-            frame.TSMEditBox:SetEnabled(true)
-            frame.TSMEditBox:SetTextColor(1, 1, 1)
-            frame.TSMValidateButton:Enable()
-            frame.TSMValidateButton.Label:SetTextColor(1, 1, 1)
-            frame.TSMResetButton:Enable()
-            frame.TSMResetButton.Label:SetTextColor(1, 1, 1)
-            frame.TSMStatus:SetText("")
+            group.EditBox:SetEnabled(true)
+            group.EditBox:SetTextColor(1, 1, 1)
+            group.ValidateButton:Enable()
+            group.ValidateButton.Label:SetTextColor(1, 1, 1)
+            group.ResetButton:Enable()
+            group.ResetButton.Label:SetTextColor(1, 1, 1)
+            group.Status:SetText("")
         end
-        frame.TSMEditBox:SetText(Data.GetCurrentTSMString())
+        group.EditBox:SetText(getter())
     end
 
     local currentScale = 1
@@ -256,50 +258,60 @@ local function CreateConfigFrame()
         for i = 2, 4 do
             frame.ForceDisenchantChecks[i]:SetChecked(Data.GetForceUseDisenchantValueIndex(i))
         end
-        for i = 1, MinPriceGettersLenght do
-            MoneyInputFrame_SetCopper(frame.MinPriceFrames[i], MinPriceGetters[i]())
+        for quality = Constants.ItemQualities.Min, Constants.ItemQualities.Max do
+            MoneyInputFrame_SetCopper(frame.MinPriceFrames[quality], Data.GetMinPrice(quality))
         end
-        RefreshTSMFields()
+        RefreshTSMGroup(tsmGroup, Data.GetCurrentTSMString)
+        RefreshTSMGroup(tsmDisenchantGroup, Data.GetCurrentTSMDisenchantString)
         currentScale = Data.GetUIScale()
         RefreshScale()
         RefreshDisenchant()
     end
 
+    ---@param group table
     ---@return string|nil
-    local function ValidateTSM()
-        local text = frame.TSMEditBox:GetText() or ""
+    local function ValidateTSMGroup(group)
+        local text = group.EditBox:GetText() or ""
         text = text:gsub("^%s+", ""):gsub("%s+$", "")
 
         if TSM_API == nil then
-            frame.TSMStatus:SetText(_G.MONEYLOOTER_L_CONFIG_TSM_NOT_AVAILABLE)
-            frame.TSMStatus:SetTextColor(1, 0.3, 0.3)
+            group.Status:SetText(_G.MONEYLOOTER_L_CONFIG_TSM_NOT_AVAILABLE)
+            group.Status:SetTextColor(1, 0.3, 0.3)
             return nil
         end
         if text == "" then
-            frame.TSMStatus:SetText(_G.MONEYLOOTER_L_CONFIG_TSM_EMPTY)
-            frame.TSMStatus:SetTextColor(1, 0.7, 0.3)
+            group.Status:SetText(_G.MONEYLOOTER_L_CONFIG_TSM_EMPTY)
+            group.Status:SetTextColor(1, 0.7, 0.3)
             return nil
         end
         if TSM_API.IsCustomPriceValid(text) then
-            frame.TSMStatus:SetText(_G.MONEYLOOTER_L_CONFIG_TSM_VALID)
-            frame.TSMStatus:SetTextColor(0.3, 1, 0.3)
+            group.Status:SetText(_G.MONEYLOOTER_L_CONFIG_TSM_VALID)
+            group.Status:SetTextColor(0.3, 1, 0.3)
             return text
         end
 
-        frame.TSMStatus:SetText(_G.MONEYLOOTER_L_CONFIG_TSM_INVALID)
-        frame.TSMStatus:SetTextColor(1, 0.3, 0.3)
+        group.Status:SetText(_G.MONEYLOOTER_L_CONFIG_TSM_INVALID)
+        group.Status:SetTextColor(1, 0.3, 0.3)
         return nil
     end
 
     local function Save()
         if TSM_API ~= nil then
-            local tsmString = ValidateTSM()
+            local tsmString = ValidateTSMGroup(tsmGroup)
             if tsmString == nil then
-                frame.TSMStatus:SetText(_G.MONEYLOOTER_L_CONFIG_SAVE_ERROR_TSM)
-                frame.TSMStatus:SetTextColor(1, 0.3, 0.3)
+                tsmGroup.Status:SetText(_G.MONEYLOOTER_L_CONFIG_SAVE_ERROR_TSM)
+                tsmGroup.Status:SetTextColor(1, 0.3, 0.3)
                 return
             end
             Data.SetTSMString(tsmString)
+
+            local tsmDisenchantString = ValidateTSMGroup(tsmDisenchantGroup)
+            if tsmDisenchantString == nil then
+                tsmDisenchantGroup.Status:SetText(_G.MONEYLOOTER_L_CONFIG_SAVE_ERROR_TSM)
+                tsmDisenchantGroup.Status:SetTextColor(1, 0.3, 0.3)
+                return
+            end
+            Data.SetTSMDisenchantString(tsmDisenchantString)
         end
 
         Data.SetForceVendorPrice(frame.ForceVendorCheck:GetChecked())
@@ -307,8 +319,8 @@ local function CreateConfigFrame()
         for i = 2, 4 do
             Data.SetForceUseDisenchantValueIndex(frame.ForceDisenchantChecks[i]:GetChecked(), i)
         end
-        for i = 1, MinPriceSettersLenght do
-            MinPriceSetters[i](MoneyInputFrame_GetCopper(frame.MinPriceFrames[i]))
+        for quality = Constants.ItemQualities.Min, Constants.ItemQualities.Max do
+            Data.SetMinPrice(quality, MoneyInputFrame_GetCopper(frame.MinPriceFrames[quality]))
         end
         Data.SetUIScale(currentScale)
         Config.ApplyScale()
@@ -317,12 +329,19 @@ local function CreateConfigFrame()
         frame.SaveStatus:SetTextColor(0.3, 1, 0.3)
     end
 
+    local function WireTSMGroup(group)
+        group.ValidateButton:SetScript(Constants.Events.OnClick, function()
+            ValidateTSMGroup(group)
+        end)
+        group.ResetButton:SetScript(Constants.Events.OnClick, function()
+            group.EditBox:SetText(group.DefaultString)
+            group.Status:SetText("")
+        end)
+    end
+
     frame:SetScript(Constants.Events.OnShow, Populate)
-    frame.TSMValidateButton:SetScript(Constants.Events.OnClick, ValidateTSM)
-    frame.TSMResetButton:SetScript(Constants.Events.OnClick, function()
-        frame.TSMEditBox:SetText(Constants.Strings.TSM_STRING)
-        frame.TSMStatus:SetText("")
-    end)
+    WireTSMGroup(tsmGroup)
+    WireTSMGroup(tsmDisenchantGroup)
     frame.SaveButton:SetScript(Constants.Events.OnClick, Save)
     frame.ScaleMinusButton:SetScript(Constants.Events.OnClick, function()
         ChangeScale(-Constants.UIScale.Step)

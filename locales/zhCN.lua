@@ -16,6 +16,7 @@ Locales.zhCN = function()
     L["CONFIG_USE_DISENCHANT_VALUE"] = "Use disenchant value"
     L["CONFIG_FORCE_USE_DISENCHANT_VALUE"] = "Force disenchant"
     L["CONFIG_TSM_STRING"] = "TSM custom string"
+    L["CONFIG_TSM_DISENCHANT_STRING"] = "TSM disenchant string"
     L["CONFIG_MIN_PRICES"] = "Minimum prices"
     L["CONFIG_VALIDATE"] = "Validate"
     L["CONFIG_RESET"] = "Reset"
