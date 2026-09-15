@@ -71,5 +71,11 @@ globals = {
     "StaticPopupDialogs",
     "StaticPopup_Show",
     "MoneyInputFrame_GetCopper",
-    "MoneyInputFrame_SetCopper"
+    "MoneyInputFrame_SetCopper",
+    "UIDropDownMenu_Initialize",
+    "UIDropDownMenu_SetText",
+    "UIDropDownMenu_SetWidth",
+    "UIDropDownMenu_CreateInfo",
+    "UIDropDownMenu_AddButton",
+    "UISpecialFrames"
 }

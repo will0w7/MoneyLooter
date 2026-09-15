@@ -1,10 +1,5 @@
 {
-    "diagnostics.disable": [
-        "lowercase-global",
-        "deprecated",
-        "undefined-field",
-        "param-type-mismatch"
-    ],
+    "diagnostics.disable": ["lowercase-global", "deprecated", "undefined-field", "param-type-mismatch"],
     "diagnostics.globals": [
         "Auctionator",
         "SetItemRef",
@@ -38,10 +33,14 @@
         "StaticPopupDialogs",
         "StaticPopup_Show",
         "MoneyInputFrame_GetCopper",
-        "MoneyInputFrame_SetCopper"
+        "MoneyInputFrame_SetCopper",
+        "UIDropDownMenu_Initialize",
+        "UIDropDownMenu_SetText",
+        "UIDropDownMenu_SetWidth",
+        "UIDropDownMenu_CreateInfo",
+        "UIDropDownMenu_AddButton",
+        "UISpecialFrames"
     ],
     "runtime.version": "Lua 5.1",
-    "workspace.ignoreDir": [
-        ".vscode"
-    ]
+    "workspace.ignoreDir": [".vscode"]
 }

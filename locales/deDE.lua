@@ -14,6 +14,7 @@ Locales.deDE = function()
     L["CONFIG_UI_SCALE"] = "UI Scale"
     L["CONFIG_FORCE_VENDOR_PRICE"] = "Force vendor price"
     L["CONFIG_USE_DISENCHANT_VALUE"] = "Use disenchant value"
+    L["CONFIG_PRICE_SOURCE"] = "Price source"
     L["CONFIG_FORCE_USE_DISENCHANT_VALUE"] = "Force disenchant"
     L["CONFIG_TSM_STRING"] = "TSM custom string"
     L["CONFIG_TSM_DISENCHANT_STRING"] = "TSM disenchant string"

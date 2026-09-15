@@ -249,7 +249,7 @@ local function UnregisterStartEvents()
 end
 
 local function PopulateData()
-    Constants.Strings.ADDON_VERSION = GetAddOnMetadata(Constants.Strings.ADDON_NAME, "Version")
+    Constants.Strings.AddonVersion = GetAddOnMetadata(Constants.Strings.AddonName, "Version")
     MoneyLooter.Config.ApplyScale()
 
     UpdateAllTexts(Data.GetTimer(), Data.GetRawMoney(), Data.GetItemsMoney(), Data.CalcGPH(), Data.GetPriciest())
@@ -284,7 +284,7 @@ local function CreateTitleBar(parent)
     local titleBar = CreateFrame("Frame", nil, parent, "ML_TitleBar")
     titleBar:SetPoint("TOPLEFT")
     titleBar:SetPoint("TOPRIGHT")
-    titleBar.Label:SetText(Constants.Strings.TITLE)
+    titleBar.Label:SetText(Constants.Strings.Title)
     return titleBar
 end
 
@@ -367,6 +367,7 @@ local function CreateResetButton(parent)
         local forceDisenchant = Data.GetForceUseDisenchantValue()
         local scrollVisible = Data.IsScrollLootFrameVisible()
         Data.ResetMoneyLooterDB()
+        MoneyLooter.Core.ClearPriceCache()
         UpdateAllTexts(0, 0, 0, 0, 0)
         UI.MLMainFrame.ScrollBoxLoot.DataProvider:Flush()
         Data.SetScrollLootFrameVisible(scrollVisible)
@@ -409,11 +410,11 @@ local function CreateStatisticLabels(parent)
     ---@param stat table
     ---@return FontString, FontString
     local function createLabelPair(stat)
-        local label = parent:CreateFontString(nil, "OVERLAY", Constants.Strings.FONT)
+        local label = parent:CreateFontString(nil, "OVERLAY", Constants.Strings.Font)
         label:SetPoint("TOPLEFT", 5, stat[3])
         label:SetText(stat[1])
 
-        local value = parent:CreateFontString(nil, "OVERLAY", Constants.Strings.FONT)
+        local value = parent:CreateFontString(nil, "OVERLAY", Constants.Strings.Font)
         value:SetPoint("TOPRIGHT", -8, stat[3])
         value:SetJustifyH("RIGHT")
         if stat[2] then value:SetText(stat[2]) end
@@ -715,7 +716,7 @@ local function slash(msg, _)
     elseif msg == "profiler" then
         Profiler.ToggleProfiler()
     else
-        print(_G.MONEYLOOTER_L_USAGE .. Constants.Strings.ADDON_VERSION)
+        print(_G.MONEYLOOTER_L_USAGE .. Constants.Strings.AddonVersion)
     end
 end
 SlashCmdList["MONEYLOOTER"] = slash
@@ -724,7 +725,7 @@ local watcher = CreateFrame("Frame")
 
 local addonLoaded = false
 local function WatcherOnEvent(_, event, arg1)
-    if event == Constants.Events.AddonLoaded and arg1 == Constants.Strings.ADDON_NAME then
+    if event == Constants.Events.AddonLoaded and arg1 == Constants.Strings.AddonName then
         addonLoaded = true
         watcher:UnregisterEvent(Constants.Events.AddonLoaded)
     elseif event == Constants.Events.PlayerEnteringWorld and addonLoaded then

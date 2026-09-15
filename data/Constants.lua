@@ -5,21 +5,21 @@ local MoneyLooter = select(2, ...)
 local addonName = select(1, ...)
 
 ---@class ML_Constants
----@field PATTERNS_SELF table
----@field PATTERNS_CRAFT table
----@field PATTERNS_RECEIVED table
+---@field PatternsSelf table
+---@field PatternsCraft table
+---@field PatternsReceived table
 ---@field RelevantInteractions table
 local Constants = {}
 MoneyLooter.Constants = Constants
 
 ---@class ML_Constants_Strings
 Constants.Strings = {
-    ADDON_NAME = addonName,
-    ADDON_VERSION = "",
-    TITLE = "MoneyLooter",
-    FONT = "GameFontHighlight",
-    TSM_STRING = "dbmarket",
-    TSM_DE_STRING = "destroy"
+    AddonName = addonName,
+    AddonVersion = "",
+    Title = "MoneyLooter",
+    Font = "GameFontHighlight",
+    TSMString = "dbmarket",
+    TSMDisenchantString = "destroy"
 }
 
 ---@class ML_Constants_Events
@@ -81,9 +81,27 @@ if MoneyLooter.isRetail then
     Constants.ItemClass.Profession = Enum.ItemClass.Profession
 end
 
+---@class ML_Constants_PriceSources
+Constants.PriceSources = {
+    TradeSkillMaster = "TradeSkillMaster",
+    Auctionator = "Auctionator",
+    Auctioneer = "Auctioneer",
+    OribosExchange = "Oribos Exchange",
+    RECrystallize = "RECrystallize"
+}
+
+---@class ML_Constants_PriceSourcesOrder
+Constants.PriceSourcesOrder = {
+    Constants.PriceSources.TradeSkillMaster,
+    Constants.PriceSources.Auctionator,
+    Constants.PriceSources.Auctioneer,
+    Constants.PriceSources.OribosExchange,
+    Constants.PriceSources.RECrystallize
+}
+
 -- Loot global patterns for self
 -- string.match returns itemLink, quantity || itemLink
-Constants.PATTERNS_SELF = {
+Constants.PatternsSelf = {
     [1] = LOOT_ITEM_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"),        -- 2
     [2] = LOOT_ITEM_PUSHED_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"), -- 2
     [3] = LOOT_ITEM_SELF:gsub("%%s", "(.+)"),                                       -- 1
@@ -92,12 +110,12 @@ Constants.PATTERNS_SELF = {
 
 -- Crafted global patterns for self
 -- string.match returns itemLink, quantity || itemLink
-Constants.PATTERNS_CRAFT = {
+Constants.PatternsCraft = {
     [1] = LOOT_ITEM_CREATED_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"), -- 2
     [2] = LOOT_ITEM_CREATED_SELF:gsub("%%s", "(.+)")                                 -- 1
 }
 
-Constants.PATTERNS_RECEIVED = {
+Constants.PatternsReceived = {
     [1] = ERR_QUEST_REWARD_MONEY_S:gsub("%%s", "(.+)")
 }
 

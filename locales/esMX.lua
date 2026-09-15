@@ -14,6 +14,7 @@ Locales.esMX = function()
     L["CONFIG_UI_SCALE"] = "Escala de UI"
     L["CONFIG_FORCE_VENDOR_PRICE"] = "Forzar precio de vendedor"
     L["CONFIG_USE_DISENCHANT_VALUE"] = "Usar valor de desencantar"
+    L["CONFIG_PRICE_SOURCE"] = "Fuente de precio"
     L["CONFIG_FORCE_USE_DISENCHANT_VALUE"] = "Forzar desencantar"
     L["CONFIG_TSM_STRING"] = "Cadena TSM personalizada"
     L["CONFIG_TSM_DISENCHANT_STRING"] = "Cadena TSM de desencantar"

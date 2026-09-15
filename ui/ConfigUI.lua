@@ -46,7 +46,7 @@ end
 ---@param text string
 ---@return FontString
 local function CreateLabel(parent, yOffset, text)
-    local label = parent:CreateFontString(nil, "OVERLAY", Constants.Strings.FONT)
+    local label = parent:CreateFontString(nil, "OVERLAY", Constants.Strings.Font)
     label:SetPoint("TOPLEFT", parent, "TOPLEFT", 14, yOffset)
     label:SetText(text)
     return label
@@ -57,7 +57,7 @@ end
 ---@param text string
 ---@return FontString
 local function CreateSectionTitle(parent, yOffset, text)
-    local label = parent:CreateFontString(nil, "OVERLAY", Constants.Strings.FONT)
+    local label = parent:CreateFontString(nil, "OVERLAY", Constants.Strings.Font)
     label:SetPoint("TOPLEFT", parent, "TOPLEFT", 14, yOffset)
     label:SetText(strupper(text))
     label:SetTextColor(SECTION_TITLE_COLOR[1], SECTION_TITLE_COLOR[2], SECTION_TITLE_COLOR[3])
@@ -73,7 +73,7 @@ local function CreateCheckboxRow(parent, yOffset, text)
     check:ClearAllPoints()
     check:SetPoint("TOPLEFT", parent, "TOPLEFT", 14, yOffset)
 
-    local label = parent:CreateFontString(nil, "OVERLAY", Constants.Strings.FONT)
+    local label = parent:CreateFontString(nil, "OVERLAY", Constants.Strings.Font)
     label:SetPoint("LEFT", check, "RIGHT", 8, 0)
     label:SetText(text)
     check.Label = label
@@ -105,8 +105,8 @@ local function CreateTSMStringGroup(parent, yOffset, titleText, defaultString)
     CreateSectionTitle(parent, yOffset, titleText)
 
     group.EditBox = CreateFrame("EditBox", nil, parent, "InputBoxTemplate")
-    group.EditBox:SetPoint("TOPLEFT", parent, "TOPLEFT", 14, yOffset - 18)
-    group.EditBox:SetSize(298, 20)
+    group.EditBox:SetPoint("TOPLEFT", parent, "TOPLEFT", 20, yOffset - 18)
+    group.EditBox:SetSize(284, 20)
     group.EditBox:SetAutoFocus(false)
 
     group.ValidateButton = CreateTextButton(parent, yOffset - 46, 14, _G.MONEYLOOTER_L_CONFIG_VALIDATE)
@@ -126,6 +126,9 @@ local function CreateConfigFrame()
     frame:RegisterForDrag(Constants.Inputs.LeftButton)
     frame:Hide()
 
+    -- close on ESC
+    table.insert(UISpecialFrames, "MONEYLOOTER_CONFIG_FRAME")
+
     frame.TitleBar = CreateTitleBar(frame)
     frame.CloseButton = CreateCloseButton(frame)
 
@@ -136,7 +139,7 @@ local function CreateConfigFrame()
     frame.ScaleMinusButton:SetPoint("TOPLEFT", frame, "TOPLEFT", 110, -40)
     frame.ScaleMinusButton:SetText("-")
 
-    frame.ScaleValue = frame:CreateFontString(nil, "OVERLAY", Constants.Strings.FONT)
+    frame.ScaleValue = frame:CreateFontString(nil, "OVERLAY", Constants.Strings.Font)
     frame.ScaleValue:SetSize(44, 20)
     frame.ScaleValue:SetJustifyH("CENTER")
     frame.ScaleValue:SetPoint("LEFT", frame.ScaleMinusButton, "RIGHT", 6, 0)
@@ -150,20 +153,42 @@ local function CreateConfigFrame()
     frame.ForceVendorCheck = CreateCheckboxRow(frame, -70, _G.MONEYLOOTER_L_CONFIG_FORCE_VENDOR_PRICE)
     frame.UseDisenchantCheck = CreateCheckboxRow(frame, -96, _G.MONEYLOOTER_L_CONFIG_USE_DISENCHANT_VALUE)
 
+    -- Price source
+    CreateSectionTitle(frame, -122, _G.MONEYLOOTER_L_CONFIG_PRICE_SOURCE)
+
+    local currentPriceSource = Constants.PriceSources.TradeSkillMaster
+    frame.PriceSourceDropdown = CreateFrame("Frame", "MONEYLOOTER_CONFIG_PRICE_SOURCE_DROPDOWN", frame,
+        "UIDropDownMenuTemplate")
+    frame.PriceSourceDropdown:SetPoint("TOPLEFT", frame, "TOPLEFT", -4, -140)
+    UIDropDownMenu_SetWidth(frame.PriceSourceDropdown, 120)
+    UIDropDownMenu_Initialize(frame.PriceSourceDropdown, function()
+        for _, source in ipairs(Constants.PriceSourcesOrder) do
+            local info = UIDropDownMenu_CreateInfo()
+            info.text = source
+            info.value = source
+            info.func = function()
+                currentPriceSource = source
+                UIDropDownMenu_SetText(frame.PriceSourceDropdown, source)
+            end
+            info.checked = (source == currentPriceSource)
+            UIDropDownMenu_AddButton(info)
+        end
+    end)
+
     -- TSM custom strings
-    local tsmGroup = CreateTSMStringGroup(frame, -132, _G.MONEYLOOTER_L_CONFIG_TSM_STRING,
-        Constants.Strings.TSM_STRING)
-    local tsmDisenchantGroup = CreateTSMStringGroup(frame, -248, _G.MONEYLOOTER_L_CONFIG_TSM_DISENCHANT_STRING,
-        Constants.Strings.TSM_DE_STRING)
+    local tsmGroup = CreateTSMStringGroup(frame, -176, _G.MONEYLOOTER_L_CONFIG_TSM_STRING,
+        Constants.Strings.TSMString)
+    local tsmDisenchantGroup = CreateTSMStringGroup(frame, -262, _G.MONEYLOOTER_L_CONFIG_TSM_DISENCHANT_STRING,
+        Constants.Strings.TSMDisenchantString)
 
     -- Minimum prices
-    CreateSectionTitle(frame, -364, _G.MONEYLOOTER_L_CONFIG_MIN_PRICES)
+    CreateSectionTitle(frame, -348, _G.MONEYLOOTER_L_CONFIG_MIN_PRICES)
 
     frame.MinPriceFrames = {}
     frame.ForceDisenchantChecks = {}
     local minQuality = Constants.ItemQualities.Min
     for quality = minQuality, Constants.ItemQualities.Max do
-        local yOffset = -382 - (quality - minQuality) * 50
+        local yOffset = -376 - (quality - minQuality) * 50
         local qualityLabel = CreateLabel(frame, yOffset - 4, Utils.GetQualityName(quality))
         local r, g, b = Utils.GetQualityColor(quality)
         qualityLabel:SetTextColor(r, g, b)
@@ -255,6 +280,8 @@ local function CreateConfigFrame()
     local function Populate()
         frame.ForceVendorCheck:SetChecked(Data.GetForceVendorPrice())
         realUseDisenchant = Data.GetUseDisenchantValue()
+        currentPriceSource = Data.GetPriceSource()
+        UIDropDownMenu_SetText(frame.PriceSourceDropdown, currentPriceSource)
         for i = 2, 4 do
             frame.ForceDisenchantChecks[i]:SetChecked(Data.GetForceUseDisenchantValueIndex(i))
         end
@@ -316,6 +343,7 @@ local function CreateConfigFrame()
 
         Data.SetForceVendorPrice(frame.ForceVendorCheck:GetChecked())
         Data.SetUseDisenchantValue(frame.UseDisenchantCheck:GetChecked())
+        Data.SetPriceSource(currentPriceSource)
         for i = 2, 4 do
             Data.SetForceUseDisenchantValueIndex(frame.ForceDisenchantChecks[i]:GetChecked(), i)
         end
@@ -324,6 +352,7 @@ local function CreateConfigFrame()
         end
         Data.SetUIScale(currentScale)
         Config.ApplyScale()
+        MoneyLooter.Core.ClearPriceCache()
 
         frame.SaveStatus:SetText(_G.MONEYLOOTER_L_CONFIG_SAVED)
         frame.SaveStatus:SetTextColor(0.3, 1, 0.3)

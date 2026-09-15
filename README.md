@@ -121,12 +121,11 @@ For example, if it finds a valid price in TSM, it won't search in Auctionator or
 When an item is looted, MoneyLooter determines its value in this order:
 
 1. If **Force vendor price** is enabled, the vendor sell price is always used and no other source is checked.
-2. If the item's quality is not a managed quality, the vendor sell price is used. Poor (0) through Epic (4) are managed; Poor items are only valued in retail, and only if they are armor or weapons (because they can be sold for transmog). Legendary and above are never auctionable, so they always use the vendor price.
-3. If **Force disenchant value** is enabled for the item's quality, the item is disenchantable (armor/weapon of Uncommon, Rare or Epic quality) and the external addon can determine its disenchant value, the item is valued using its disenchant value. Currently only Auctionator provides disenchant values. If no disenchant value is available, the regular pricing below is used instead.
-4. Otherwise, the regular price sources are tried in the order described above and the first valid price wins.
-5. Each price source must return at least the **minimum price threshold** configured for that quality (crafting reagents ignore it). If a source's auction price is below the threshold, it's treated as "no price" and the next source is tried. This threshold is meant to skip items whose auction price is overvalued.
-6. If **Use disenchant value** is enabled and the item is disenchantable, the disenchant value is also checked and the higher of the two is used. The disenchant value ignores the threshold, so an item whose auction price falls below the threshold can still be counted by its disenchant value.
-7. If no source returns a price, the vendor sell price is used as a last resort.
+2. Crafting reagents ignore the quality thresholds: their price is requested directly from the configured price source.
+3. If the item's quality is not managed, the vendor sell price is used. Uncommon (2), Rare (3) and Epic (4) are managed everywhere; Poor (0) and Common (1) are only managed in retail, and only for armor/weapons (they can be sold for transmog).
+4. Otherwise the regular price is requested from the configured price source. If it reaches the **minimum price threshold** configured for that quality, it is used.
+5. If the regular price is below the threshold (or **Force disenchant** is enabled for that quality), and the item is disenchantable (armor/weapon/jewelry of Uncommon, Rare or Epic), the disenchant value is requested instead.
+6. If nothing returns a price, the vendor sell price is used as a last resort.
 
 ## Usage
 
@@ -163,9 +162,9 @@ The price format for mprice is a number followed by g(old), s(ilver) or c(opper)
 
 ## Configuration
 
-**Important**: MoneyLooter values items using the TradeSkillMaster, Auctionator, Auctioneer, OribosExchange and RECrystallized addons. If all are available, it will always use TSM. It's a cascading system, first it will check TSM, if it's not available then Auctionator, etc. and finally, if neither is available, it will use the vendor value. I've done it this way because, in my opinion, TSM offers the most accurate and up-to-date prices (if you use the TSM custom string correctly, although for the current expansion, 'dbmarket' is a reliable source of information, it's not so true for old content, transmogs, etc).
+**Important**: MoneyLooter values items using a single, configurable price source. In the configuration menu you choose which addon provides prices: TradeSkillMaster, Auctionator, Auctioneer, OribosExchange or RECrystallize. Only that addon is queried (there is no automatic fallback between addons); if it returns no price, the vendor value is used.
 
-MoneyLooter by default sets the minimum prices to 0 for all item qualities. Also, the TSM string it uses is 'dbmarket'.
+MoneyLooter by default sets the minimum prices to 0 for all item qualities, uses TradeSkillMaster as the price source, and the TSM string 'dbmarket'.
 If you want to change this setting you can do the following:
 
 - **TSM Custom String:** Type /ml custom 'TSMCustomString'

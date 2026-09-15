@@ -95,8 +95,9 @@ Data.XDB = {}
 
 ---@class ML_CrossDB
 Data.XDB.prototype = {
-    CurrentTSMString = "dbmarket",
-    CurrentTSMDisenchantString = "destroy",
+    CurrentTSMString = Constants.Strings.TSMString,
+    CurrentTSMDisenchantString = Constants.Strings.TSMDisenchantString,
+    PriceSource = Constants.PriceSources.TradeSkillMaster,
     ------------------------------
     MinPrices = { [0] = 0, 0, 0, 0, 0 },
     UIScale = 1
@@ -406,10 +407,20 @@ function Data.IsQualityManaged(quality, class)
     if type(quality) ~= "number" then return false end
     if quality < Constants.ItemQualities.Min or quality > Constants.ItemQualities.Max then return false end
     -- retail only for transmogs
-    if quality == 0 then
+    if quality == 0 or quality == 1 then
         return (MoneyLooter.isRetail == true) and Data.IsArmorOrWeapon(class)
     end
     return true
+end
+
+---@return string
+function Data.GetPriceSource()
+    return MoneyLooterXDB.PriceSource
+end
+
+---@param source string
+function Data.SetPriceSource(source)
+    MoneyLooterXDB.PriceSource = source
 end
 
 ---@return string
