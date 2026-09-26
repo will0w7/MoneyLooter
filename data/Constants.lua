@@ -64,17 +64,35 @@ Constants.UIScale = {
 }
 
 ---@class ML_Constants_ItemQualities
-Constants.ItemQualities = {
-    Min = 0, -- Poor
-    Max = 4, -- Epic
-    DisenchantableMin = 2,
-    DisenchantableMax = 4
+Constants.ItemQuality = {
+    Poor = 0,
+    Common = 1,
+    Uncommon = 2,
+    Rare = 3,
+    Epic = 4,
+    Min = 0,               -- poor
+    Max = 4,               -- epic
+    DisenchantableMin = 2, -- uncommon
+    DisenchantableMax = 4  -- epic
+}
+
+---@class ML_Constants_DoNotDisenchant
+Constants.NotDisenchantable = {
+    BodyType = Enum.InventoryType.IndexBodyType,    -- shirts
+    TabardType = Enum.InventoryType.IndexTabardType -- tabards
 }
 
 ---@class ML_Constants_ItemClass
 Constants.ItemClass = {
     Weapon = Enum.ItemClass.Weapon,
-    Armor = Enum.ItemClass.Armor
+    Armor = Enum.ItemClass.Armor,
+    Reagent = Enum.ItemClass.Reagent,
+    Quest = Enum.ItemClass.Questitem,
+    Tradegoods = Enum.ItemClass.Tradegoods,
+    Recipe = Enum.ItemClass.Recipe,
+    Miscellaneous = Enum.ItemClass.Miscellaneous,
+    Key = Enum.ItemClass.Key,
+    Consumable = Enum.ItemClass.Consumable
 }
 
 if MoneyLooter.isRetail then
@@ -97,6 +115,13 @@ Constants.PriceSourcesOrder = {
     Constants.PriceSources.Auctioneer,
     Constants.PriceSources.OribosExchange,
     Constants.PriceSources.RECrystallize
+}
+
+---@class ML_Constants_ItemAction
+Constants.ItemAction = {
+    Sell = 1,
+    Auction = 2,
+    Disenchant = 3
 }
 
 -- Loot global patterns for self

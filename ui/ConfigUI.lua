@@ -111,7 +111,7 @@ local function CreateTSMStringGroup(parent, yOffset, titleText, defaultString)
 
     group.ValidateButton = CreateTextButton(parent, yOffset - 46, 14, _G.MONEYLOOTER_L_CONFIG_VALIDATE)
     group.ResetButton = CreateTextButton(parent, yOffset - 46, 130, _G.MONEYLOOTER_L_CONFIG_RESET)
-    group.Status = CreateLabel(parent, yOffset - 74, "")
+    group.Status = CreateLabel(parent, yOffset - 70, "")
     group.DefaultString = defaultString
 
     return group
@@ -186,8 +186,8 @@ local function CreateConfigFrame()
 
     frame.MinPriceFrames = {}
     frame.ForceDisenchantChecks = {}
-    local minQuality = Constants.ItemQualities.Min
-    for quality = minQuality, Constants.ItemQualities.Max do
+    local minQuality = Constants.ItemQuality.Min
+    for quality = minQuality, Constants.ItemQuality.Max do
         local yOffset = -376 - (quality - minQuality) * 50
         local qualityLabel = CreateLabel(frame, yOffset - 4, Utils.GetQualityName(quality))
         local r, g, b = Utils.GetQualityColor(quality)
@@ -285,7 +285,7 @@ local function CreateConfigFrame()
         for i = 2, 4 do
             frame.ForceDisenchantChecks[i]:SetChecked(Data.GetForceUseDisenchantValueIndex(i))
         end
-        for quality = Constants.ItemQualities.Min, Constants.ItemQualities.Max do
+        for quality = Constants.ItemQuality.Min, Constants.ItemQuality.Max do
             MoneyInputFrame_SetCopper(frame.MinPriceFrames[quality], Data.GetMinPrice(quality))
         end
         RefreshTSMGroup(tsmGroup, Data.GetCurrentTSMString)
@@ -347,7 +347,7 @@ local function CreateConfigFrame()
         for i = 2, 4 do
             Data.SetForceUseDisenchantValueIndex(frame.ForceDisenchantChecks[i]:GetChecked(), i)
         end
-        for quality = Constants.ItemQualities.Min, Constants.ItemQualities.Max do
+        for quality = Constants.ItemQuality.Min, Constants.ItemQuality.Max do
             Data.SetMinPrice(quality, MoneyInputFrame_GetCopper(frame.MinPriceFrames[quality]))
         end
         Data.SetUIScale(currentScale)

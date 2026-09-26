@@ -363,7 +363,7 @@ end
 
 ---@param money integer
 function Data.SetAllMinPrices(money)
-    for quality = Constants.ItemQualities.Min, Constants.ItemQualities.Max do
+    for quality = Constants.ItemQuality.Min, Constants.ItemQuality.Max do
         MoneyLooterXDB.MinPrices[quality] = money
     end
 end
@@ -374,13 +374,31 @@ function Data.IsArmorOrWeapon(class)
     return class == Constants.ItemClass.Weapon or class == Constants.ItemClass.Armor
 end
 
+---@param quality integer
+---@param class integer
+---@return boolean
+function Data.IsLowQAndWorthIt(quality, class)
+    if quality == Constants.ItemQuality.Poor and (class == Constants.ItemClass.Reagent or
+            class == Constants.ItemClass.Quest or class == Constants.ItemClass.Tradegoods) then
+        return true
+    elseif quality == Constants.ItemQuality.Common and (class == Constants.ItemClass.Reagent or
+            class == Constants.ItemClass.Quest or class == Constants.ItemClass.Tradegoods or
+            class == Constants.ItemClass.Recipe or class == Constants.ItemClass.Miscellaneous or
+            class == Constants.ItemClass.Key or class == Constants.ItemClass.Consumable)
+    then
+        return true
+    end
+
+    return false
+end
+
 ---@param class integer
 ---@return boolean
 function Data.IsDisenchantableClass(class)
     if Data.IsArmorOrWeapon(class) then
         return true
     end
-    -- retail only, profession items
+    -- retail only, profession items, keep? can you loot them?
     return MoneyLooter.isRetail and (class == Constants.ItemClass.Profession)
 end
 
@@ -389,12 +407,11 @@ end
 ---@param equipLoc string|nil
 ---@return boolean
 function Data.IsDisenchantable(quality, class, equipLoc)
-    if quality < Constants.ItemQualities.DisenchantableMin
-        or quality > Constants.ItemQualities.DisenchantableMax then
+    if quality < Constants.ItemQuality.DisenchantableMin
+        or quality > Constants.ItemQuality.DisenchantableMax then
         return false
     end
-    -- shirts and tabards
-    if equipLoc == "INVTYPE_BODY" or equipLoc == "INVTYPE_TABARD" then
+    if equipLoc == Constants.NotDisenchantable.BodyType or equipLoc == Constants.NotDisenchantable.TabardType then
         return false
     end
     return Data.IsDisenchantableClass(class)
@@ -404,10 +421,9 @@ end
 ---@param class integer
 ---@return boolean
 function Data.IsQualityManaged(quality, class)
-    if type(quality) ~= "number" then return false end
-    if quality < Constants.ItemQualities.Min or quality > Constants.ItemQualities.Max then return false end
+    if quality < Constants.ItemQuality.Min or quality > Constants.ItemQuality.Max then return false end
     -- retail only for transmogs
-    if quality == 0 or quality == 1 then
+    if quality == Constants.ItemQuality.Poor or quality == Constants.ItemQuality.Common then
         return (MoneyLooter.isRetail == true) and Data.IsArmorOrWeapon(class)
     end
     return true

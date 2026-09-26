@@ -48,7 +48,9 @@ local GetUseDisenchantValue = Data.GetUseDisenchantValue
 local GetPriceSource = Data.GetPriceSource
 local GetMinPrice = Data.GetMinPrice
 local IsQualityManaged = Data.IsQualityManaged
+local IsLowQAndWorthIt = Data.IsLowQAndWorthIt
 local IsDisenchantable = Data.IsDisenchantable
+local IsArmorOrWeapon = Data.IsArmorOrWeapon
 local GetOldMoney = Data.GetOldMoney
 local AddRawMoney = Data.AddRawMoney
 local SetOldMoney = Data.SetOldMoney
@@ -74,7 +76,7 @@ local function GetCachedPrice(itemLink)
     if not entry then return nil end
 
     if entry.expires > GetTime() then
-        return entry.price
+        return entry.price, entry.action
     end
     priceCache[itemLink] = nil
     return nil
@@ -82,9 +84,11 @@ end
 
 ---@param itemLink string
 ---@param price number
-local function SetCachedPrice(itemLink, price)
+---@param action number
+local function SetCachedPrice(itemLink, price, action)
     priceCache[itemLink] = {
         price = price,
+        action = action,
         expires = GetTime() + CacheTTL,
     }
 end
@@ -98,7 +102,7 @@ local function GetCachedItemInfo(itemString)
     local info = itemInfoCache[itemString]
     if not info then
         local temp = { GetItemInfo(itemString) }
-        info = { temp[3], temp[11], temp[17], temp[12], temp[9] }
+        info = { temp[3], temp[11], temp[12], temp[9] }
         itemInfoCache[itemString] = info
     end
     return unpack(info)
@@ -175,60 +179,62 @@ local priceSources = {
 local function CalculatePrice(itemLink)
     if not itemLink then return nil end
 
-    local cached = GetCachedPrice(itemLink)
-    if cached then return cached end
+    local cachedPrice, cachedAction = GetCachedPrice(itemLink)
+    if cachedPrice then return cachedPrice, cachedAction end
 
     local itemString = str_match(itemLink, "item[%-%d:]+")
-    local quality, sellPrice, isCraftingReagent, classID, equipLoc =
+    local quality, sellPrice, classId, equipLoc =
         Measure("GetCachedItemInfo", GetCachedItemInfo, itemString)
 
+    local ignoreThreshold = not IsArmorOrWeapon(classId)
     local sellPriceOrZero = sellPrice or 0
 
-    local function cacheAndReturn(price)
+    local function cacheAndReturn(price, action)
         price = price or 0
-        SetCachedPrice(itemLink, price)
-        return price
+        SetCachedPrice(itemLink, price, action)
+        return price, action
     end
 
     if GetForceVendorPrice() then
-        return cacheAndReturn(sellPriceOrZero)
+        return cacheAndReturn(sellPriceOrZero, Constants.ItemAction.Sell)
+    end
+
+    -- not a valid quality and not reagent, tradegoods or quest item
+    if not IsQualityManaged(quality, classId) and not IsLowQAndWorthIt(quality, classId) then
+        return cacheAndReturn(sellPriceOrZero, Constants.ItemAction.Sell)
     end
 
     local source = priceSources[GetPriceSource()] or priceSources[Constants.PriceSources.TradeSkillMaster]
 
     -- ignore the minimum thresholds
-    if isCraftingReagent then
+    if ignoreThreshold then
         local price = Measure("CalculatePrice.ExtApi.Reagent", source.getPrice, itemLink)
         if price and price > 0 then
-            return cacheAndReturn(price)
+            return cacheAndReturn(price, Constants.ItemAction.Auction)
         end
-        return cacheAndReturn(sellPriceOrZero)
-    end
-
-    -- not a valid quality
-    if not IsQualityManaged(quality, classID) then
-        return cacheAndReturn(sellPriceOrZero)
+        return cacheAndReturn(sellPriceOrZero, Constants.ItemAction.Sell)
     end
 
     local forceDisenchant = Data.GetForceUseDisenchantValueIndex(quality)
     local useDisenchant = GetUseDisenchantValue()
+    local isDisenchantable = IsDisenchantable(quality, classId, equipLoc)
 
-    -- get the price from the selected addon
-    if not forceDisenchant then
-        local price = Measure("CalculatePrice.ExtApi.Normal", source.getPrice, itemLink)
-        if price and price >= GetMinPrice(quality) then
-            return cacheAndReturn(price)
-        end
-    end
-
-    if (useDisenchant or forceDisenchant) and IsDisenchantable(quality, classID, equipLoc) then
+    if isDisenchantable and (useDisenchant or forceDisenchant) then
         local disenchantPrice = Measure("CalculatePrice.ExtApi.Disenchant", source.getDisenchantPrice, itemLink)
         if disenchantPrice and disenchantPrice > 0 then
-            return cacheAndReturn(disenchantPrice)
+            return cacheAndReturn(disenchantPrice, Constants.ItemAction.Disenchant)
         end
     end
 
-    return cacheAndReturn(sellPriceOrZero)
+    -- get the price from the selected addon
+    if not isDisenchantable or not forceDisenchant then
+        local price = Measure("CalculatePrice.ExtApi.Normal", source.getPrice, itemLink)
+        if price and price >= GetMinPrice(quality) then
+            return cacheAndReturn(price, Constants.ItemAction.Auction)
+        end
+    end
+
+    return cacheAndReturn(sellPriceOrZero, Constants.ItemAction.Sell)
 end
 
 ---@param lootString string
@@ -275,11 +281,11 @@ local function ChatMsgLoot(_, _, lootString, _, _, _, playerName2)
     local itemLink, quantity = GetLinkAndQuantityLoot(lootString)
     if itemLink == nil or itemLink:find("battlepet:") then return end
 
-    local price = Measure("CalculatePrice", CalculatePrice, itemLink)
+    local price, action = Measure("CalculatePrice", CalculatePrice, itemLink)
 
     local totalPrice = price * quantity
     local itemID = Measure("GetCachedItemInfoFromHyperlink", GetCachedItemInfoFromHyperlink, itemLink)
-    local i = LootedItemNew(NextLootEntryId(), itemID, itemLink, price, quantity)
+    local i = LootedItemNew(NextLootEntryId(), itemID, itemLink, price, quantity, action)
     InsertLootedItem(i)
     AddItemsMoney(totalPrice)
     AddTotalMoney(totalPrice)

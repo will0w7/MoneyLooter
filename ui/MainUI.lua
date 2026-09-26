@@ -34,14 +34,32 @@ local function CreateTextureFromItemID(itemId)
     return ("|T%s:0|t"):format(tostring(C_Item.GetItemIconByID(itemId)))
 end
 
+local ActionIcons = {
+    [Constants.ItemAction.Sell] = "Interface\\Icons\\inv_misc_coin_02",
+    [Constants.ItemAction.Auction] = "Interface\\Icons\\inv_hammer_15",
+    [Constants.ItemAction.Disenchant] = "Interface\\Icons\\inv_enchant_disenchant"
+}
+
 ---@class ML_ItemScrollMixin
 ML_ItemScrollMixin = {}
 
-function ML_ItemScrollMixin:OnClick()
-    GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
+function ML_ItemScrollMixin:OnEnter()
     local elementData = self:GetElementData()
-    SetItemRef(elementData.itemLink, elementData.itemLink)
+    if not elementData then return end
+    GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
+    GameTooltip:SetHyperlink(elementData.itemLink)
     GameTooltip:Show()
+end
+
+function ML_ItemScrollMixin:OnLeave()
+    GameTooltip:Hide()
+end
+
+function ML_ItemScrollMixin:OnClick()
+    local elementData = self:GetElementData()
+    if not elementData then return end
+    GameTooltip:Hide()
+    SetItemRef(elementData.itemLink, elementData.itemLink, "LeftButton")
 end
 
 function ML_ItemScrollMixin:OnRemoveClick()
@@ -89,7 +107,7 @@ end
 function ML_ItemScrollMixin:Init()
     ---@class ML_Item
     local elementData = self:GetElementData()
-    self:SetRightText(elementData.value * elementData.quantity)
+    self:SetRightText(elementData.value * elementData.quantity, elementData.action)
     self:SetLeftText(elementData.id, elementData.quantity, elementData.itemLink)
     self.RemoveButton:SetShown(Data.IsSummaryMode() or elementData.entryId ~= nil)
     self:TrimDataProvider()
@@ -109,8 +127,13 @@ function ML_ItemScrollMixin:SetLeftText(id, quantity, itemLink)
 end
 
 ---@param value number
-function ML_ItemScrollMixin:SetRightText(value)
-    self.RightLabel:SetText(Utils.GetCoinTextString(value))
+---@param action string|nil
+function ML_ItemScrollMixin:SetRightText(value, action)
+    local text = Utils.GetCoinTextString(value)
+    if action and ActionIcons[action] then
+        text = text .. " " .. ("|T%s:0|t"):format(ActionIcons[action])
+    end
+    self.RightLabel:SetText(text)
 end
 
 function ML_ItemScrollMixin:TrimDataProvider()
@@ -635,7 +658,7 @@ local function ParseMinPrice(msg)
         Data.SetAllMinPrices(copper)
     else
         quality = tonumber(qualifier)
-        if quality == nil or quality < Constants.ItemQualities.Min or quality > Constants.ItemQualities.Max then
+        if quality == nil or quality < Constants.ItemQuality.Min or quality > Constants.ItemQuality.Max then
             print(_G.MONEYLOOTER_L_MPRICE_ERROR)
             return
         end

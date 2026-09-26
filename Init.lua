@@ -1,9 +1,10 @@
 ---@class MoneyLooter
 ---@field isRetail boolean
+---@field isForever boolean
 ---@field isClassic boolean
----@field isCata boolean
----@field isWrath boolean
 ---@field isTBC boolean
+---@field isWrath boolean
+---@field isCata boolean
 ---@field isMists boolean
 local MoneyLooter = select(2, ...)
 
@@ -19,4 +20,6 @@ elseif WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC then
     MoneyLooter.isTBC = true
 elseif WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC then
     MoneyLooter.isMists = true
+else -- FIXME
+    MoneyLooter.isForever = true
 end
