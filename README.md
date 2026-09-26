@@ -2,7 +2,29 @@
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-A lightweight and fast World of Warcraft addon designed to track your gold farms. Track both raw gold and the gold value of looted items thanks to amazing addons like Auctionator or TradeSkillMaster, with reload protection so you don't need to worry about disconnections.
+A lightweight and fast World of Warcraft addon designed to track your gold farms. Track both raw gold and the gold value of looted items using the price source you pick in the configuration menu, TradeSkillMaster, Auctionator, Auctioneer, OribosExchange or RECrystallize, with reload protection so you don't need to worry about disconnections.
+
+## New in 2.0: Configuration menu, UI scale, selectable price source, Forever support and more
+
+![MoneyLooter 2.0 Config menu](https://github.com/will0w7/MoneyLooter/blob/main/images/MoneyLooter2.0.png?raw=true)
+
+MoneyLooter 2.0 adds a proper configuration menu. Click the gear button in the bottom right corner of the addon to open it, change what you need and press _Save_ to apply the changes.
+
+**Price source:** You now choose which addon provides your item prices -> **TradeSkillMaster**, **Auctionator**, **Auctioneer**, **OribosExchange** or **RECrystallize**. There is no automatic fallback between addons anymore: only the selected addon is queried. **Make sure you select your price source in the configuration menu, TradeSkillMaster is the default.**
+
+From the same menu you can also configure:
+
+- **Force vendor price:** Use only the vendor sell price.
+- **Use disenchant value:** Use the disenchant value when the regular price is below your minimum threshold.
+- **Force disenchant value:** One toggle per quality (Uncommon, Rare, Epic). When enabled, that quality is always valued by its disenchant value.
+- **TSM custom string:** Your custom TSM price string, with _Validate_ and _Reset_ buttons.
+- **Minimum prices:** One threshold per quality (Poor through Epic) in gold/silver/copper. _Poor_ and _Common_ are disabled outside of retail (except for items that are not armor or weapons).
+
+**UI scale:** An account-wide setting that scales the whole interface (window, text and icons). Default `1.0`, adjustable between `0.5` and `2.0` in steps of `0.1`.
+
+**Forever support:** The Forever Beta is now supported. The client is a beta, so support for this version is also considered beta.
+
+_The sections below are historical changelog entries for earlier releases and may not reflect how the addon works today._
 
 ## New in 1.11: Auto pick between disenchant value and auction value (disabled by default)
 
@@ -10,13 +32,14 @@ Now, when enabled (using the toggle **_/ml disenchant_** or **_/moneylooter dise
 
 Picking the highest value seems like a logical choice, since no one would disenchant an item with a disenchantment value of 2g and an auction price of 500g. However, I'm open to suggestions.
 
-This setting is account wide.
+~~This setting is account wide.~~
 
 ## New in 1.8: Performance improvements, internal profiler and cache system
 
-**EMA‑based GPH calculation:** GPH (Gold Per Hour) is now computed with an EMA (Exponential Moving Average), smoothing spikes. During the first 30 seconds, an adaptive alpha is applied in the calculation to prevent sudden spikes.
+**EMA‑based GPH calculation:** GPH (Gold Per Hour) is now computed with an EMA (Exponential Moving Average), smoothing spikes. During the first 30 seconds, an adaptive alpha is applied in the calculation to prevent sudden spikes.
 
 **Two new cache systems:**
+
 - **Item cache:** A cache that persists only during the active session (a /reload clears it) and dramatically reduces calls to WoW’s internal APIs.
 - **Price cache:** A cache that also persists only during the active session but has a **one‑hour** expiration time. It prevents unnecessary calls to other addons APIs, as price updates are uncommon during farming sessions. To purge the cache, simply run **_/reload_** to delete it completely.
 
@@ -28,9 +51,9 @@ These caching systems trade a small amount of extra memory for significant perfo
 
 **Translations:** Translations were added for languages that previously had no localization. They were generated with gpt‑oss. While not perfect, providing them is better than nothing (esES, esMX, enUS, ruRU already had manual translations).
 
-## New in 1.5: OribosExchange, RECrystallized and Auctioneer
+## New in 1.5: OribosExchange, RECrystallize and Auctioneer
 
-Added support for OribosExchange, RECrystallized and Auctioneer.
+Added support for OribosExchange, RECrystallize and Auctioneer.
 
 **Restored the fallback system**: In the past I disabled this system because with certain items (mainly in Retail), when TSM didn't find a price or that price was below the filter, Auctionator could return unrealistically high prices due to lack of auction data.
 
@@ -71,10 +94,13 @@ Download the latest release from [Wago](https://addons.wago.io/addons/moneyloote
 | Version             | Status |
 | ------------------- | ------ |
 | Retail              | ✅      |
-| Cataclysm Classic   | ✅      |
+| Forever             | ✅      |
 | Classic Era         | ✅      |
 | Classic Hardcore    | ✅      |
 | Season of Discovery | ✅      |
+| Burning Crusade     | ✅      |
+| WOTLK               | ✅      |
+| Cataclysm           | ✅      |
 | Mists of Pandaria   | ✅      |
 
 ✅ = Compatible
@@ -83,19 +109,28 @@ Download the latest release from [Wago](https://addons.wago.io/addons/moneyloote
 
 ❌ = Not compatible
 
-**Note:** Since Wrath and TBC no longer have official servers and are causing some issues with CurseForge, I will no longer be supporting these versions but I will continue packaging the TOC files in the addon.
+## Price source
 
-## Price source order
+MoneyLooter uses a single, configurable price source. Open the configuration menu (the gear button in the bottom right corner) and select the addon that will provide your item prices:
 
-1. TSM
-2. Auctionator
-3. Auctioneer
-4. OribosExchange (only Retail)
-5. RECrystallize (only Retail, available in Wago)
+- TradeSkillMaster
+- Auctionator
+- Auctioneer
+- OribosExchange (only Retail)
+- RECrystallize (only Retail, available in Wago)
 
-It's a cascading fallback system, if TSM doesn't find a price, it will look for it in Auctionator, then in Auctioneer, etc. When it finds a valid price, it doesn't continue searching in other addons.
+Only the selected addon is queried. There is no automatic fallback between addons: if it returns no price, the vendor sell price is used instead. **Remember to select your price source in the configuration menu, TradeSkillMaster is the default.**
 
-For example, if it finds a valid price in TSM, it won't search in Auctionator or other addons.
+## How items are valued
+
+When an item is looted, MoneyLooter determines its value in this order:
+
+1. If **Force vendor price** is enabled, the vendor sell price is always used and no other source is checked.
+2. If the item is not armor or a weapon, the quality thresholds are ignored and its price is requested directly from the configured price source. If no price is returned, the vendor sell price is used.
+3. If the item's quality is not managed, the vendor sell price is used. Uncommon (2), Rare (3) and Epic (4) are managed everywhere; Poor (0) and Common (1) are only managed in retail, and only for armor/weapons (they can be sold for transmog).
+4. Otherwise the regular price is requested from the configured price source. If it reaches the **minimum price threshold** configured for that quality, it is used.
+5. If the regular price is below the threshold (or **Force disenchant** is enabled for that quality), and the item is disenchantable (armor/weapon/jewelry of Uncommon, Rare or Epic), the disenchant value is requested instead.
+6. If nothing returns a price, the vendor sell price is used as a last resort.
 
 ## Usage
 
@@ -108,20 +143,25 @@ You can alternate between **/ml** or **/moneylooter** for chat commands. In the 
         /ml hide: Hide MoneyLooter
         /ml info: Shows information about the addon
 
+**Deprecated:** The following commands change settings that are also available in the configuration menu. They will be removed as chat commands in a future version.
+
         /ml custom: Sets a custom TSM string to be used in the price calculation. If empty, returns the custom TSM string it's currently using.
 
         /ml forcevendorprice: This command forces the merchant's selling price to always be used, skipping addons. It's a toggle.
 
+        /ml disenchant: Toggles the use of the disenchantment value when it is higher than the direct auction price.
+
         /ml mprice: Sets the minimum price threshold for a given quality.
             mpricex: All available qualities.
+            mprice0: Quality 0 - Poor - Grey
             mprice1: Quality 1 - Common - White
             mprice2: Quality 2 - Uncommon - Green
             mprice3: Quality 3 - Rare - Blue
             mprice4: Quality 4 - Epic - Purple
-        * The rest of the qualities will use the vendor price, if they have it.
 
-The price format for mpricex is a number followed by g(old), s(ilver) or c(opper). If you only specify the number, gold will be used by default.
+The price format for mprice is a number followed by g(old), s(ilver) or c(opper). If you only specify the number, gold will be used by default.
 
+        /ml mprice0 50 s
         /ml mprice1 50 s
         /ml mprice2 5000
         /ml mprice3 500 g
@@ -129,37 +169,23 @@ The price format for mpricex is a number followed by g(old), s(ilver) or c(opper
 
 ## Configuration
 
-**Important**: MoneyLooter values items using the TradeSkillMaster, Auctionator, Auctioneer, OribosExchange and RECrystallized addons. If all are available, it will always use TSM. It's a cascading system, first it will check TSM, if it's not available then Auctionator, etc. and finally, if neither is available, it will use the vendor value. I've done it this way because, in my opinion, TSM offers the most accurate and up-to-date prices (if you use the TSM custom string correctly, although for the current expansion, 'dbmarket' is a reliable source of information, it's not so true for old content, transmogs, etc).
+All settings are configured from the in-game menu. Click the **gear button** in the bottom right corner of the addon to open it, change what you need and press **Save** to apply.
 
-MoneyLooter by default sets the minimum prices to 0 for all item qualities. Also, the TSM string it uses is 'dbmarket'.
-If you want to change this setting you can do the following:
+- **Price source:** Choose which addon provides your item prices -> TradeSkillMaster, Auctionator, Auctioneer, OribosExchange or RECrystallize. Only the selected addon is queried; there is no automatic fallback between addons.
+- **Force vendor price:** Use only the vendor sell price, skipping all price addons.
+- **Use disenchant value:** Use the disenchant value when the regular price is below your minimum threshold.
+- **Force disenchant value:** One toggle per quality (Uncommon, Rare, Epic). When enabled, that quality is always valued by its disenchant value.
+- **TSM custom string:** Your custom TSM price string, with **Validate** and **Reset** buttons.
+- **Minimum prices:** One threshold per quality (Poor through Epic) in gold/silver/copper.
+- **UI scale:** Account-wide scaling of the whole interface, from `0.5` to `2.0` (default `1.0`).
 
-* **TSM Custom String:** Type /ml custom 'TSMCustomString'
+By default, MoneyLooter sets all minimum prices to `0`, uses **TradeSkillMaster** as the price source, and the TSM string `dbmarket`.
 
-        For example:
-        /ml custom check(dbmarket - 1000g, 95% dbmarket, 50% dbmarket)
+Settings are account wide, so you only have to set them once and they apply to all your characters.
 
-    In this example, MoneyLooter will use TSM (if available) with the custom price string 'check(dbmarket - 1000g, 95% dbmarket, 50% dbmarket)' to value your items (I'm not recommending this custom string, it's just an example 🙂).
+Some settings can still be changed with chat commands, but those commands are deprecated and will be removed in a future version, see [Usage](#usage).
 
-    If you want to return to the default settings use:
-
-        /ml custom dbmarket
-* **TSM Minimum price threshold:** Type /ml mprice1 '1234 (g|s|c)'
-
-        For example:
-        /ml mprice2 5500 g
-
-    In this example, MoneyLooter will use 5500 gold as minimum threshold for items with quality 2 (Uncommon).
-
-    If you want to return to the default settings use:
-
-        /ml mpricex 0
-
-    See [Usage](#usage) and check available qualities.
-
-This setting are account-wide so you only have to set it once and you can use it on all your characters.
-
-**Note:** For accurate item pricing using Auctionator, ensure you have scanned the auction house with it recently.
+**Note:** For accurate item pricing using Auctionator, make sure you have scanned the auction house with it recently.
 
 ## Why?
 

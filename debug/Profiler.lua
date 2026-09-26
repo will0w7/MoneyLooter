@@ -9,15 +9,17 @@ Profiler.enabled = false
 
 local GetTimePreciseSec = GetTimePreciseSec
 local startTimes = {}
+local depth = 0
 
 ---@param label string id
-function Profiler.RealStart(label)
+function Profiler.Start(label)
     if not Profiler.enabled then return end
+    depth = depth + 1
     startTimes[label] = GetTimePreciseSec()
 end
 
 ---@param label string id
-function Profiler.RealStop(label)
+function Profiler.Stop(label)
     if not Profiler.enabled then return end
     local t0 = startTimes[label]
     if not t0 then
@@ -25,32 +27,27 @@ function Profiler.RealStop(label)
         return
     end
     local elapsedSec = GetTimePreciseSec() - t0
-    print(string.format("$> [Profiler] %s: %.4f ms", label, elapsedSec * 1000))
+    depth = depth - 1
+    if depth < 0 then depth = 0 end
+    print(string.format("$> [Profiler] (%d) %s: %.4f ms", depth, label, elapsedSec * 1000))
     startTimes[label] = nil
 end
 
 ---@param label string id
 ---@param func function
-function Profiler.RealMeasure(label, func, ...)
+function Profiler.Measure(label, func, ...)
+    if not Profiler.enabled then
+        return func(...)
+    end
     Profiler.Start(label)
     local res = { func(...) }
     Profiler.Stop(label)
     return unpack(res)
 end
 
-local function noop() end
-local function noopMeasure(_, func, ...) return func(...) end
-
-local function setProfilerEnabled(enabled)
-    Profiler.enabled = enabled
-    Profiler.Start   = enabled and Profiler.RealStart or noop
-    Profiler.Stop    = enabled and Profiler.RealStop or noop
-    Profiler.Measure = enabled and Profiler.RealMeasure or noopMeasure
-end
-
 function Profiler.ToggleProfiler()
-    setProfilerEnabled(not Profiler.enabled)
+    Profiler.enabled = not Profiler.enabled
+    depth = 0
+    table.wipe(startTimes)
     print("|cffff0000$> [Profiler] Enabled: ", Profiler.enabled, "|r")
 end
-
-setProfilerEnabled(false)

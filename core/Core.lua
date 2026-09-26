@@ -15,25 +15,57 @@ local Core = {}
 MoneyLooter.Core = Core
 
 ------------------------------------------------------------------------------
-local TSM_API = TSM_API
-local AUCTIONATOR_API = Auctionator and Auctionator.API and Auctionator.API.v1
-local AUCTIONEER_API = Auctioneer
+local TSMApi = TSM_API
+local AuctionatorApi = Auctionator and Auctionator.API and Auctionator.API.v1
+local AuctioneerApi = Auctioneer
 local RECrystallize_PriceCheck = RECrystallize_PriceCheck
+local OEMarketInfo = OEMarketInfo
 ------------------------------------------------------------------------------
 local GetItemInfo = C_Item.GetItemInfo or GetItemInfo
 local GetItemInfoFromHyperlink = GetItemInfoFromHyperlink
 local GetMoney, GetUnitName, GetTime = GetMoney, GetUnitName, GetTime
-local tonumber, strsplit, unpack = tonumber, strsplit, unpack
+local tonumber, strsplit, unpack, ipairs = tonumber, strsplit, unpack, ipairs
 local str_match = string.match
+------------------------------------------------------------------------------
+local TSM_ToItemString = TSMApi and TSMApi.ToItemString
+local TSM_GetCustomPriceValue = TSMApi and TSMApi.GetCustomPriceValue
+local AUCTIONATOR_GetAuctionPriceByItemLink = AuctionatorApi and AuctionatorApi.GetAuctionPriceByItemLink
+local AUCTIONATOR_GetDisenchantPriceByItemLink = AuctionatorApi and AuctionatorApi.GetDisenchantPriceByItemLink
+------------------------------------------------------------------------------
+local Measure = Profiler.Measure
+local LootedItemNew = LootedItem.New
+------------------------------------------------------------------------------
+local IsInteractionPaused = Data.IsInteractionPaused
+local NextLootEntryId = Data.NextLootEntryId
+local InsertLootedItem = Data.InsertLootedItem
+local AddItemsMoney = Data.AddItemsMoney
+local AddTotalMoney = Data.AddTotalMoney
+local SetPriciest = Data.SetPriciest
+local GetForceVendorPrice = Data.GetForceVendorPrice
+local GetCurrentTSMString = Data.GetCurrentTSMString
+local GetCurrentTSMDisenchantString = Data.GetCurrentTSMDisenchantString
+local GetUseDisenchantValue = Data.GetUseDisenchantValue
+local GetPriceSource = Data.GetPriceSource
+local GetMinPrice = Data.GetMinPrice
+local IsQualityManaged = Data.IsQualityManaged
+local IsLowQAndWorthIt = Data.IsLowQAndWorthIt
+local IsDisenchantable = Data.IsDisenchantable
+local IsArmorOrWeapon = Data.IsArmorOrWeapon
+local GetOldMoney = Data.GetOldMoney
+local AddRawMoney = Data.AddRawMoney
+local SetOldMoney = Data.SetOldMoney
+local SetInteractionPaused = Data.SetInteractionPaused
+local UpdateLoot = MoneyLooter.UI.UpdateLoot
+local UpdateRawMoney = MoneyLooter.UI.UpdateRawMoney
 ------------------------------------------------------------------------------
 local playerName = GetUnitName("player")
 local itemInfoCache = {}
 local itemInfoCacheLink = {}
 local priceCache = {}
-local CACHE_TTL = 60 * 60
+local CacheTTL = 60 * 60
 ------------------------------------------------------------------------------
-local patternsSelf = Constants.PATTERNS_SELF
-local patternsCraft = Constants.PATTERNS_CRAFT
+local patternsSelf = Constants.PatternsSelf
+local patternsCraft = Constants.PatternsCraft
 local patternsLength = #patternsSelf
 local patternsCraftLength = #patternsCraft
 ------------------------------------------------------------------------------
@@ -44,7 +76,7 @@ local function GetCachedPrice(itemLink)
     if not entry then return nil end
 
     if entry.expires > GetTime() then
-        return entry.price
+        return entry.price, entry.action
     end
     priceCache[itemLink] = nil
     return nil
@@ -52,11 +84,17 @@ end
 
 ---@param itemLink string
 ---@param price number
-local function SetCachedPrice(itemLink, price)
+---@param action number
+local function SetCachedPrice(itemLink, price, action)
     priceCache[itemLink] = {
         price = price,
-        expires = GetTime() + CACHE_TTL,
+        action = action,
+        expires = GetTime() + CacheTTL,
     }
+end
+
+function Core.ClearPriceCache()
+    table.wipe(priceCache)
 end
 
 ---@param itemString string
@@ -64,7 +102,7 @@ local function GetCachedItemInfo(itemString)
     local info = itemInfoCache[itemString]
     if not info then
         local temp = { GetItemInfo(itemString) }
-        info = { temp[3], temp[11], temp[17] }
+        info = { temp[3], temp[11], temp[12], temp[9] }
         itemInfoCache[itemString] = info
     end
     return unpack(info)
@@ -80,77 +118,60 @@ local function GetCachedItemInfoFromHyperlink(itemString)
     return info
 end
 
----@param quality number
-local function GetMinPrice(quality)
-    if quality == 1 then
-        return Data.GetMinPrice1()
-    elseif quality == 2 then
-        return Data.GetMinPrice2()
-    elseif quality == 3 then
-        return Data.GetMinPrice3()
-    elseif quality == 4 then
-        return Data.GetMinPrice4()
-    end
-end
-
 local priceSources = {
-    {
-        cond = TSM_API,
-        fn   = function(quality, itemLink, isCraftingReagent)
-            local tsmItemString = TSM_API.ToItemString(itemLink)
-            local value = TSM_API.GetCustomPriceValue(Data.GetCurrentTSMString(), tsmItemString)
-            if not value then return 0 end
-            local min = GetMinPrice(quality)
-            return (value >= min or isCraftingReagent) and value or 0
-        end
+    [Constants.PriceSources.TradeSkillMaster] = {
+        getPrice = function(itemLink)
+            if not TSMApi then return nil end
+            local tsmItemString = TSM_ToItemString(itemLink)
+            return TSM_GetCustomPriceValue(GetCurrentTSMString(), tsmItemString)
+        end,
+        getDisenchantPrice = function(itemLink)
+            if not TSMApi then return nil end
+            local tsmItemString = TSM_ToItemString(itemLink)
+            return TSM_GetCustomPriceValue(GetCurrentTSMDisenchantString(), tsmItemString)
+        end,
     },
-    {
-        cond = AUCTIONATOR_API,
-        fn   = function(quality, itemLink, isCraftingReagent)
-            local value = AUCTIONATOR_API.GetAuctionPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
-
-            if Data.GetUseDisenchantValue() then
-                local disenchant = AUCTIONATOR_API.GetDisenchantPriceByItemLink(Constants.Strings.ADDON_NAME, itemLink)
-                if disenchant ~= nil and value ~= nil and disenchant > value then
-                    value = disenchant
-                end
-            end
-            if not value then return 0 end
-            local min = GetMinPrice(quality)
-            return (value >= min or isCraftingReagent) and value or 0
-        end
+    [Constants.PriceSources.Auctionator] = {
+        getPrice = function(itemLink)
+            if not AuctionatorApi then return nil end
+            return AUCTIONATOR_GetAuctionPriceByItemLink(Constants.Strings.AddonName, itemLink)
+        end,
+        getDisenchantPrice = function(itemLink)
+            if not AuctionatorApi then return nil end
+            return AUCTIONATOR_GetDisenchantPriceByItemLink(Constants.Strings.AddonName, itemLink)
+        end,
     },
-    {
-        cond = AUCTIONEER_API,
-        fn   = function(quality, itemLink, isCraftingReagent)
-            local itemKey  = AUCTIONEER_API:ItemKeyFromLink(itemLink)
-            local stats    = AUCTIONEER_API:Statistics(itemKey)
-            local overTime = stats["Stats:OverTime"]
-            local value    = (overTime and overTime:Best()) or 0
-            if not value then return 0 end
-            local min = GetMinPrice(quality)
-            return (value >= min or isCraftingReagent) and value or 0
-        end
+    [Constants.PriceSources.Auctioneer] = {
+        getPrice = function(itemLink)
+            if not AuctioneerApi then return nil end
+            local itemKey = AuctioneerApi:ItemKeyFromLink(itemLink)
+            local stats = AuctioneerApi:Statistics(itemKey)
+            local overTime = stats and stats["Stats:OverTime"]
+            return overTime and overTime:Best()
+        end,
+        getDisenchantPrice = function()
+            return nil
+        end,
     },
-    {
-        cond = MoneyLooter.isRetail and OEMarketInfo,
-        fn   = function(quality, itemLink, isCraftingReagent)
+    [Constants.PriceSources.OribosExchange] = {
+        getPrice = function(itemLink)
+            if not (MoneyLooter.isRetail and OEMarketInfo) then return nil end
             local info = {}
             OEMarketInfo(itemLink, info)
-            if not info.region then return 0 end
-            local value = info.region
-            local min = GetMinPrice(quality)
-            return (value >= min or isCraftingReagent) and value or 0
-        end
+            return info.region
+        end,
+        getDisenchantPrice = function()
+            return nil
+        end,
     },
-    {
-        cond = MoneyLooter.isRetail and RECrystallize_PriceCheck,
-        fn   = function(quality, itemLink, isCraftingReagent)
-            local value = RECrystallize_PriceCheck(itemLink)
-            if not value then return 0 end
-            local min = GetMinPrice(quality)
-            return (value >= min or isCraftingReagent) and value or 0
-        end
+    [Constants.PriceSources.RECrystallize] = {
+        getPrice = function(itemLink)
+            if not (MoneyLooter.isRetail and RECrystallize_PriceCheck) then return nil end
+            return RECrystallize_PriceCheck(itemLink)
+        end,
+        getDisenchantPrice = function()
+            return nil
+        end,
     },
 }
 
@@ -158,43 +179,67 @@ local priceSources = {
 local function CalculatePrice(itemLink)
     if not itemLink then return nil end
 
-    local cached = GetCachedPrice(itemLink)
-    if cached then return cached end
+    local cachedPrice, cachedAction = GetCachedPrice(itemLink)
+    if cachedPrice then return cachedPrice, cachedAction end
 
     local itemString = str_match(itemLink, "item[%-%d:]+")
-    local quality, sellPrice, isCraftingReagent =
-        Profiler.Measure("GetCachedItemInfo", GetCachedItemInfo, itemString)
+    local quality, sellPrice, classId, equipLoc =
+        Measure("GetCachedItemInfo", GetCachedItemInfo, itemString)
 
-    if Data.GetForceVendorPrice() then
-        SetCachedPrice(itemLink, sellPrice or 0)
-        return sellPrice or 0
+    local ignoreThreshold = not IsArmorOrWeapon(classId)
+    local sellPriceOrZero = sellPrice or 0
+
+    local function cacheAndReturn(price, action)
+        price = price or 0
+        SetCachedPrice(itemLink, price, action)
+        return price, action
     end
 
-    if quality < 1 or quality > 4 then
-        local price = sellPrice and (sellPrice > 0 and sellPrice) or 0
-        SetCachedPrice(itemLink, price)
-        return price
+    if GetForceVendorPrice() then
+        return cacheAndReturn(sellPriceOrZero, Constants.ItemAction.Sell)
     end
 
-    local price = 0
-    for _, src in ipairs(priceSources) do
-        if src.cond then
-            price = Profiler.Measure("CalculatePrice.EXT_API", src.fn, quality, itemLink, isCraftingReagent)
-            if price > 0 then break end
+    -- not a valid quality and not reagent, tradegoods or quest item
+    if not IsQualityManaged(quality, classId) and not IsLowQAndWorthIt(quality, classId) then
+        return cacheAndReturn(sellPriceOrZero, Constants.ItemAction.Sell)
+    end
+
+    local source = priceSources[GetPriceSource()] or priceSources[Constants.PriceSources.TradeSkillMaster]
+
+    -- ignore the minimum thresholds
+    if ignoreThreshold then
+        local price = Measure("CalculatePrice.ExtApi.Reagent", source.getPrice, itemLink)
+        if price and price > 0 then
+            return cacheAndReturn(price, Constants.ItemAction.Auction)
+        end
+        return cacheAndReturn(sellPriceOrZero, Constants.ItemAction.Sell)
+    end
+
+    local forceDisenchant = Data.GetForceUseDisenchantValueIndex(quality)
+    local useDisenchant = GetUseDisenchantValue()
+    local isDisenchantable = IsDisenchantable(quality, classId, equipLoc)
+
+    if isDisenchantable and (useDisenchant or forceDisenchant) then
+        local disenchantPrice = Measure("CalculatePrice.ExtApi.Disenchant", source.getDisenchantPrice, itemLink)
+        if disenchantPrice and disenchantPrice > 0 then
+            return cacheAndReturn(disenchantPrice, Constants.ItemAction.Disenchant)
         end
     end
 
-    if price == 0 and sellPrice > 0 then
-        price = sellPrice
+    -- get the price from the selected addon
+    if not isDisenchantable or not forceDisenchant then
+        local price = Measure("CalculatePrice.ExtApi.Normal", source.getPrice, itemLink)
+        if price and price >= GetMinPrice(quality) then
+            return cacheAndReturn(price, Constants.ItemAction.Auction)
+        end
     end
 
-    SetCachedPrice(itemLink, price)
-    return price or 0
+    return cacheAndReturn(sellPriceOrZero, Constants.ItemAction.Sell)
 end
 
 ---@param lootString string
 ---@return string|nil, number|nil
-function GetLinkAndQuantityLoot(lootString)
+local function GetLinkAndQuantityLoot(lootString)
     for i = 1, patternsLength do
         local pattern = patternsSelf[i]
         local item, quantity = str_match(lootString, pattern)
@@ -206,7 +251,7 @@ end
 
 ---@param craftString string
 ---@return string|nil
-function GetLinkAndQuantityCraft(craftString)
+local function GetLinkAndQuantityCraft(craftString)
     for i = 1, patternsCraftLength do
         local pattern = patternsCraft[i]
         local item = str_match(craftString, pattern)
@@ -218,7 +263,7 @@ end
 ---@param receivedString string
 ---@return boolean
 local function ReceivedMoney(receivedString)
-    local received = str_match(receivedString, Constants.PATTERNS_RECEIVED[1])
+    local received = str_match(receivedString, Constants.PatternsReceived[1])
     return received ~= nil
 end
 
@@ -226,7 +271,7 @@ end
 ---@param lootString string
 ---@param playerName2 string
 local function ChatMsgLoot(_, _, lootString, _, _, _, playerName2)
-    if Data.IsInteractionPaused() then return end
+    if IsInteractionPaused() then return end
     if lootString == nil then return end
     if GetLinkAndQuantityCraft(lootString) then return end
 
@@ -236,27 +281,27 @@ local function ChatMsgLoot(_, _, lootString, _, _, _, playerName2)
     local itemLink, quantity = GetLinkAndQuantityLoot(lootString)
     if itemLink == nil or itemLink:find("battlepet:") then return end
 
-    local price = Profiler.Measure("CalculatePrice", CalculatePrice, itemLink)
+    local price, action = Measure("CalculatePrice", CalculatePrice, itemLink)
 
     local totalPrice = price * quantity
-    local itemID = Profiler.Measure("GetCachedItemInfoFromHyperlink", GetCachedItemInfoFromHyperlink, itemLink)
-    local i = LootedItem.new(Data.NextLootEntryId(), itemID, itemLink, price, quantity)
-    Data.InsertLootedItem(i)
-    Data.AddItemsMoney(totalPrice)
-    Data.AddTotalMoney(totalPrice)
+    local itemID = Measure("GetCachedItemInfoFromHyperlink", GetCachedItemInfoFromHyperlink, itemLink)
+    local i = LootedItemNew(NextLootEntryId(), itemID, itemLink, price, quantity, action)
+    InsertLootedItem(i)
+    AddItemsMoney(totalPrice)
+    AddTotalMoney(totalPrice)
     -- only price of individual items, not groups (1xBismuth not 5xBismuth)
-    Data.SetPriciest(price, itemLink)
-    Profiler.Measure("UpdateLoot", UpdateLoot, i)
+    SetPriciest(price, itemLink)
+    Measure("UpdateLoot", UpdateLoot, i)
 end
 
 local function ChatMsgMoney_QuestTurnedIn()
     -- here we dont stop interaction, if we turn in a quest with a profession
     -- window opened, we want to register the money change
     local newMoney = GetMoney()
-    local change = (newMoney - Data.GetOldMoney())
-    Data.AddRawMoney(change)
-    Data.AddTotalMoney(change)
-    Data.SetOldMoney(newMoney)
+    local change = (newMoney - GetOldMoney())
+    AddRawMoney(change)
+    AddTotalMoney(change)
+    SetOldMoney(newMoney)
     UpdateRawMoney()
 end
 
@@ -264,39 +309,39 @@ end
 local function ChatMsgSystem(_, _, receivedString)
     if not ReceivedMoney(receivedString) then return end
     local newMoney = GetMoney()
-    local change = (newMoney - Data.GetOldMoney())
-    Data.AddRawMoney(change)
-    Data.AddTotalMoney(change)
-    Data.SetOldMoney(newMoney)
+    local change = (newMoney - GetOldMoney())
+    AddRawMoney(change)
+    AddTotalMoney(change)
+    SetOldMoney(newMoney)
     UpdateRawMoney()
 end
 
 ---@param interaction Enum.PlayerInteractionType
 local function PInteractionManagerShow(_, _, interaction)
     if Constants.RelevantInteractions[interaction] then
-        Data.SetInteractionPaused(true)
+        SetInteractionPaused(true)
     end
 end
 
 ---@param interaction Enum.PlayerInteractionType
 local function PInteractionManagerHide(_, _, interaction)
     if Constants.RelevantInteractions[interaction] then
-        Data.SetInteractionPaused(false)
-        Data.SetOldMoney(GetMoney())
+        SetInteractionPaused(false)
+        SetOldMoney(GetMoney())
     end
 end
 
 ---@param event WowEvent
 function Core.OnEvent(_, event, ...)
     if event == Constants.Events.ChatMsgLoot then
-        Profiler.Measure(event, ChatMsgLoot, nil, event, ...)
+        Measure(event, ChatMsgLoot, nil, event, ...)
     elseif event == Constants.Events.ChatMsgMoney or event == Constants.Events.QuestTurnedIn then
-        Profiler.Measure(event, ChatMsgMoney_QuestTurnedIn)
+        Measure(event, ChatMsgMoney_QuestTurnedIn)
     elseif event == Constants.Events.ChatMsgSystem then
-        Profiler.Measure(event, ChatMsgSystem, nil, event, ...)
+        Measure(event, ChatMsgSystem, nil, event, ...)
     elseif event == Constants.Events.PInteractionManagerShow then
-        Profiler.Measure(event, PInteractionManagerShow, nil, event, ...)
+        Measure(event, PInteractionManagerShow, nil, event, ...)
     elseif event == Constants.Events.PInteractionManagerHide then
-        Profiler.Measure(event, PInteractionManagerHide, nil, event, ...)
+        Measure(event, PInteractionManagerHide, nil, event, ...)
     end
 end

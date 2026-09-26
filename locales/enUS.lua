@@ -10,6 +10,24 @@ Locales.enUS = function()
     L["CONTINUE"] = "Continue"
     L["PAUSE"] = "Pause"
     L["RESET"] = "Reset"
+    L["CONFIG_TITLE"] = "MoneyLooter Configuration"
+    L["CONFIG_UI_SCALE"] = "UI Scale"
+    L["CONFIG_FORCE_VENDOR_PRICE"] = "Force vendor price"
+    L["CONFIG_USE_DISENCHANT_VALUE"] = "Use disenchant value"
+    L["CONFIG_PRICE_SOURCE"] = "Price source"
+    L["CONFIG_FORCE_USE_DISENCHANT_VALUE"] = "Force disenchant"
+    L["CONFIG_TSM_STRING"] = "TSM custom string"
+    L["CONFIG_TSM_DISENCHANT_STRING"] = "TSM disenchant string"
+    L["CONFIG_MIN_PRICES"] = "Minimum prices"
+    L["CONFIG_VALIDATE"] = "Validate"
+    L["CONFIG_RESET"] = "Reset"
+    L["CONFIG_SAVE"] = "Save"
+    L["CONFIG_TSM_VALID"] = "Valid TSM string"
+    L["CONFIG_TSM_INVALID"] = "Invalid TSM string"
+    L["CONFIG_TSM_EMPTY"] = "TSM string is empty"
+    L["CONFIG_TSM_NOT_AVAILABLE"] = "TSM is not available"
+    L["CONFIG_SAVE_ERROR_TSM"] = "Cannot save: TSM string is invalid"
+    L["CONFIG_SAVED"] = "Configuration saved"
     L["TIME_LABEL"] = "Time:"
     L["GOLD_LABEL"] = "Gold:"
     L["ITEMS_LABEL"] = "Items:"
@@ -26,12 +44,13 @@ Locales.enUS = function()
               /ml custom
   |cFF36e8e6/ml|r |cFFf1f488mprice 'value'|r: Sets the minimum price threshold for a given quality.
             mpricex: All available qualities.
+            mprice0: Quality 0 - Poor - Grey
             mprice1: Quality 1 - Common - White
             mprice2: Quality 2 - Uncommon - Green
             mprice3: Quality 3 - Rare - Blue
             mprice4: Quality 4 - Epic - Purple
-      The rest of the qualities will use the vendor price, if they have it.
-    Examples: /ml mprice1 50 s
+    Examples: /ml mprice0 50 s
+              /ml mprice1 50 s
               /ml mprice2 5000
               /ml mprice3 500 g
               /ml mprice4 5 c

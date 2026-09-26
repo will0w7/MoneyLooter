@@ -10,6 +10,24 @@ Locales.esES = function()
     L["CONTINUE"] = "Continuar"
     L["PAUSE"] = "Pausar"
     L["RESET"] = "Reiniciar"
+    L["CONFIG_TITLE"] = "Configuración de MoneyLooter"
+    L["CONFIG_UI_SCALE"] = "Escala de UI"
+    L["CONFIG_FORCE_VENDOR_PRICE"] = "Forzar precio de vendedor"
+    L["CONFIG_USE_DISENCHANT_VALUE"] = "Usar valor de desencantar"
+    L["CONFIG_PRICE_SOURCE"] = "Fuente de precio"
+    L["CONFIG_FORCE_USE_DISENCHANT_VALUE"] = "Forzar desencantar"
+    L["CONFIG_TSM_STRING"] = "Cadena TSM personalizada"
+    L["CONFIG_TSM_DISENCHANT_STRING"] = "Cadena TSM de desencantar"
+    L["CONFIG_MIN_PRICES"] = "Precios mínimos"
+    L["CONFIG_VALIDATE"] = "Validar"
+    L["CONFIG_RESET"] = "Restablecer"
+    L["CONFIG_SAVE"] = "Guardar"
+    L["CONFIG_TSM_VALID"] = "Cadena TSM válida"
+    L["CONFIG_TSM_INVALID"] = "Cadena TSM no válida"
+    L["CONFIG_TSM_EMPTY"] = "La cadena TSM está vacía"
+    L["CONFIG_TSM_NOT_AVAILABLE"] = "TSM no está disponible"
+    L["CONFIG_SAVE_ERROR_TSM"] = "No se puede guardar: la cadena TSM no es válida"
+    L["CONFIG_SAVED"] = "Configuración guardada"
     L["TIME_LABEL"] = "Tiempo:"
     L["GOLD_LABEL"] = "Oro:"
     L["ITEMS_LABEL"] = "Objetos:"
@@ -24,14 +42,15 @@ Locales.esES = function()
   |cFF36e8e6/ml|r |cFFf1f488custom 'custom TSM string'|r: Establece una cadena TSM custom que será usada para calcular el precio. Si está vacía, se devuelve la cadena que está siendo usada.
     Ejemplos: /ml custom dbmarket
               /ml custom
-  |cFF36e8e6/ml|r |cFFf1f488mprice 'value'|r: Sets the minimum price threshold for a given quality.
-            mpricex: All available qualities.
-            mprice1: Quality 1 - Común - Blanco
-            mprice2: Quality 2 - Poco común - Verde
-            mprice3: Quality 3 - Raro - Azul
-            mprice4: Quality 4 - Épico - Morado
-      El resto de calidades usarán el precio de vendedor, si lo tienen.
-    Ejemplos: /ml mprice1 50 s
+  |cFF36e8e6/ml|r |cFFf1f488mprice 'value'|r: Establece el precio mínimo para una calidad.
+            mpricex: Todas las calidades.
+            mprice0: Calidad 0 - Pobre - Gris
+            mprice1: Calidad 1 - Común - Blanco
+            mprice2: Calidad 2 - Poco común - Verde
+            mprice3: Calidad 3 - Raro - Azul
+            mprice4: Calidad 4 - Épico - Morado
+    Ejemplos: /ml mprice0 50 s
+              /ml mprice1 50 s
               /ml mprice2 5000
               /ml mprice3 500 g
               /ml mprice4 5 c

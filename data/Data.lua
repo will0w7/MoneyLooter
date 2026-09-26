@@ -69,7 +69,9 @@ Data.DB.prototype = {
     ----------------------------------------------
     CurrentStartText = _G.MONEYLOOTER_L_START,
     ----------------------------------------------
-    ForceVendorPrice = false
+    ForceVendorPrice = false,
+    UseDisenchantValue = false,
+    ForceUseDisenchantValue = { false, false, false, false }
 }
 
 Data.DB.mt = {}
@@ -93,14 +95,12 @@ Data.XDB = {}
 
 ---@class ML_CrossDB
 Data.XDB.prototype = {
-    CurrentTSMString = "dbmarket",
+    CurrentTSMString = Constants.Strings.TSMString,
+    CurrentTSMDisenchantString = Constants.Strings.TSMDisenchantString,
+    PriceSource = Constants.PriceSources.TradeSkillMaster,
     ------------------------------
-    MinPrice1 = 0,
-    MinPrice2 = 0,
-    MinPrice3 = 0,
-    MinPrice4 = 0,
-    ------------------------------
-    UseDisenchantValue = false
+    MinPrices = { [0] = 0, 0, 0, 0, 0 },
+    UIScale = 1
 }
 
 Data.XDB.mt = {}
@@ -117,6 +117,17 @@ local function initialize_xdb()
         setmetatable(MoneyLooterXDB, nil)
     end
     setmetatable(MoneyLooterXDB, Data.XDB.mt)
+
+    if MoneyLooterXDB.MinPrices == nil then
+        MoneyLooterXDB.MinPrices = {}
+    end
+    for quality = 1, 4 do
+        local legacyKey = "MinPrice" .. quality
+        if MoneyLooterXDB[legacyKey] ~= nil then
+            MoneyLooterXDB.MinPrices[quality] = MoneyLooterXDB[legacyKey]
+            MoneyLooterXDB[legacyKey] = nil
+        end
+    end
 end
 
 ---@class ML_TempData
@@ -328,52 +339,104 @@ function Data.SetCurrentStartText(text)
     return MoneyLooterDB.CurrentStartText
 end
 
+---@param quality integer
 ---@return integer
-function Data.GetMinPrice1()
-    return MoneyLooterXDB.MinPrice1
+function Data.GetMinPrice(quality)
+    return MoneyLooterXDB.MinPrices[quality] or 0
 end
 
+---@param quality integer
 ---@param money integer
-function Data.SetMinPrice1(money)
-    MoneyLooterXDB.MinPrice1 = money
+function Data.SetMinPrice(quality, money)
+    MoneyLooterXDB.MinPrices[quality] = money
 end
 
----@return integer
-function Data.GetMinPrice2()
-    return MoneyLooterXDB.MinPrice2
+---@return table
+function Data.GetMinPrices()
+    return MoneyLooterXDB.MinPrices
 end
 
----@param money integer
-function Data.SetMinPrice2(money)
-    MoneyLooterXDB.MinPrice2 = money
-end
-
----@return integer
-function Data.GetMinPrice3()
-    return MoneyLooterXDB.MinPrice3
-end
-
----@param money integer
-function Data.SetMinPrice3(money)
-    MoneyLooterXDB.MinPrice3 = money
-end
-
----@return integer
-function Data.GetMinPrice4()
-    return MoneyLooterXDB.MinPrice4
-end
-
----@param money integer
-function Data.SetMinPrice4(money)
-    MoneyLooterXDB.MinPrice4 = money
+---@param value table
+function Data.SetMinPrices(value)
+    MoneyLooterXDB.MinPrices = value
 end
 
 ---@param money integer
 function Data.SetAllMinPrices(money)
-    MoneyLooterXDB.MinPrice1 = money
-    MoneyLooterXDB.MinPrice2 = money
-    MoneyLooterXDB.MinPrice3 = money
-    MoneyLooterXDB.MinPrice4 = money
+    for quality = Constants.ItemQuality.Min, Constants.ItemQuality.Max do
+        MoneyLooterXDB.MinPrices[quality] = money
+    end
+end
+
+---@param class integer
+---@return boolean
+function Data.IsArmorOrWeapon(class)
+    return class == Constants.ItemClass.Weapon or class == Constants.ItemClass.Armor
+end
+
+---@param quality integer
+---@param class integer
+---@return boolean
+function Data.IsLowQAndWorthIt(quality, class)
+    if quality == Constants.ItemQuality.Poor and (class == Constants.ItemClass.Reagent or
+            class == Constants.ItemClass.Quest or class == Constants.ItemClass.Tradegoods) then
+        return true
+    elseif quality == Constants.ItemQuality.Common and (class == Constants.ItemClass.Reagent or
+            class == Constants.ItemClass.Quest or class == Constants.ItemClass.Tradegoods or
+            class == Constants.ItemClass.Recipe or class == Constants.ItemClass.Miscellaneous or
+            class == Constants.ItemClass.Key or class == Constants.ItemClass.Consumable)
+    then
+        return true
+    end
+
+    return false
+end
+
+---@param class integer
+---@return boolean
+function Data.IsDisenchantableClass(class)
+    if Data.IsArmorOrWeapon(class) then
+        return true
+    end
+    -- retail only, profession items, keep? can you loot them?
+    return MoneyLooter.isRetail and (class == Constants.ItemClass.Profession)
+end
+
+---@param quality integer
+---@param class integer
+---@param equipLoc string|nil
+---@return boolean
+function Data.IsDisenchantable(quality, class, equipLoc)
+    if quality < Constants.ItemQuality.DisenchantableMin
+        or quality > Constants.ItemQuality.DisenchantableMax then
+        return false
+    end
+    if equipLoc == Constants.NotDisenchantable.BodyType or equipLoc == Constants.NotDisenchantable.TabardType then
+        return false
+    end
+    return Data.IsDisenchantableClass(class)
+end
+
+---@param quality integer
+---@param class integer
+---@return boolean
+function Data.IsQualityManaged(quality, class)
+    if quality < Constants.ItemQuality.Min or quality > Constants.ItemQuality.Max then return false end
+    -- retail only for transmogs
+    if quality == Constants.ItemQuality.Poor or quality == Constants.ItemQuality.Common then
+        return (MoneyLooter.isRetail == true) and Data.IsArmorOrWeapon(class)
+    end
+    return true
+end
+
+---@return string
+function Data.GetPriceSource()
+    return MoneyLooterXDB.PriceSource
+end
+
+---@param source string
+function Data.SetPriceSource(source)
+    MoneyLooterXDB.PriceSource = source
 end
 
 ---@return string
@@ -393,6 +456,26 @@ function Data.SetTSMString(tsmString)
         return
     end
     MoneyLooterXDB.CurrentTSMString = tsmString
+    print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING_VALID .. "|cFF36e8e6" .. tsmString .. "|r")
+end
+
+---@return string
+function Data.GetCurrentTSMDisenchantString()
+    return MoneyLooterXDB.CurrentTSMDisenchantString
+end
+
+---@param tsmString string
+function Data.SetTSMDisenchantString(tsmString)
+    local TSM_API = TSM_API
+    if TSM_API == nil then
+        print(_G.MONEYLOOTER_L_TSM_NOT_AVAILABLE)
+        return
+    end
+    if not TSM_API.IsCustomPriceValid(tsmString) then
+        print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING_NOT_VALID .. "|cFF36e8e6" .. tsmString .. "|r")
+        return
+    end
+    MoneyLooterXDB.CurrentTSMDisenchantString = tsmString
     print(_G.MONEYLOOTER_L_TSM_CUSTOM_STRING_VALID .. "|cFF36e8e6" .. tsmString .. "|r")
 end
 
@@ -506,10 +589,44 @@ function Data.SetForceVendorPrice(force)
 end
 
 function Data.GetUseDisenchantValue()
-    return MoneyLooterXDB.UseDisenchantValue
+    return MoneyLooterDB.UseDisenchantValue
 end
 
 ---@param value boolean
 function Data.SetUseDisenchantValue(value)
-    MoneyLooterXDB.UseDisenchantValue = value
+    MoneyLooterDB.UseDisenchantValue = value
+end
+
+function Data.GetForceUseDisenchantValue()
+    return MoneyLooterDB.ForceUseDisenchantValue
+end
+
+---@param value table
+function Data.SetForceUseDisenchantValue(value)
+    MoneyLooterDB.ForceUseDisenchantValue = value
+end
+
+function Data.GetForceUseDisenchantValueIndex(index)
+    return MoneyLooterDB.ForceUseDisenchantValue[index]
+end
+
+---@param value boolean
+function Data.SetForceUseDisenchantValueIndex(value, index)
+    MoneyLooterDB.ForceUseDisenchantValue[index] = value
+end
+
+---@return number
+function Data.GetUIScale()
+    return MoneyLooterXDB.UIScale
+end
+
+---@param scale number
+function Data.SetUIScale(scale)
+    if scale == nil then return end
+    if scale < Constants.UIScale.Min then
+        scale = Constants.UIScale.Min
+    elseif scale > Constants.UIScale.Max then
+        scale = Constants.UIScale.Max
+    end
+    MoneyLooterXDB.UIScale = scale
 end

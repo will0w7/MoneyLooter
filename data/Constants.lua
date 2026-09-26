@@ -5,20 +5,21 @@ local MoneyLooter = select(2, ...)
 local addonName = select(1, ...)
 
 ---@class ML_Constants
----@field PATTERNS_SELF table
----@field PATTERNS_CRAFT table
----@field PATTERNS_RECEIVED table
+---@field PatternsSelf table
+---@field PatternsCraft table
+---@field PatternsReceived table
 ---@field RelevantInteractions table
 local Constants = {}
 MoneyLooter.Constants = Constants
 
 ---@class ML_Constants_Strings
 Constants.Strings = {
-    ADDON_NAME = addonName,
-    ADDON_VERSION = "",
-    TITLE = "MoneyLooter",
-    FONT = "GameFontHighlight",
-    TSM_STRING = "dbmarket"
+    AddonName = addonName,
+    AddonVersion = "",
+    Title = "MoneyLooter",
+    Font = "GameFontHighlight",
+    TSMString = "dbmarket",
+    TSMDisenchantString = "destroy"
 }
 
 ---@class ML_Constants_Events
@@ -28,11 +29,14 @@ Constants.Events = {
     OnDragStart = "OnDragStart",
     OnDragStop = "OnDragStop",
     OnHide = "OnHide",
+    OnShow = "OnShow",
     OnLoad = "OnLoad",
     OnEnter = "OnEnter",
     OnLeave = "OnLeave",
     OnLoop = "OnLoop",
     OnClick = "OnClick",
+    OnMouseDown = "OnMouseDown",
+    OnMouseUp = "OnMouseUp",
     --------------------------------------
     ChatMsgMoney = "CHAT_MSG_MONEY",
     ChatMsgLoot = "CHAT_MSG_LOOT",
@@ -46,9 +50,83 @@ Constants.Events = {
     ChatMsgSystem = "CHAT_MSG_SYSTEM"
 }
 
+---@class ML_Constants_Inputs
+Constants.Inputs = {
+    LeftButton = "LeftButton",
+    RightButton = "RightButton"
+}
+
+---@class ML_Constants_UIScale
+Constants.UIScale = {
+    Min = 0.5,
+    Max = 2,
+    Step = 0.1
+}
+
+---@class ML_Constants_ItemQualities
+Constants.ItemQuality = {
+    Poor = 0,
+    Common = 1,
+    Uncommon = 2,
+    Rare = 3,
+    Epic = 4,
+    Min = 0,               -- poor
+    Max = 4,               -- epic
+    DisenchantableMin = 2, -- uncommon
+    DisenchantableMax = 4  -- epic
+}
+
+---@class ML_Constants_DoNotDisenchant
+Constants.NotDisenchantable = {
+    BodyType = Enum.InventoryType.IndexBodyType,    -- shirts
+    TabardType = Enum.InventoryType.IndexTabardType -- tabards
+}
+
+---@class ML_Constants_ItemClass
+Constants.ItemClass = {
+    Weapon = Enum.ItemClass.Weapon,
+    Armor = Enum.ItemClass.Armor,
+    Reagent = Enum.ItemClass.Reagent,
+    Quest = Enum.ItemClass.Questitem,
+    Tradegoods = Enum.ItemClass.Tradegoods,
+    Recipe = Enum.ItemClass.Recipe,
+    Miscellaneous = Enum.ItemClass.Miscellaneous,
+    Key = Enum.ItemClass.Key,
+    Consumable = Enum.ItemClass.Consumable
+}
+
+if MoneyLooter.isRetail then
+    Constants.ItemClass.Profession = Enum.ItemClass.Profession
+end
+
+---@class ML_Constants_PriceSources
+Constants.PriceSources = {
+    TradeSkillMaster = "TradeSkillMaster",
+    Auctionator = "Auctionator",
+    Auctioneer = "Auctioneer",
+    OribosExchange = "Oribos Exchange",
+    RECrystallize = "RECrystallize"
+}
+
+---@class ML_Constants_PriceSourcesOrder
+Constants.PriceSourcesOrder = {
+    Constants.PriceSources.TradeSkillMaster,
+    Constants.PriceSources.Auctionator,
+    Constants.PriceSources.Auctioneer,
+    Constants.PriceSources.OribosExchange,
+    Constants.PriceSources.RECrystallize
+}
+
+---@class ML_Constants_ItemAction
+Constants.ItemAction = {
+    Sell = 1,
+    Auction = 2,
+    Disenchant = 3
+}
+
 -- Loot global patterns for self
 -- string.match returns itemLink, quantity || itemLink
-Constants.PATTERNS_SELF = {
+Constants.PatternsSelf = {
     [1] = LOOT_ITEM_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"),        -- 2
     [2] = LOOT_ITEM_PUSHED_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"), -- 2
     [3] = LOOT_ITEM_SELF:gsub("%%s", "(.+)"),                                       -- 1
@@ -57,12 +135,12 @@ Constants.PATTERNS_SELF = {
 
 -- Crafted global patterns for self
 -- string.match returns itemLink, quantity || itemLink
-Constants.PATTERNS_CRAFT = {
+Constants.PatternsCraft = {
     [1] = LOOT_ITEM_CREATED_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"), -- 2
     [2] = LOOT_ITEM_CREATED_SELF:gsub("%%s", "(.+)")                                 -- 1
 }
 
-Constants.PATTERNS_RECEIVED = {
+Constants.PatternsReceived = {
     [1] = ERR_QUEST_REWARD_MONEY_S:gsub("%%s", "(.+)")
 }
 
