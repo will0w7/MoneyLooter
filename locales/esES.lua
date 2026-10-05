@@ -90,5 +90,12 @@ Locales.esES = function()
     "|cFFd8de35Money Looter:|r Usando valor de desencantamiento cuando es más alto que el valor de venta directo en subasta."
     L["USE_DISENCHANT_VALUE_DISABLED"] =
     "|cFFd8de35Money Looter:|r Se deja de usar el valor de desencatamiento. Siempre se usará el valor de venta directo en subasta."
+    L["SELL_BUTTON"] = "ML Vender %d/%d"
+    L["SELL_BUTTON_SELLING"] = "ML Vendiendo %d/%d"
+    L["SELL_BUTTON_TOOLTIP"] =
+    "Usa los filtros de MoneyLooter para vender todo lo que no quieras. Los objetos de subasta o desencantar nunca se venden."
+    L["SELL_OPEN"] = "|cFFd8de35MoneyLooter:|r Se pueden vender %d objetos por %s."
+    L["CONFIG_ALWAYS_AUCTION_UNIQUES"] = "Vender apariencias únicas siempre en la CdS"
+    L["CONFIG_FORCE_VENDOR_JELLEWERY"] = "Forzar precio de vendedor para la joyería"
     return L
 end

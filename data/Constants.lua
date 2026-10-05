@@ -92,7 +92,14 @@ Constants.ItemClass = {
     Recipe = Enum.ItemClass.Recipe,
     Miscellaneous = Enum.ItemClass.Miscellaneous,
     Key = Enum.ItemClass.Key,
-    Consumable = Enum.ItemClass.Consumable
+    Consumable = Enum.ItemClass.Consumable,
+    Container = Enum.ItemClass.Container
+}
+
+---@class ML_Constants_ItemSubclass
+Constants.ItemSubclass = {
+    Junk = Enum.ItemMiscellaneousSubclass.Junk, -- a lot of stuff and lockboxes
+    Generic = Enum.ItemArmorSubclass.Generic    -- spellstones, firestones, trinkets, rings and necks
 }
 
 if MoneyLooter.isRetail then
@@ -121,7 +128,26 @@ Constants.PriceSourcesOrder = {
 Constants.ItemAction = {
     Sell = 1,
     Auction = 2,
-    Disenchant = 3
+    Disenchant = 3,
+    CanBeOpened = 4,
+    Invalid = 5,
+    Scan = 6,
+    AuctionUnique = 7,
+    SellJewellery = 8,
+    ForceSell = 9
+}
+
+---@class ML_Constants_ActionIcons
+Constants.ActionIcons = {
+    [Constants.ItemAction.Sell] = "Interface\\Icons\\inv_misc_coin_02",
+    [Constants.ItemAction.Auction] = "Interface\\Icons\\inv_hammer_15",
+    [Constants.ItemAction.Disenchant] = "Interface\\Icons\\inv_enchant_disenchant",
+    [Constants.ItemAction.CanBeOpened] = "Interface\\Icons\\inv_misc_lockboxghostiron",
+    [Constants.ItemAction.Scan] = "Interface\\Icons\\inv_misc_questionmark",
+    [Constants.ItemAction.Invalid] = "Interface\\Icons\\inv_misc_questionmark",
+    [Constants.ItemAction.AuctionUnique] = "Interface\\Icons\\inv_hammer_05",
+    [Constants.ItemAction.SellJewellery] = "Interface\\Icons\\inv_misc_coin_04",
+    [Constants.ItemAction.ForceSell] = "Interface\\Icons\\inv_misc_coin_06"
 }
 
 -- Loot global patterns for self

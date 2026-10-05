@@ -152,14 +152,16 @@ local function CreateConfigFrame()
     -- Toggles
     frame.ForceVendorCheck = CreateCheckboxRow(frame, -70, _G.MONEYLOOTER_L_CONFIG_FORCE_VENDOR_PRICE)
     frame.UseDisenchantCheck = CreateCheckboxRow(frame, -96, _G.MONEYLOOTER_L_CONFIG_USE_DISENCHANT_VALUE)
+    frame.AlwaysAuctionUniqueAppareances = CreateCheckboxRow(frame, -122, _G.MONEYLOOTER_L_CONFIG_ALWAYS_AUCTION_UNIQUES)
+    frame.ForceVendorJewellery = CreateCheckboxRow(frame, -148, _G.MONEYLOOTER_L_CONFIG_FORCE_VENDOR_JELLEWERY)
 
     -- Price source
-    CreateSectionTitle(frame, -122, _G.MONEYLOOTER_L_CONFIG_PRICE_SOURCE)
+    CreateSectionTitle(frame, -174, _G.MONEYLOOTER_L_CONFIG_PRICE_SOURCE)
 
     local currentPriceSource = Constants.PriceSources.TradeSkillMaster
     frame.PriceSourceDropdown = CreateFrame("Frame", "MONEYLOOTER_CONFIG_PRICE_SOURCE_DROPDOWN", frame,
         "UIDropDownMenuTemplate")
-    frame.PriceSourceDropdown:SetPoint("TOPLEFT", frame, "TOPLEFT", -4, -140)
+    frame.PriceSourceDropdown:SetPoint("TOPLEFT", frame, "TOPLEFT", -4, -190)
     UIDropDownMenu_SetWidth(frame.PriceSourceDropdown, 120)
     UIDropDownMenu_Initialize(frame.PriceSourceDropdown, function()
         for _, source in ipairs(Constants.PriceSourcesOrder) do
@@ -176,19 +178,27 @@ local function CreateConfigFrame()
     end)
 
     -- TSM custom strings
-    local tsmGroup = CreateTSMStringGroup(frame, -176, _G.MONEYLOOTER_L_CONFIG_TSM_STRING,
+    local tsmGroup = CreateTSMStringGroup(frame, -228, _G.MONEYLOOTER_L_CONFIG_TSM_STRING,
         Constants.Strings.TSMString)
-    local tsmDisenchantGroup = CreateTSMStringGroup(frame, -262, _G.MONEYLOOTER_L_CONFIG_TSM_DISENCHANT_STRING,
+    local tsmDisenchantGroup = CreateTSMStringGroup(frame, -314, _G.MONEYLOOTER_L_CONFIG_TSM_DISENCHANT_STRING,
         Constants.Strings.TSMDisenchantString)
 
     -- Minimum prices
-    CreateSectionTitle(frame, -348, _G.MONEYLOOTER_L_CONFIG_MIN_PRICES)
+    CreateSectionTitle(frame, -400, _G.MONEYLOOTER_L_CONFIG_MIN_PRICES)
 
     frame.MinPriceFrames = {}
     frame.ForceDisenchantChecks = {}
     local minQuality = Constants.ItemQuality.Min
     for quality = minQuality, Constants.ItemQuality.Max do
-        local yOffset = -376 - (quality - minQuality) * 50
+        local forceOptionQuality = quality >= 2 and quality <= 4
+        local spacing = 30
+        if forceOptionQuality then
+            spacing = 45
+        end
+        local yOffset = -424 - (quality - minQuality) * spacing
+        if forceOptionQuality then
+            yOffset = yOffset + 30
+        end
         local qualityLabel = CreateLabel(frame, yOffset - 4, Utils.GetQualityName(quality))
         local r, g, b = Utils.GetQualityColor(quality)
         qualityLabel:SetTextColor(r, g, b)
@@ -198,7 +208,7 @@ local function CreateConfigFrame()
         moneyInput:SetPoint("TOPLEFT", frame, "TOPLEFT", 120, yOffset)
         frame.MinPriceFrames[quality] = moneyInput
 
-        if quality >= 2 and quality <= 4 then
+        if forceOptionQuality then
             frame.ForceDisenchantChecks[quality] = CreateCheckboxRow(frame, yOffset - 22,
                 _G.MONEYLOOTER_L_CONFIG_FORCE_USE_DISENCHANT_VALUE)
             frame.ForceDisenchantChecks[quality].Label:SetTextColor(r, g, b)
@@ -279,6 +289,8 @@ local function CreateConfigFrame()
 
     local function Populate()
         frame.ForceVendorCheck:SetChecked(Data.GetForceVendorPrice())
+        frame.AlwaysAuctionUniqueAppareances:SetChecked(Data.GetAlwaysAuctionUniqueAppareances())
+        frame.ForceVendorJewellery:SetChecked(Data.GetForceVendorJewellery())
         realUseDisenchant = Data.GetUseDisenchantValue()
         currentPriceSource = Data.GetPriceSource()
         UIDropDownMenu_SetText(frame.PriceSourceDropdown, currentPriceSource)
@@ -343,6 +355,8 @@ local function CreateConfigFrame()
 
         Data.SetForceVendorPrice(frame.ForceVendorCheck:GetChecked())
         Data.SetUseDisenchantValue(frame.UseDisenchantCheck:GetChecked())
+        Data.SetAlwaysAuctionUniqueAppareances(frame.AlwaysAuctionUniqueAppareances:GetChecked())
+        Data.SetForceVendorJewellery(frame.ForceVendorJewellery:GetChecked())
         Data.SetPriceSource(currentPriceSource)
         for i = 2, 4 do
             Data.SetForceUseDisenchantValueIndex(frame.ForceDisenchantChecks[i]:GetChecked(), i)
@@ -380,6 +394,12 @@ local function CreateConfigFrame()
     end)
     frame.UseDisenchantCheck:SetScript(Constants.Events.OnClick, function()
         realUseDisenchant = frame.UseDisenchantCheck:GetChecked()
+    end)
+    frame.AlwaysAuctionUniqueAppareances:SetScript(Constants.Events.OnClick, function()
+        Data.SetAlwaysAuctionUniqueAppareances(frame.AlwaysAuctionUniqueAppareances:GetChecked())
+    end)
+    frame.ForceVendorJewellery:SetScript(Constants.Events.OnClick, function()
+        Data.SetForceVendorJewellery(frame.ForceVendorJewellery:GetChecked())
     end)
     for i = 2, 4 do
         frame.ForceDisenchantChecks[i]:SetScript(Constants.Events.OnClick, RefreshDisenchant)

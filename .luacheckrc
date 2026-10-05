@@ -77,5 +77,12 @@ globals = {
     "UIDropDownMenu_SetWidth",
     "UIDropDownMenu_CreateInfo",
     "UIDropDownMenu_AddButton",
-    "UISpecialFrames"
+    "UISpecialFrames",
+    "C_Container",
+    "UseContainerItem",
+    "GetContainerNumSlots",
+    "GetContainerItemLink",
+    "GetContainerItemInfo",
+    "NUM_BAG_SLOTS",
+    "InCombatLockdown"
 }

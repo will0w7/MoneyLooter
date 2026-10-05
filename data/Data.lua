@@ -71,7 +71,9 @@ Data.DB.prototype = {
     ----------------------------------------------
     ForceVendorPrice = false,
     UseDisenchantValue = false,
-    ForceUseDisenchantValue = { false, false, false, false }
+    ForceUseDisenchantValue = { false, false, false, false },
+    AlwaysAuctionUniqueAppareances = false,
+    ForceVendorJewellery = false
 }
 
 Data.DB.mt = {}
@@ -374,6 +376,12 @@ function Data.IsArmorOrWeapon(class)
     return class == Constants.ItemClass.Weapon or class == Constants.ItemClass.Armor
 end
 
+---@param subclass integer
+---@return boolean
+function Data.IsJewellery(subclass)
+    return subclass == Constants.ItemSubclass.Generic
+end
+
 ---@param quality integer
 ---@param class integer
 ---@return boolean
@@ -629,4 +637,24 @@ function Data.SetUIScale(scale)
         scale = Constants.UIScale.Max
     end
     MoneyLooterXDB.UIScale = scale
+end
+
+---@param value boolean
+function Data.SetAlwaysAuctionUniqueAppareances(value)
+    MoneyLooterDB.AlwaysAuctionUniqueAppareances = value
+end
+
+---@return boolean
+function Data.GetAlwaysAuctionUniqueAppareances()
+    return MoneyLooterDB.AlwaysAuctionUniqueAppareances
+end
+
+---@param value boolean
+function Data.SetForceVendorJewellery(value)
+    MoneyLooterDB.ForceVendorJewellery = value
+end
+
+---@return boolean
+function Data.GetForceVendorJewellery()
+    return MoneyLooterDB.ForceVendorJewellery
 end

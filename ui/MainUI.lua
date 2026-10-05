@@ -22,7 +22,9 @@ MoneyLooter.UI = UI
 ------------------------------------------------------------------------------
 local CreateFrame = CreateFrame
 local GetAddOnMetadata = C_AddOns.GetAddOnMetadata or GetAddOnMetadata
+local GetItemIconByID = C_Item.GetItemIconByID
 local GetMoney = GetMoney
+local InCombatLockdown = InCombatLockdown
 ------------------------------------------------------------------------------
 local tostring, date, print, tonumber = tostring, date, print, tonumber
 local strlenutf8, ipairs, unpack = strlenutf8, ipairs, unpack
@@ -31,14 +33,8 @@ local strlenutf8, ipairs, unpack = strlenutf8, ipairs, unpack
 ---@param itemId number
 ---@return string
 local function CreateTextureFromItemID(itemId)
-    return ("|T%s:0|t"):format(tostring(C_Item.GetItemIconByID(itemId)))
+    return ("|T%s:0|t"):format(tostring(GetItemIconByID(itemId)))
 end
-
-local ActionIcons = {
-    [Constants.ItemAction.Sell] = "Interface\\Icons\\inv_misc_coin_02",
-    [Constants.ItemAction.Auction] = "Interface\\Icons\\inv_hammer_15",
-    [Constants.ItemAction.Disenchant] = "Interface\\Icons\\inv_enchant_disenchant"
-}
 
 ---@class ML_ItemScrollMixin
 ML_ItemScrollMixin = {}
@@ -58,6 +54,7 @@ end
 function ML_ItemScrollMixin:OnClick()
     local elementData = self:GetElementData()
     if not elementData then return end
+    if InCombatLockdown() then return end
     GameTooltip:Hide()
     SetItemRef(elementData.itemLink, elementData.itemLink, "LeftButton")
 end
@@ -130,8 +127,8 @@ end
 ---@param action string|nil
 function ML_ItemScrollMixin:SetRightText(value, action)
     local text = Utils.GetCoinTextString(value)
-    if action and ActionIcons[action] then
-        text = text .. " " .. ("|T%s:0|t"):format(ActionIcons[action])
+    if action and Constants.ActionIcons[action] then
+        text = text .. " " .. ("|T%s:0|t"):format(Constants.ActionIcons[action])
     end
     self.RightLabel:SetText(text)
 end
@@ -389,6 +386,8 @@ local function CreateResetButton(parent)
         local disenchant = Data.GetUseDisenchantValue()
         local forceDisenchant = Data.GetForceUseDisenchantValue()
         local scrollVisible = Data.IsScrollLootFrameVisible()
+        local auctionUniqueAppareances = Data.GetAlwaysAuctionUniqueAppareances()
+        local forceVendorJewellery = Data.GetForceVendorJewellery()
         Data.ResetMoneyLooterDB()
         MoneyLooter.Core.ClearPriceCache()
         UpdateAllTexts(0, 0, 0, 0, 0)
@@ -397,6 +396,8 @@ local function CreateResetButton(parent)
         Data.SetForceVendorPrice(forceVendor)
         Data.SetUseDisenchantValue(disenchant)
         Data.SetForceUseDisenchantValue(forceDisenchant)
+        Data.SetAlwaysAuctionUniqueAppareances(auctionUniqueAppareances)
+        Data.SetForceVendorJewellery(forceVendorJewellery)
     end)
 
     return button
