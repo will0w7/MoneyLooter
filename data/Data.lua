@@ -658,3 +658,10 @@ end
 function Data.GetForceVendorJewellery()
     return MoneyLooterDB.ForceVendorJewellery
 end
+
+---@param bindType integer
+---@return boolean
+function Data.IsBoP(bindType)
+    return (bindType == Constants.BindType.OnAcquire or bindType == Constants.BindType.ToWoWAccount
+        or bindType == Constants.BindType.ToBnetAccount or bindType == Constants.BindType.ToBnetAccountUntilEquipped)
+end

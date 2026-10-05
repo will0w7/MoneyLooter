@@ -55,6 +55,7 @@ local IsLowQAndWorthIt = Data.IsLowQAndWorthIt
 local IsDisenchantable = Data.IsDisenchantable
 local IsArmorOrWeapon = Data.IsArmorOrWeapon
 local IsJewellery = Data.IsJewellery
+local IsBoP = Data.IsBoP
 local GetOldMoney = Data.GetOldMoney
 local AddRawMoney = Data.AddRawMoney
 local SetOldMoney = Data.SetOldMoney
@@ -110,12 +111,12 @@ end
 local function GetCachedItemInfo(itemString)
     local info = itemInfoCache[itemString]
     if not info then
-        local _, _, itemQuality, _, _, _, _, _, itemEquipLoc, _, sellPrice, classID, subclassID, _, _, _, _ =
+        local _, _, itemQuality, _, _, _, _, _, itemEquipLoc, _, sellPrice, classID, subclassID, bindType, _, _, _ =
             GetItemInfo(itemString)
         if itemQuality == nil or classID == nil then
             return nil
         end
-        info = { itemQuality, sellPrice, classID, itemEquipLoc, subclassID }
+        info = { itemQuality, sellPrice, classID, itemEquipLoc, subclassID, bindType }
         itemInfoCache[itemString] = info
     end
     return unpack(info)
@@ -198,12 +199,12 @@ function Core.CalculatePrice(itemLink)
     if cachedAction ~= Constants.ItemAction.Scan then return cachedPrice, cachedAction end
 
     local itemString = str_match(itemLink, "item[%-%d:]+")
-    local quality, sellPrice, classID, equipLoc, subclassID =
+    local quality, sellPrice, classID, equipLoc, subclassID, bindType =
         Measure("GetCachedItemInfo", GetCachedItemInfo, itemString)
 
-    -- print("itemLink" .. itemLink)
-    -- print("classID" .. classID)
-    -- print("subclassID" .. subclassID)
+    -- print("itemLink " .. itemLink)
+    -- print("classID " .. classID)
+    -- print("subclassID " .. subclassID)
 
     -- lockboxes are considered junk, so we need to ignore them by name
     -- same with pouchs (like Stuffed Deviate Scale Pouch)
@@ -255,6 +256,7 @@ function Core.CalculatePrice(itemLink)
     local forceVendorJewellery = GetForceVendorJewellery()
     local isJewellery = IsJewellery(subclassID)
     local isUnique = Appareance.IsUniqueAppearance(itemLink)
+    local isBoP = IsBoP(bindType)
 
     -- disenchant it?
     if isDisenchantable and (useDisenchant or forceDisenchant) then
@@ -265,12 +267,12 @@ function Core.CalculatePrice(itemLink)
     end
 
     -- force vendor price for jewellery
-    if forceVendorJewellery and isArmorOrWeapon and isJewellery then
+    if forceVendorJewellery and isArmorOrWeapon and isJewellery and not isBoP then
         return cacheAndReturn(sellPriceOrZero, Constants.ItemAction.Sell)
     end
 
     -- get the price from the selected addon
-    if not isDisenchantable or not forceDisenchant then
+    if (not isDisenchantable or not forceDisenchant) and not isBoP then
         local price = Measure("CalculatePrice.ExtApi.Normal", source.getPrice, itemLink)
         local icon = Constants.ItemAction.Auction
 

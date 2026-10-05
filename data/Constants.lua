@@ -147,7 +147,15 @@ Constants.ActionIcons = {
     [Constants.ItemAction.Invalid] = "Interface\\Icons\\inv_misc_questionmark",
     [Constants.ItemAction.AuctionUnique] = "Interface\\Icons\\inv_hammer_05",
     [Constants.ItemAction.SellJewellery] = "Interface\\Icons\\inv_misc_coin_04",
-    [Constants.ItemAction.ForceSell] = "Interface\\Icons\\inv_misc_coin_06"
+    [Constants.ItemAction.ForceSell] = "Interface\\Icons\\inv_misc_coin_03"
+}
+
+---@class ML_Constants_BindType
+Constants.BindType = {
+    OnAcquire = Enum.ItemBind.OnAcquire,
+    ToWoWAccount = Enum.ItemBind.ToWoWAccount,
+    ToBnetAccount = Enum.ItemBind.ToBnetAccount,
+    ToBnetAccountUntilEquipped = Enum.ItemBind.ToBnetAccountUntilEquipped
 }
 
 -- Loot global patterns for self
