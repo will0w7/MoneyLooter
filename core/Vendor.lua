@@ -7,6 +7,8 @@ local Constants = MoneyLooter.Constants
 local Core = MoneyLooter.Core
 ---@class ML_Utils
 local Utils = MoneyLooter.Utils
+---@class ML_Debug
+local Debug = MoneyLooter.Debug
 
 ------------------------------------------------------------------------------
 local CreateFrame = CreateFrame
@@ -70,24 +72,28 @@ local function CollectSellableItems()
 
     for bag = 0, NUM_BAG_SLOTS do
         local numSlots = GetContainerNumSlots(bag)
-        if not numSlots or numSlots <= 0 then return {}, 0 end
-
-        for slot = 1, numSlots do
-            local itemLink = GetContainerItemLink(bag, slot)
-            if itemLink then
-                local stackCount, noValue, locked, lootable = GetContainerItemDetails(bag, slot)
-                if not noValue and not locked and not lootable then
-                    local sellPrice, action = Core.CalculatePrice(itemLink)
-                    if IsSellAction(action) and sellPrice and sellPrice > 0 then
-                        local value = sellPrice * stackCount
-                        items[#items + 1] = { bag = bag, slot = slot, value = value }
-                        totalValue = totalValue + value
+        Debug.Info("CollectSellableItems bag " .. bag .. " numSlots " .. tostring(numSlots))
+        if not numSlots or numSlots <= 0 then
+            Debug.Warn("CollectSellableItems skipping bag " .. bag .. " (no slots)")
+        else
+            for slot = 1, numSlots do
+                local itemLink = GetContainerItemLink(bag, slot)
+                if itemLink then
+                    local stackCount, noValue, locked, lootable = GetContainerItemDetails(bag, slot)
+                    if not noValue and not locked and not lootable then
+                        local sellPrice, action = Core.CalculatePrice(itemLink)
+                        if IsSellAction(action) and sellPrice and sellPrice > 0 then
+                            local value = sellPrice * stackCount
+                            items[#items + 1] = { bag = bag, slot = slot, value = value }
+                            totalValue = totalValue + value
+                        end
                     end
                 end
             end
         end
     end
 
+    Debug.Info("CollectSellableItems collected " .. #items .. " sellable items")
     return items, totalValue
 end
 
@@ -100,6 +106,8 @@ local function UpdateButtonText()
     if not button then return end
     local remaining = GetRemaining()
     local perClick = math_min(SellsPerClick, remaining)
+    Debug.Info("UpdateButtonText remaining " ..
+        remaining .. " perClick " .. perClick .. " queue " .. #sellQueue .. " cursor " .. sellCursor)
     if not batchActive then
         button:Enable()
         button:SetText(string_format(_G.MONEYLOOTER_L_SELL_BUTTON, perClick, remaining))
@@ -253,6 +261,7 @@ eventFrame:SetScript("OnEvent", function(_, event)
         eventFrame:RegisterEvent("BAG_UPDATE")
 
         local items, totalValue = CollectSellableItems()
+        Debug.Info("MERCHANT_SHOW collected " .. #items .. " items, totalValue " .. tostring(totalValue))
         sellQueue = items
         sellCursor = 1
         UpdateButtonText()
@@ -271,7 +280,9 @@ eventFrame:SetScript("OnEvent", function(_, event)
         OnPlayerMoney()
     elseif event == "BAG_UPDATE" then
         if not batchActive then
-            sellQueue = CollectSellableItems()
+            local items = CollectSellableItems()
+            Debug.Info("BAG_UPDATE collected " .. #items .. " items")
+            sellQueue = items
             sellCursor = 1
             UpdateButtonText()
         end

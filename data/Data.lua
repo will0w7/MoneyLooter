@@ -379,7 +379,7 @@ end
 ---@param subclass integer
 ---@return boolean
 function Data.IsJewellery(class, subclass, equipLoc)
-    return (class == Constants.ItemClass.Armor and subclass == Constants.ItemSubclass.Generic) and
+    return (class == Constants.ItemClass.Armor and subclass == Constants.ItemSubclass.ArmorGeneric) and
         equipLoc ~= Constants.EquipLoc.OffHand
 end
 
@@ -671,6 +671,13 @@ end
 ---@return boolean
 function Data.IsRecipe(class)
     return class == Constants.ItemClass.Recipe
+end
+
+---@param class integer
+---@param subclass integer
+---@return boolean
+function Data.IsWeaponTool(class, subclass)
+    return class == Constants.ItemClass.Weapon and subclass == Constants.ItemSubclass.WeaponGeneric
 end
 
 function Data.ScrapIsJunk(itemLink)

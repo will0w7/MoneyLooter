@@ -98,8 +98,9 @@ Constants.ItemClass = {
 
 ---@class ML_Constants_ItemSubclass
 Constants.ItemSubclass = {
-    Junk = Enum.ItemMiscellaneousSubclass.Junk, -- a lot of stuff and lockboxes
-    Generic = Enum.ItemArmorSubclass.Generic    -- spellstones, firestones, trinkets, rings and necks
+    Junk = Enum.ItemMiscellaneousSubclass.Junk,     -- a lot of stuff and lockboxes
+    ArmorGeneric = Enum.ItemArmorSubclass.Generic,  -- spellstones, firestones, trinkets, rings and necks
+    WeaponGeneric = Enum.ItemWeaponSubclass.Generic -- profession tools (mining pick, skinning knife, etc)
 }
 
 Constants.EquipLoc = {

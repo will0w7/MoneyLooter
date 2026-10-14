@@ -59,6 +59,7 @@ local IsArmorOrWeapon = Data.IsArmorOrWeapon
 local IsJewellery = Data.IsJewellery
 local IsBoP = Data.IsBoP
 local IsRecipe = Data.IsRecipe
+local IsWeaponTool = Data.IsWeaponTool
 local IsUniqueAppearance = Appareance.IsUniqueAppearance
 local ScrapIsJunk = Data.ScrapIsJunk
 local GetOldMoney = Data.GetOldMoney
@@ -252,6 +253,12 @@ function Core.CalculatePrice(itemLink)
     if ScrapIsJunk(itemLink) then
         Debug.Warn("Scrap.IsJunk")
         return cacheAndReturn(sellPriceOrZero, Constants.ItemAction.Sell)
+    end
+
+    -- profession tools, ignore them
+    if IsWeaponTool(classID, subclassID) then
+        Debug.Warn("Tool.NoValue")
+        return cacheAndReturn(0, Constants.ItemAction.NoValue)
     end
 
     -- not a valid quality and not reagent, tradegoods or quest item
