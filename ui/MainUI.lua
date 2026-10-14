@@ -14,6 +14,8 @@ local CBFunctions = MoneyLooter.CBFunctions
 local SMFunctions = MoneyLooter.SMFunctions
 ---@class ML_Profiler
 local Profiler = MoneyLooter.Profiler
+---@class ML_Debug
+local Debug = MoneyLooter.Debug
 
 ---@class ML_UI
 local UI = {}
@@ -737,8 +739,8 @@ local function slash(msg, _)
         if time > 0 then
             Data.SubXFromTimer(time)
         end
-    elseif msg == "profiler" then
-        Profiler.ToggleProfiler()
+    elseif msg == "debug" then
+        Debug.ToggleDebug()
     else
         print(_G.MONEYLOOTER_L_USAGE .. Constants.Strings.AddonVersion)
     end

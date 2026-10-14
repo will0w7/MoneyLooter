@@ -102,6 +102,10 @@ Constants.ItemSubclass = {
     Generic = Enum.ItemArmorSubclass.Generic    -- spellstones, firestones, trinkets, rings and necks
 }
 
+Constants.EquipLoc = {
+    OffHand = "INVTYPE_HOLDABLE" -- off hands are class armor and subclass generic
+}
+
 if MoneyLooter.isRetail then
     Constants.ItemClass.Profession = Enum.ItemClass.Profession
 end
@@ -134,7 +138,9 @@ Constants.ItemAction = {
     Scan = 6,
     AuctionUnique = 7,
     SellJewellery = 8,
-    ForceSell = 9
+    ForceSell = 9,
+    Recipe = 10,
+    NoValue = 11
 }
 
 ---@class ML_Constants_ActionIcons
@@ -147,7 +153,9 @@ Constants.ActionIcons = {
     [Constants.ItemAction.Invalid] = "Interface\\Icons\\inv_misc_questionmark",
     [Constants.ItemAction.AuctionUnique] = "Interface\\Icons\\inv_hammer_05",
     [Constants.ItemAction.SellJewellery] = "Interface\\Icons\\inv_misc_coin_04",
-    [Constants.ItemAction.ForceSell] = "Interface\\Icons\\inv_misc_coin_03"
+    [Constants.ItemAction.ForceSell] = "Interface\\Icons\\inv_misc_coin_03",
+    [Constants.ItemAction.Recipe] = "Interface\\Icons\\inv_scroll_05",
+    [Constants.ItemAction.NoValue] = "Interface\\Icons\\inv_stone_12"
 }
 
 ---@class ML_Constants_BindType

@@ -378,8 +378,9 @@ end
 
 ---@param subclass integer
 ---@return boolean
-function Data.IsJewellery(subclass)
-    return subclass == Constants.ItemSubclass.Generic
+function Data.IsJewellery(class, subclass, equipLoc)
+    return (class == Constants.ItemClass.Armor and subclass == Constants.ItemSubclass.Generic) and
+        equipLoc ~= Constants.EquipLoc.OffHand
 end
 
 ---@param quality integer
@@ -664,4 +665,21 @@ end
 function Data.IsBoP(bindType)
     return (bindType == Constants.BindType.OnAcquire or bindType == Constants.BindType.ToWoWAccount
         or bindType == Constants.BindType.ToBnetAccount or bindType == Constants.BindType.ToBnetAccountUntilEquipped)
+end
+
+---@param class integer
+---@return boolean
+function Data.IsRecipe(class)
+    return class == Constants.ItemClass.Recipe
+end
+
+function Data.ScrapIsJunk(itemLink)
+    local scrap = Scrap
+    if scrap == nil or scrap.IsJunk == nil then return false end
+
+    local id = tonumber(itemLink:match("item:(%d+)"))
+    if not id then return false end
+
+    local isJunk = scrap:IsJunk(id)
+    return isJunk or false
 end

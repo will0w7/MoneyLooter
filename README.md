@@ -4,6 +4,18 @@
 
 A lightweight and fast World of Warcraft addon designed to track your gold farms. Track both raw gold and the gold value of looted items using the price source you pick in the configuration menu, TradeSkillMaster, Auctionator, Auctioneer, OribosExchange or RECrystallize, with reload protection so you don't need to worry about disconnections.
 
+## 2.1 The Transmog update: AllTheThings and Scrap integration, improvements and bug fixes
+
+In this version MoneyLooter can tell whether an item has a unique appearance, making it easier to distinguish valuable items from ones that aren't (any unique appearance is valuable to a collector). AllTheThings is used for this, and it takes into account whether shared appearances can be obtained or not; if none of that item's appearances can be obtained except the item's own, that item counts as a unique appearance. If you don't have AllTheThings, MoneyLooter gets all the appearances from Blizzard's API, but it can't tell whether the shared appearances can be obtained or not. For now, this mode has no threshold for the item's minimum value, but if you mark it as _Junk_ in Scrap, MoneyLooter will treat it as junk even if it's a unique appearance.
+
+In this version MoneyLooter also integrates with Scrap, so it can tell whether an item is marked as _Junk_. If so, MoneyLooter will directly mark it as an item to sell to the vendor. This check happens **before the disenchant check**, so if you want to disenchant certain items, don't mark them as _Junk_ in Scrap.
+
+Many improvements and bug fixes are included in how prices are determined, especially when it comes to disenchanting. Keep in mind that if you use **TSM** to get the disenchant price, it may not have the item cached and won't return a disenchant value. To mitigate this, MoneyLooter, in this specific case, doesn't cache the item's value and, if you get it again, will ask **TSM** for the disenchant value again.
+
+To make this whole process easier, MoneyLooter now also includes a sell button in the top of the vendor window that sells every item MoneyLooter has marked for selling. Items are sold 12 at a time, so that if it sells something you didn't want to sell by mistake, you can get it back from the buyback. Due to Blizzard API limitations, the selling process is somewhat slow (and my implementation is a bit rough), and I'm working on improvements to make it faster without overloading Blizzard's API. **IMPORTANT**: The sell button is designed for transmog farmers, so BoP armor/weapon items will be sold, don't use this if you don't want to lose something valuable you keep in your inventory. It doesn't matter that you didn't loot it with MoneyLooter running, when you open the vendor, it will analyze **ALL** of your inventory and determine whether an item should be sold or not, using the same logic as when looting. BoP recipes are **never** sold.
+
+Enjoy your transmog farms!
+
 ## New in 2.0: Configuration menu, UI scale, selectable price source, Forever support and more
 
 ![MoneyLooter 2.0 Config menu](https://github.com/will0w7/MoneyLooter/blob/main/images/MoneyLooter2.0.png?raw=true)
@@ -47,7 +59,7 @@ These caching systems trade a small amount of extra memory for significant perfo
 
 **Core refactor:** A general refactor was performed on the addon, mainly in the Core module. This brings performance improvements and simplifies the code for easier maintenance.
 
-**Internal profiler:** I can now track performance regressions and improvements reliably (and everyone can, just use /ml profiler to toggle on/off the profiler).
+**Internal profiler:** I can now track performance regressions and improvements reliably (and everyone can, just use /ml debug to toggle on/off the debug mode, which also enables the profiler).
 
 **Translations:** Translations were added for languages that previously had no localization. They were generated with gpt‑oss. While not perfect, providing them is better than nothing (esES, esMX, enUS, ruRU already had manual translations).
 

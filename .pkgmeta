@@ -14,6 +14,8 @@ optional-dependencies:
   - auctionator
   - auctioneer
   - oribos-exchange
+  - all-the-things
+  - scrap
 tools-used:
   - devtool
   - addon-usage

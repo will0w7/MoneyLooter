@@ -84,5 +84,10 @@ globals = {
     "GetContainerItemLink",
     "GetContainerItemInfo",
     "NUM_BAG_SLOTS",
-    "InCombatLockdown"
+    "InCombatLockdown",
+    "C_TransmogCollection",
+    "C_Item",
+    "AllTheThings",
+    "ATTC",
+    "Scrap"
 }

@@ -11,6 +11,8 @@ local Data = MoneyLooter.Data
 local Profiler = MoneyLooter.Profiler
 ---@class ML_Appearance
 local Appareance = MoneyLooter.Appearance
+---@class ML_Debug
+local Debug = MoneyLooter.Debug
 
 ---@class ML_Core
 local Core = {}
@@ -56,6 +58,9 @@ local IsDisenchantable = Data.IsDisenchantable
 local IsArmorOrWeapon = Data.IsArmorOrWeapon
 local IsJewellery = Data.IsJewellery
 local IsBoP = Data.IsBoP
+local IsRecipe = Data.IsRecipe
+local IsUniqueAppearance = Appareance.IsUniqueAppearance
+local ScrapIsJunk = Data.ScrapIsJunk
 local GetOldMoney = Data.GetOldMoney
 local AddRawMoney = Data.AddRawMoney
 local SetOldMoney = Data.SetOldMoney
@@ -190,10 +195,10 @@ local priceSources = {
 }
 
 ---@param itemLink string
----@return integer price
----@return integer action
+---@return integer
+---@return integer
 function Core.CalculatePrice(itemLink)
-    if not itemLink then return 0, Constants.ItemAction.CanBeOpened end
+    if not itemLink then return 0, Constants.ItemAction.Invalid end
 
     local cachedPrice, cachedAction = GetCachedPrice(itemLink)
     if cachedAction ~= Constants.ItemAction.Scan then return cachedPrice, cachedAction end
@@ -202,14 +207,21 @@ function Core.CalculatePrice(itemLink)
     local quality, sellPrice, classID, equipLoc, subclassID, bindType =
         Measure("GetCachedItemInfo", GetCachedItemInfo, itemString)
 
-    -- print("itemLink " .. itemLink)
-    -- print("classID " .. classID)
-    -- print("subclassID " .. subclassID)
+    if Debug.enabled then
+        Debug.Info("itemLink " .. itemLink)
+        Debug.Info("classID " .. classID)
+        Debug.Info("subclassID " .. subclassID)
+        Debug.Info("equipLoc " .. equipLoc)
+        Debug.Info("isRecipe " .. tostring(IsRecipe(classID)))
+        Debug.Info("isBoP " .. tostring(IsBoP(bindType)))
+        Debug.Info("isJewellery " .. tostring(IsJewellery(classID, subclassID, equipLoc)))
+    end
 
     -- lockboxes are considered junk, so we need to ignore them by name
     -- same with pouchs (like Stuffed Deviate Scale Pouch)
     if classID == Constants.ItemClass.Miscellaneous and subclassID == Constants.ItemSubclass.Junk then
         if itemLink:find("Lockbox") or itemLink:find("Pouch") then
+            Debug.Warn("CanBeOpened")
             return 0, Constants.ItemAction.CanBeOpened
         end
     end
@@ -223,73 +235,146 @@ function Core.CalculatePrice(itemLink)
     local sellPriceOrZero = sellPrice or 0
 
     local function cacheAndReturn(price, action)
+        Debug.Warn("cacheAndReturn")
         local savePrice = price or 0
         SetCachedPrice(itemLink, savePrice, action)
         return savePrice, action
     end
 
-    -- not a valid quality and not reagent, tradegoods or quest item
-    if not IsQualityManaged(quality, classID) and not IsLowQAndWorthIt(quality, classID) then
+    local function noCacheAndReturn(price, action)
+        Debug.Warn("noCacheAndReturn")
+        return price or 0, action
+    end
+
+    local saveAndReturn = cacheAndReturn
+
+    -- marked as junk on scrap
+    if ScrapIsJunk(itemLink) then
+        Debug.Warn("Scrap.IsJunk")
         return cacheAndReturn(sellPriceOrZero, Constants.ItemAction.Sell)
     end
 
-    local source = priceSources[GetPriceSource()] or priceSources[Constants.PriceSources.TradeSkillMaster]
+    -- not a valid quality and not reagent, tradegoods or quest item
+    if not IsQualityManaged(quality, classID) and not IsLowQAndWorthIt(quality, classID) then
+        Debug.Warn("Quality.Sell")
+        return cacheAndReturn(sellPriceOrZero, Constants.ItemAction.Sell)
+    end
+
+    local priceSource = GetPriceSource()
+    local source = priceSources[priceSource] or priceSources[Constants.PriceSources.TradeSkillMaster]
+    local isBoP = IsBoP(bindType)
+
+    if isBoP and IsRecipe(classID) then
+        Debug.Warn("Recipe")
+        return cacheAndReturn(0, Constants.ItemAction.Recipe)
+    end
 
     -- ignore the minimum thresholds
     if ignoreThreshold then
         local price = Measure("CalculatePrice.ExtApi.Reagent", source.getPrice, itemLink)
         if price and price > 0 then
+            Debug.Warn("Ignore.Auction")
             return cacheAndReturn(price, Constants.ItemAction.Auction)
         end
+
+        if sellPriceOrZero == 0 then
+            Debug.Warn("Ignore.NoValue")
+            return cacheAndReturn(0, Constants.ItemAction.NoValue)
+        end
+
+        Debug.Warn("Ignore.Sell")
         return cacheAndReturn(sellPriceOrZero, Constants.ItemAction.Sell)
     end
 
     -- force vendor price for items following the thresholds
     if GetForceVendorPrice() then
+        Debug.Warn("ForceSell")
         return cacheAndReturn(sellPriceOrZero, Constants.ItemAction.ForceSell)
     end
 
     local forceDisenchant = GetForceUseDisenchantValueIndex(quality)
-    local useDisenchant = GetUseDisenchantValue()
     local isDisenchantable = IsDisenchantable(quality, classID, equipLoc)
-    local alwaysAuctionUniqueAppareances = GetAlwaysAuctionUniqueAppareances()
-    local forceVendorJewellery = GetForceVendorJewellery()
-    local isJewellery = IsJewellery(subclassID)
-    local isUnique = Appareance.IsUniqueAppearance(itemLink)
-    local isBoP = IsBoP(bindType)
+    local isUniqueAppearance = IsUniqueAppearance(itemLink)
+
+    Debug.Info("IsUniqueAppearance " .. tostring(isUniqueAppearance))
+    Debug.Info("IsDisenchantable " .. tostring(isDisenchantable))
+    Debug.Info("GetForceUseDisenchantValueIndex " .. tostring(forceDisenchant))
 
     -- disenchant it?
-    if isDisenchantable and (useDisenchant or forceDisenchant) then
-        local disenchantPrice = Measure("CalculatePrice.ExtApi.Disenchant", source.getDisenchantPrice, itemLink)
-        if disenchantPrice and disenchantPrice > 0 then
-            return cacheAndReturn(disenchantPrice, Constants.ItemAction.Disenchant)
+    if isDisenchantable and (GetUseDisenchantValue() or forceDisenchant) then
+        local priceOrZero = Measure("CalculatePrice.ExtApi.Disenchantable", source.getPrice, itemLink) or 0
+        local disenPriceOrZero = Measure("CalculatePrice.ExtApi.Disenchant", source.getDisenchantPrice, itemLink) or 0
+
+        Debug.Info("priceOrZero " .. tostring(priceOrZero))
+        Debug.Info("disenPriceOrZero " .. tostring(disenPriceOrZero))
+        Debug.Info("sellPriceOrZero " .. tostring(sellPriceOrZero))
+
+        -- do not disenchant, above the threshold
+        local aboveThreshold = false
+        if priceOrZero > GetMinPrice(quality) then aboveThreshold = true end
+
+        -- TSM needs to load the item info and can fail determining the disenchant value
+        -- the first time you get an item, do not cache the price
+        if disenPriceOrZero == 0 then
+            saveAndReturn = noCacheAndReturn
+        else
+            -- unique appearance skips disenchantment
+            if not isUniqueAppearance then
+                if disenPriceOrZero > sellPriceOrZero and not aboveThreshold then
+                    Debug.Warn("Disenchant")
+                    return cacheAndReturn(disenPriceOrZero, Constants.ItemAction.Disenchant)
+                elseif forceDisenchant and disenPriceOrZero > sellPriceOrZero then
+                    Debug.Warn("Force.Disenchant")
+                    return cacheAndReturn(disenPriceOrZero, Constants.ItemAction.Disenchant)
+                end
+            end
         end
     end
 
+    -- BoP, sell it
+    if isBoP then
+        if sellPriceOrZero == 0 then
+            Debug.Warn("BoP.NoValue")
+            return saveAndReturn(0, Constants.ItemAction.NoValue)
+        end
+
+        Debug.Warn("BoP.Sell")
+        return saveAndReturn(sellPriceOrZero, Constants.ItemAction.Sell)
+    end
+
     -- force vendor price for jewellery
-    if forceVendorJewellery and isArmorOrWeapon and isJewellery and not isBoP then
-        return cacheAndReturn(sellPriceOrZero, Constants.ItemAction.Sell)
+    if GetForceVendorJewellery() and IsJewellery(classID, subclassID, equipLoc) then
+        Debug.Warn("SellJewellery")
+        return saveAndReturn(sellPriceOrZero, Constants.ItemAction.SellJewellery)
     end
 
     -- get the price from the selected addon
-    if (not isDisenchantable or not forceDisenchant) and not isBoP then
+    if not isDisenchantable or not forceDisenchant then
         local price = Measure("CalculatePrice.ExtApi.Normal", source.getPrice, itemLink)
         local icon = Constants.ItemAction.Auction
 
-        if isUnique then
+        if isUniqueAppearance then
             icon = Constants.ItemAction.AuctionUnique
 
-            if alwaysAuctionUniqueAppareances then
-                return cacheAndReturn(price, Constants.ItemAction.AuctionUnique)
+            if GetAlwaysAuctionUniqueAppareances() then
+                Debug.Warn("AuctionUnique")
+                return saveAndReturn(price, Constants.ItemAction.AuctionUnique)
             end
         end
 
         if price and price >= GetMinPrice(quality) then
-            return cacheAndReturn(price, icon)
+            Debug.Warn("NoUnique.Auction")
+            return saveAndReturn(price, icon)
         end
     end
 
-    return cacheAndReturn(sellPriceOrZero, Constants.ItemAction.Sell)
+    if sellPriceOrZero == 0 then
+        Debug.Warn("NoValue")
+        return saveAndReturn(0, Constants.ItemAction.NoValue)
+    end
+
+    Debug.Warn("Sell")
+    return saveAndReturn(sellPriceOrZero, Constants.ItemAction.Sell)
 end
 
 ---@param lootString string
@@ -323,7 +408,6 @@ local function ReceivedMoney(receivedString)
     return received ~= nil
 end
 
-
 ---@param lootString string
 ---@param playerName2 string
 local function ChatMsgLoot(_, _, lootString, _, _, _, playerName2)
@@ -339,6 +423,7 @@ local function ChatMsgLoot(_, _, lootString, _, _, _, playerName2)
 
     local price, action = Measure("CalculatePrice", Core.CalculatePrice, itemLink)
     if action == Constants.ItemAction.Invalid then return end
+
 
     local totalPrice = price * quantity
     local itemID = Measure("GetCachedItemInfoFromHyperlink", GetCachedItemInfoFromHyperlink, itemLink)

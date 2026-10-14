@@ -11,29 +11,29 @@ local GetTimePreciseSec = GetTimePreciseSec
 local startTimes = {}
 local depth = 0
 
----@param label string id
+---@param label string
 function Profiler.Start(label)
     if not Profiler.enabled then return end
     depth = depth + 1
     startTimes[label] = GetTimePreciseSec()
 end
 
----@param label string id
+---@param label string
 function Profiler.Stop(label)
     if not Profiler.enabled then return end
     local t0 = startTimes[label]
     if not t0 then
-        print("|cffff0000[Profiler] 'Start' not found for ", label, "|r")
+        print("|cffffff00$> [MLProfiler]|r 'Start' not found for ", label)
         return
     end
     local elapsedSec = GetTimePreciseSec() - t0
     depth = depth - 1
     if depth < 0 then depth = 0 end
-    print(string.format("$> [Profiler] (%d) %s: %.4f ms", depth, label, elapsedSec * 1000))
+    print(string.format("|cffffff00$> [MLProfiler]|r (%d) %s: %.4f ms", depth, label, elapsedSec * 1000))
     startTimes[label] = nil
 end
 
----@param label string id
+---@param label string
 ---@param func function
 function Profiler.Measure(label, func, ...)
     if not Profiler.enabled then
@@ -45,9 +45,9 @@ function Profiler.Measure(label, func, ...)
     return unpack(res)
 end
 
-function Profiler.ToggleProfiler()
-    Profiler.enabled = not Profiler.enabled
+---@param enabled boolean
+function Profiler.SetEnabled(enabled)
+    Profiler.enabled = enabled
     depth = 0
     table.wipe(startTimes)
-    print("|cffff0000$> [Profiler] Enabled: ", Profiler.enabled, "|r")
 end
