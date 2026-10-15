@@ -65,6 +65,7 @@ Locales.esMX = function()
     L["TSM_CUSTOM_STRING_NOT_VALID"] =
     "|cFFd8de35Money Looter:|r La siguiente cadena de TSM no es válida y no fue configurada: "
     L["TSM_CUSTOM_STRING_VALID"] = "|cFFd8de35Money Looter:|r La siguiente cadena de TSM es válida y fue configurada: "
+    L["TSM_CUSTOM_STRING"] = "|cFFd8de35Money Looter:|r Usando la siguiente cadena TSM personalizada: "
     L["NEW_DB_VERSION"] =
     "|cFFd8de35Money Looter:|r Se ha detectado una nueva versión de la base de datos, actualizando..."
     L["DB_UPDATED"] = "|cFFd8de35Money Looter:|r La base de datos se ha actualizado correctamente!"
@@ -84,10 +85,18 @@ Locales.esMX = function()
     L["FORCE_VENDOR_PRICE_DISABLED"] = "|cFFd8de35Money Looter:|r Forzar precio de venta de mercader deshabilitado."
     L["TIME_ERROR"] =
     "|cFFd8de35Money Looter:|r El formato es incorrecto, debe ser: 00h00m00s o cualquier combinación de tiempo (5m30s)"
+    L["REMOVE_CONFIRM"] = "¿Eliminar %s del total de la sesión?"
     L["ALL"] = "TODOS"
     L["USE_DISENCHANT_VALUE_ENABLED"] =
     "|cFFd8de35Money Looter:|r Usando valor de desencantamiento cuando es más alto que el valor de venta directo en subasta."
     L["USE_DISENCHANT_VALUE_DISABLED"] =
     "|cFFd8de35Money Looter:|r Se deja de usar el valor de desencatamiento. Siempre se usará el valor de venta directo en subasta."
+    L["SELL_BUTTON"] = "ML Vender %d/%d"
+    L["SELL_BUTTON_SELLING"] = "ML Vendiendo %d/%d"
+    L["SELL_BUTTON_TOOLTIP"] =
+    "Usa los filtros de MoneyLooter para vender todo lo que no quieras. Los objetos de subasta o desencantar nunca se venden."
+    L["SELL_OPEN"] = "|cFFd8de35MoneyLooter:|r Se pueden vender %d objetos por %s."
+    L["CONFIG_ALWAYS_AUCTION_UNIQUES"] = "Vender apariencias únicas siempre en la CdS"
+    L["CONFIG_FORCE_VENDOR_JELLEWERY"] = "Forzar precio de vendedor para la joyería"
     return L
 end

@@ -80,10 +80,18 @@ Locales.koKR = function()
     L["FORCE_VENDOR_PRICE_DISABLED"] = "|cFFd8de35Money Looter:|r 판매자 가격 강제 비활성화."
     L["TIME_ERROR"] =
     "|cFFd8de35Money Looter:|r 형식이 잘못되었습니다. 올바른 형식은 00h00m00s 또는 시간 조합(5m30s)이어야 합니다."
+    L["REMOVE_CONFIRM"] = "Remove %s from session total?"
     L["ALL"] = "모두"
     L["USE_DISENCHANT_VALUE_ENABLED"] =
     "|cFFd8de35Money Looter:|r Using disenchantment value when it is higher than the direct auction price."
     L["USE_DISENCHANT_VALUE_DISABLED"] =
     "|cFFd8de35Money Looter:|r Disenchantment value is no longer used. The direct auction price will always be used."
+    L["SELL_BUTTON"] = "ML Sell %d/%d"
+    L["SELL_BUTTON_SELLING"] = "ML Selling %d/%d"
+    L["SELL_BUTTON_TOOLTIP"] =
+    "Use MoneyLooter filters to sell everything you don't want. Auction and disenchant items are never sold."
+    L["SELL_OPEN"] = "|cFFd8de35MoneyLooter:|r Can sell %d items for %s."
+    L["CONFIG_ALWAYS_AUCTION_UNIQUES"] = "Always sell at AH unique appareances"
+    L["CONFIG_FORCE_VENDOR_JELLEWERY"] = "Force vendor price for jewellery"
     return L
 end

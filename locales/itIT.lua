@@ -85,10 +85,18 @@ Locales.itIT = function()
     L["FORCE_VENDOR_PRICE_DISABLED"] = "|cFFd8de35Money Looter:|r Prezzo venditore forzato disattivato."
     L["TIME_ERROR"] =
     "|cFFd8de35Money Looter:|r Il formato è errato, deve essere: 00h00m00s o qualsiasi combinazione di tempo (5m30s)"
+    L["REMOVE_CONFIRM"] = "Remove %s from session total?"
     L["ALL"] = "TUTTI"
     L["USE_DISENCHANT_VALUE_ENABLED"] =
     "|cFFd8de35Money Looter:|r Using disenchantment value when it is higher than the direct auction price."
     L["USE_DISENCHANT_VALUE_DISABLED"] =
     "|cFFd8de35Money Looter:|r Disenchantment value is no longer used. The direct auction price will always be used."
+    L["SELL_BUTTON"] = "ML Sell %d/%d"
+    L["SELL_BUTTON_SELLING"] = "ML Selling %d/%d"
+    L["SELL_BUTTON_TOOLTIP"] =
+    "Use MoneyLooter filters to sell everything you don't want. Auction and disenchant items are never sold."
+    L["SELL_OPEN"] = "|cFFd8de35MoneyLooter:|r Can sell %d items for %s."
+    L["CONFIG_ALWAYS_AUCTION_UNIQUES"] = "Always sell at AH unique appareances"
+    L["CONFIG_FORCE_VENDOR_JELLEWERY"] = "Force vendor price for jewellery"
     return L
 end

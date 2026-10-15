@@ -65,6 +65,7 @@ Locales.esES = function()
     L["TSM_CUSTOM_STRING_NOT_VALID"] =
     "|cFFd8de35Money Looter:|r La siguiente cadena de TSM no es válida y no fue configurada: "
     L["TSM_CUSTOM_STRING_VALID"] = "|cFFd8de35Money Looter:|r La siguiente cadena de TSM es válida y fue configurada: "
+    L["TSM_CUSTOM_STRING"] = "|cFFd8de35Money Looter:|r Usando la siguiente cadena TSM personalizada: "
     L["NEW_DB_VERSION"] =
     "|cFFd8de35Money Looter:|r Se ha detectado una nueva versión de la base de datos, actualizando..."
     L["DB_UPDATED"] = "|cFFd8de35Money Looter:|r La base de datos se ha actualizado correctamente!"
